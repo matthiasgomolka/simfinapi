@@ -1,0 +1,3 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+my_api_key.R
