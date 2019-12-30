@@ -5,6 +5,7 @@
 sfa_memoise_fromJSON <- function(cache_dir = tempdir()) {
     memoise::memoise(jsonlite::fromJSON,
                      cache = memoise::cache_filesystem(cache_dir))
+    # R.cache::addMemoization(jsonlite::fromJSON)
 }
 
 # not yet working properly; use tidyr::unnest()

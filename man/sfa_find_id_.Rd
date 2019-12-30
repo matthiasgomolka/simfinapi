@@ -11,7 +11,7 @@ sfa_find_id_(find, by = "ticker", api_key = Sys.getenv("sfa_api_key"))
 
 \item{by}{\verb{[character(1)]} Either search by "ticker" or by "name".}
 
-\item{api_key}{\verb{[character(1)]} Your SimFin API key. For simplicity use \code{options(sfa_api_key = "yourapikey")}.}
+\item{api_key}{\verb{[character(1)]} Your SimFin API key. For simplicity use \code{options(sfa_api_key = "yourapikey")}. <-}
 }
 \description{
 Find single SimFin ID's
