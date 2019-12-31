@@ -4,7 +4,7 @@
 \alias{sfa_memoise_fromJSON}
 \title{memoise jsonlite::fromJSON for SimFin API calls}
 \usage{
-sfa_memoise_fromJSON(cache_dir = tempdir())
+sfa_memoise_fromJSON(api_call, cache_dir = options("sfa_cache_dir")[[1]])
 }
 \arguments{
 \item{cache_dir}{\verb{[character(1)]} Path of the cache directory.}

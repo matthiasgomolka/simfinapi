@@ -3,7 +3,7 @@
 #' @importFrom data.table setDT setkeyv
 #' @export
 sfa_get_entities <- function(api_key = Sys.getenv("sfa_api_key")) {
-    api_call <- paste0(options("sfa_api"),
+    api_call <- paste0(Sys.getenv("sfa_api"),
                        "info/all-entities/",
                        "?api-key=", api_key)
 

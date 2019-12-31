@@ -1,7 +1,5 @@
 .onLoad <- function(libname, pkgname) {
-    sfa_memoise_fromJSON <- sfa_memoise_fromJSON()
-    environment(sfa_memoise_fromJSON) <- asNamespace("simfinapi")
-    # sfa_memoise_fromJSON <- R.cache::addMemoization(jsonlite::fromJSON)
+    options(sfa_cache_dir = tempdir())
     Sys.setenv(sfa_api = "https://simfin.com/api/v1/")
     Sys.setenv(sfa_key_var = "simId")
 }
