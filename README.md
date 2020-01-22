@@ -2,5 +2,4 @@ This package wraps the https://simfin.com/ API to make SimFin data easily availa
 
 To do:
 
-- make API calls saver: Capture error and throw useful warning.
 - allow for api calls via ticker (instead of SimId)

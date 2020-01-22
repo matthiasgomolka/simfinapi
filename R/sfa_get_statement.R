@@ -23,6 +23,11 @@ sfa_get_statement_ <- function(simId,
                        "&fyear=", fin_year)
 
     raw <- sfa_memoise_fromJSON(api_call)
+
+    if (is.null(raw)) {
+        return(NULL)
+    }
+
     dt <- data.table::data.table(
         simId = simId,
         statement = statement,
@@ -49,7 +54,7 @@ sfa_get_statement_ <- function(simId,
 #' @param fin_year `[integer(1)]` The financial year of interest.
 #' @param api_key `[character(1)]` Your SimFin API key. For simplicity use `Sys.setenv(sfa_api_key = "yourapikey")`.
 #' @importFrom future.apply future_lapply
-#' @importFrom data.table rbindlist setkeyv
+#' @importFrom data.table rbindlist
 #' @export
 sfa_get_statement <- function(simIds,
                               statement,
@@ -58,7 +63,5 @@ sfa_get_statement <- function(simIds,
                               api_key = Sys.getenv("sfa_api_key")) {
     result_list <- future.apply::future_lapply(simIds, sfa_get_statement_,
                                                statement, period, fin_year, api_key)
-    dt <- data.table::rbindlist(result_list)
-    data.table::setkeyv(dt, Sys.getenv("sfa_key_var"))
-    return(dt)
+    data.table::rbindlist(result_list)
 }
