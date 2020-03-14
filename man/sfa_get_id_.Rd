@@ -4,14 +4,16 @@
 \alias{sfa_get_id_}
 \title{Find single SimFin ID's}
 \usage{
-sfa_get_id_(find, by = "ticker", api_key = Sys.getenv("sfa_api_key"))
+sfa_get_id_(find, type, api_key = getOption("sfa_api_key"))
 }
 \arguments{
 \item{find}{\verb{[character(1)]} The string to search for.}
 
-\item{by}{\verb{[character(1)]} Either search by "ticker" or by "name".}
+\item{api_key}{\verb{[character(1)]} Your SimFin API key. I recommend setting the
+API key globally via \code{options(sfa_api_key = "yourapikey")} and omit the
+\code{api_key} argument in all simfinapi functions.}
 
-\item{api_key}{\verb{[character(1)]} Your SimFin API key. For simplicity use \code{options(sfa_api_key = "yourapikey")}.}
+\item{by}{\verb{[character(1)]} Either search by "ticker" (default) or by "name".}
 }
 \description{
 Find single SimFin ID's
