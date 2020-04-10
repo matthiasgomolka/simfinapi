@@ -9,19 +9,24 @@ sfa_get_statement_(
   statement,
   period,
   fin_year,
-  api_key = Sys.getenv("sfa_api_key")
+  api_key = getOption("sfa_api_key")
 )
 }
 \arguments{
 \item{simId}{\verb{[integer(1)]} SimFin ID of the company of interest.}
 
-\item{statement}{\verb{[character(1)]} One of "pl" (Profit and Loss), "bs" (Balance Sheet), "cf" (Cash Flow).}
+\item{statement}{\verb{[character(1)]} One of "pl" (Profit and Loss), "bs"
+(Balance Sheet), "cf" (Cash Flow).}
 
-\item{period}{\verb{[character(1)]} One of "Q1" "Q2" "Q3" "Q4" "H1" "H2" "9M" "FY" "TTM". See \code{ptype} on https://simfin.com/api/v1/documentation/#operation/getCompStatementStandardised for details.}
+\item{period}{\verb{[character(1)]} One of "Q1" "Q2" "Q3" "Q4" "H1" "H2" "9M" "FY"
+"TTM". See \code{ptype} on
+https://simfin.com/api/v1/documentation/#operation/getCompStatementStandardised
+for details.}
 
 \item{fin_year}{\verb{[integer(1)]} The financial year of interest.}
 
-\item{api_key}{\verb{[character(1)]} Your SimFin API key. For simplicity use \code{Sys.setenv(sfa_api_key = "yourapikey")}.}
+\item{api_key}{\verb{[character(1)]} Your SimFin API key. For simplicity use
+\code{option(sfa_api_key = "yourapikey")}.}
 }
 \description{
 Get basic company information

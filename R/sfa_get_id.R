@@ -32,9 +32,9 @@ sfa_get_id_ <- function(find, type, api_key = getOption("sfa_api_key")) {
 #' @export
 sfa_get_id <- function(find, by = "ticker", api_key = getOption("sfa_api_key")) {
     # input checks
-    checkmate::assert_character(find, min.chars = 4L)
+    checkmate::assert_character(find)
     checkmate::assert_choice(by, c("ticker", "name"))
-    checkmate::assert_string(api_key, min.chars = 32L)
+    checkmate::assert_string(api_key, pattern = "[[:alnum:]]{32}")
 
     type <- switch(by,
                    ticker = "ticker",

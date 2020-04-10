@@ -4,7 +4,7 @@
 \alias{sfa_memoise_fromJSON}
 \title{memoise jsonlite::fromJSON for SimFin API calls}
 \usage{
-sfa_memoise_fromJSON(api_call, cache_dir = options("sfa_cache_dir")[[1]])
+sfa_memoise_fromJSON(api_call, cache_dir = getOption("sfa_cache_dir"))
 }
 \arguments{
 \item{api_call}{\verb{[character(1)} URL of the API call.}
