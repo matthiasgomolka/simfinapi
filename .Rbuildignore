@@ -1,3 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 my_api_key.R
+^\.travis\.yml$
+^codecov\.yml$
+^\.covrignore$
+^\.github$

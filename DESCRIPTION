@@ -1,23 +1,30 @@
-Package: simfinapi
 Type: Package
+Package: simfinapi
 Title: What the Package Does (Title Case)
 Version: 0.1.0
-Authors@R: person("Matthias", "Gomolka",
-                  role  = c("aut","cre"),
-                  email = "matthias.gomolka@posteo.de")
-Description: This package wraps the https://simfin.com/ API to make SimFin data
-    easily available in R. To obtain an SimFin API key (and thus to use this 
-    package), you need to register at https://simfin.com/login. 
+Authors@R: 
+    person(given = "Matthias",
+           family = "Gomolka",
+           role = c("aut", "cre"),
+           email = "matthias.gomolka@posteo.de")
+Description: This package wraps the https://simfin.com/ API
+    to make SimFin data easily available in R. To obtain an SimFin API key
+    (and thus to use this package), you need to register at
+    https://simfin.com/login. 
 License: GPL-3
-Encoding: UTF-8
-LazyData: true
+Depends: 
+    R (>= 3.2)
 Imports: 
+    checkmate,
+    data.table,
+    future.apply,
+    glue,
     jsonlite,
     memoise,
-    future.apply,
-    data.table,
-    purrr,
-    glue,
-    checkmate
+    purrr
+Suggests: 
+    covr
+Encoding: UTF-8
+LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0

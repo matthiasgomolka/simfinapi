@@ -3,3 +3,9 @@ This package wraps the https://simfin.com/ API to make SimFin data easily availa
 To do:
 
 - allow for api calls via ticker (instead of SimId)
+
+---
+
+Please note that the 'simfinapi' project is released with a
+[Contributor Code of Conduct](.github/CODE_OF_CONDUCT.md).
+By contributing to this project, you agree to abide by its terms.
