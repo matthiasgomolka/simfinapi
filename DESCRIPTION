@@ -15,15 +15,15 @@ License: GPL-3
 Depends: 
     R (>= 3.2)
 Imports: 
-    checkmate,
-    data.table,
-    future.apply,
-    glue,
-    jsonlite,
-    memoise,
-    purrr
+    checkmate (>= 2.0.0),
+    data.table (>= 1.12.8),
+    future.apply (>= 1.4.0),
+    glue (>= 1.3.2),
+    jsonlite (>= 1.6.1),
+    memoise (>= 1.1.0),
+    purrr (>= 0.3.3)
 Suggests: 
-    covr
+    covr (>= 3.5.0)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

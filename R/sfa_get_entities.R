@@ -5,12 +5,11 @@
 #' @importFrom data.table setDT
 #' @export
 sfa_get_entities <- function(api_key = getOption("sfa_api_key")) {
-    checkmate::assert_string(api_key, pattern = "[[:alnum:]]{32}")
+  checkmate::assert_string(api_key, pattern = "[[:alnum:]]{32}")
 
-    api_call <- glue::glue(
-        "https://simfin.com/api/v1/info/all-entities/?api-key={api_key}"
-    )
+  api_call <- glue::glue(
+    "https://simfin.com/api/v1/info/all-entities/?api-key={api_key}"
+  )
 
-    (data.table::setDT(sfa_memoise_fromJSON(api_call)))
+  (data.table::setDT(sfa_memoise_fromJSON(api_call)))
 }
-
