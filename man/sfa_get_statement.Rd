@@ -15,13 +15,18 @@ sfa_get_statement(
 \arguments{
 \item{simIds}{\verb{[integer]} SimFin IDs of the companies of interest.}
 
-\item{statement}{\verb{[character(1)]} One of "pl" (Profit and Loss), "bs" (Balance Sheet), "cf" (Cash Flow).}
+\item{statement}{\verb{[character(1)]} One of "pl" (Profit and Loss), "bs"
+(Balance Sheet), "cf" (Cash Flow).}
 
-\item{period}{\verb{[character(1)]} One of "Q1" "Q2" "Q3" "Q4" "H1" "H2" "9M" "FY" "TTM". See \code{ptype} on https://simfin.com/api/v1/documentation/#operation/getCompStatementStandardised for details.}
+\item{period}{\verb{[character(1)]} One of "Q1" "Q2" "Q3" "Q4" "H1" "H2" "9M" "FY"
+"TTM". See \code{ptype} on
+https://simfin.com/api/v1/documentation/#operation/getCompStatementStandardised
+for details.}
 
 \item{fin_year}{\verb{[integer(1)]} The financial year of interest.}
 
-\item{api_key}{\verb{[character(1)]} Your SimFin API key. For simplicity use \code{Sys.setenv(sfa_api_key = "yourapikey")}.}
+\item{api_key}{\verb{[character(1)]} Your SimFin API key. For simplicity use
+\code{options(sfa_api_key = "yourapikey")}.}
 }
 \description{
 Get basic company information

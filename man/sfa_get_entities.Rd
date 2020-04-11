@@ -4,10 +4,11 @@
 \alias{sfa_get_entities}
 \title{Get a table of all available SimFin ID's with ticker and name.}
 \usage{
-sfa_get_entities(api_key = Sys.getenv("sfa_api_key"))
+sfa_get_entities(api_key = getOption("sfa_api_key"))
 }
 \arguments{
-\item{api_key}{\verb{[character(1)]} Your SimFin API key. For simplicity use \code{sys.setenv(sfa_api_key = "yourapikey")}.}
+\item{api_key}{\verb{[character(1)]} Your SimFin API key. For simplicity use
+\code{options(sfa_api_key = "yourapikey")}.}
 }
 \description{
 Get a table of all available SimFin ID's with ticker and name.

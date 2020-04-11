@@ -7,13 +7,14 @@
 sfa_get_id_(find, type, api_key = getOption("sfa_api_key"))
 }
 \arguments{
-\item{find}{\verb{[character(1)]} The string to search for.}
+\item{find}{\link{character} The string to search for.}
 
-\item{api_key}{\verb{[character(1)]} Your SimFin API key. I recommend setting the
+\item{type}{\link{character} Either search by "ticker" (default) or by
+"name-search".}
+
+\item{api_key}{\link{character} Your SimFin API key. I recommend setting the
 API key globally via \code{options(sfa_api_key = "yourapikey")} and omit the
 \code{api_key} argument in all simfinapi functions.}
-
-\item{by}{\verb{[character(1)]} Either search by "ticker" (default) or by "name".}
 }
 \description{
 Find single SimFin ID's

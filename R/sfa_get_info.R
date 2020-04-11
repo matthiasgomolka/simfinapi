@@ -4,11 +4,13 @@
 #' @importFrom data.table as.data.table
 sfa_get_info_ <- function(simId,
                           api_key = Sys.getenv("sfa_api_key")) {
-    api_call <- paste0(Sys.getenv("sfa_api"),
-                       "companies/id/", simId,
-                       "?api-key=", api_key)
+  api_call <- paste0(
+    Sys.getenv("sfa_api"),
+    "companies/id/", simId,
+    "?api-key=", api_key
+  )
 
-    data.table::setDT(sfa_memoise_fromJSON(api_call))
+  data.table::setDT(sfa_memoise_fromJSON(api_call))
 }
 
 #' Get basic company information
@@ -18,9 +20,8 @@ sfa_get_info_ <- function(simId,
 #' @importFrom data.table rbindlist
 sfa_get_info <- function(simIds,
                          api_key = options("sfa_api_key")) {
-
-    result_list <- future.apply::future_lapply(simIds, sfa_get_info_, api_key)
-    dt <- data.table::rbindlist(result_list)
-    data.table::setkeyv(dt, Sys.getenv("sfa_key_var"))
-    return(dt)
+  result_list <- future.apply::future_lapply(simIds, sfa_get_info_, api_key)
+  dt <- data.table::rbindlist(result_list)
+  data.table::setkeyv(dt, Sys.getenv("sfa_key_var"))
+  return(dt)
 }

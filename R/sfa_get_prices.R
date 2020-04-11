@@ -1,41 +1,41 @@
 sfa_get_price_ <- function(
-    simId,
+                           simId,
+                           start,
+                           end,
+                           api_key = getOption("sfa_api_key")) {
+  checkmate::assert_int(simId, lower = 1L, upper = 999999L)
+  checkmate::assert_string(
     start,
-    end,
-    api_key = getOption("sfa_api_key")
-) {
-    checkmate::assert_int(simId, lower = 1L, upper = 999999L)
-    checkmate::assert_string(
-        start,
-        pattern = "^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}$"
-    )
+    pattern = "^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}$"
+  )
 
-    api_call <- glue::glue(
-        "https://simfin.com/api/v1/companies/id/{simId}/shares/prices?api-key={api_key}&start={start}&end={end}"
-    )
+  api_call <- glue::glue(
+    "https://simfin.com/api/v1/companies/id/{simId}/shares/prices?api-key={api_key}&start={start}&end={end}"
+  )
 
-    raw <- sfa_memoise_fromJSON(api_call)
-    dt <- data.table::data.table(
-        simId = simId,
-        raw[["priceData"]],
-        key = "simId"
-    )
-    set(dt, j = "date", value = as.Date(dt[["date"]]))
-    for (var in c("closeAdj", "splitCoef")) {
-        set(dt, j = var, value = as.numeric(dt[[var]]))
-    }
-    return(dt)
+  raw <- sfa_memoise_fromJSON(api_call)
+  dt <- data.table::data.table(
+    simId = simId,
+    raw[["priceData"]],
+    key = "simId"
+  )
+  set(dt, j = "date", value = as.Date(dt[["date"]]))
+  for (var in c("closeAdj", "splitCoef")) {
+    set(dt, j = var, value = as.numeric(dt[[var]]))
+  }
+  return(dt)
 }
 
 
 sfa_get_price <- function(
-    simIds,
-    start,
-    end,
-    api_key = options("sfa_api_key")
-) {
-    result_list <- lapply(simIds, sfa_get_price_,
-                          start, end, api_key)
+                          simIds,
+                          start,
+                          end,
+                          api_key = options("sfa_api_key")) {
+  result_list <- lapply(
+    simIds, sfa_get_price_,
+    start, end, api_key
+  )
 
-    data.table::rbindlist(result_list)
+  data.table::rbindlist(result_list)
 }
