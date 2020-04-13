@@ -1,3 +1,7 @@
+ <!-- badges: start -->
+  [![R build status](https://github.com/Plebejer/simfinapi/workflows/R-CMD-check/badge.svg)](https://github.com/Plebejer/simfinapi/actions)
+  <!-- badges: end -->
+ 
  [![Travis build status](https://travis-ci.org/Plebejer/simfinapi.svg?branch=master)](https://travis-ci.org/Plebejer/simfinapi)
  [![Codecov test coverage](https://codecov.io/gh/Plebejer/simfinapi/branch/master/graph/badge.svg)](https://codecov.io/gh/Plebejer/simfinapi?branch=master)
 
@@ -11,4 +15,4 @@ To do:
 
 Please note that the 'simfinapi' project is released with a
 [Contributor Code of Conduct](.github/CODE_OF_CONDUCT.md).
-By contributing to this project, you agree to abide by its terms.
+By contributing to this project, you agree to abide by its terms.   
