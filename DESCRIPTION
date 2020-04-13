@@ -7,9 +7,9 @@ Authors@R:
            family = "Gomolka",
            role = c("aut", "cre"),
            email = "matthias.gomolka@posteo.de")
-Description: This package wraps the https://simfin.com/ API
-    to make SimFin data easily available in R. To obtain an SimFin API key
-    (and thus to use this package), you need to register at
+Description: Through simfinapi, you can intuitively access the SimFin API 
+    (https://simfin.com/) to make SimFin data easily available in R. To obtain
+    an SimFin API key (and thus to use this package), you need to register at
     https://simfin.com/login. 
 License: GPL-3
 Depends: 
