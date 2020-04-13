@@ -1,5 +1,5 @@
 <!-- badges: start -->
-[![R build status](https://github.com/Plebejer/simfinapi/workflows/check-full/badge.svg)](https://github.com/Plebejer/simfinapi/actions)
+[![R build status](https://github.com/Plebejer/simfinapi/workflows/R-CMD-check/badge.svg)](https://github.com/Plebejer/simfinapi/actions)
 [![R build status](https://github.com/Plebejer/simfinapi/workflows/test-coverage/badge.svg)](https://github.com/Plebejer/simfinapi/actions)
 <!-- badges: end -->
 
