@@ -3,13 +3,28 @@
 #'   `options(sfa_api_key = "yourapikey")`.
 #' @importFrom checkmate assert_string
 #' @importFrom data.table setDT
+#' @importFrom httr content
+#' @importFrom jsonlite fromJSON
 #' @export
 sfa_get_entities <- function(api_key = getOption("sfa_api_key")) {
   checkmate::assert_string(api_key, pattern = "[[:alnum:]]{32}")
 
-  api_call <- glue::glue(
-    "https://simfin.com/api/v1/info/all-entities/?api-key={api_key}"
+  response <- mem_GET(
+    "https://simfin.com",
+    path = list("api/v1/info/all-entities"),
+    query = list("api-key" = api_key)
   )
 
-  (data.table::setDT(sfa_memoise_fromJSON(api_call)))
+  content <- httr::content(response, as = "text")
+  content <- jsonlite::fromJSON(content)
+
+  if (names(content)[[1]] == "error") {
+    stop(content, call. = FALSE)
+  }
+
+  data.table::setDT(content)
+  content
 }
+
+
+

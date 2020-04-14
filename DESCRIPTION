@@ -25,6 +25,7 @@ Imports:
     httr
 Suggests: 
     covr (>= 3.5.0),
+    secret,
     testthat
 Encoding: UTF-8
 LazyData: true
