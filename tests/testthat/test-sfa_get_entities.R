@@ -20,7 +20,7 @@ test_that("sfa_get_entities returns error if api key is incorrect", {
         "Assertion on 'api_key' failed: Must comply to pattern '[[:alnum:]]{32}'.",
         fixed = TRUE
     )
-    expect_error(
+    expect_warning(
         sfa_get_entities("invalidApiKkeyOfCorrectLength123"),
         "Error, API key not found. Check your key at simfin.com/data/access/api or contact info@simfin.com",
         fixed = TRUE

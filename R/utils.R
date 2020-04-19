@@ -5,6 +5,33 @@ mem_GET <- memoise::memoise(
     cache = memoise::cache_filesystem(getOption("sfa_cache_dir", tempdir()))
 )
 
+#' @importFrom httr content
+#' @importFrom jsonlite fromJSON
+#' @importFrom utils hasName
+call_api <- function(...) {
+    # call API and transform result to list
+    response <- mem_GET(
+        url = "https://simfin.com",
+        ...
+    )
+    content <- httr::content(response, as = "text")
+    content <- jsonlite::fromJSON(content)
+
+    # stop if there was an error
+    if (utils::hasName(content, "error")) {
+        warning(content[["error"]], call. = FALSE)
+        return(NULL)
+    }
+
+    content
+}
+
+#' @importFrom data.table rbindlist setkeyv
+gather_result <- function(result_list) {
+    result_DT <- data.table::rbindlist(result_list)
+    data.table::setkeyv(result_DT, "simId")
+    result_DT
+}
 
 # not yet working properly; use tidyr::unnest()
 # sfa_unnest_statement <- function(dt) {

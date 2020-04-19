@@ -10,32 +10,20 @@
 #' @importFrom data.table data.table
 #' @importFrom glue glue
 sfa_get_id_ <- function(find, type, api_key = getOption("sfa_api_key")) {
-  response <- mem_GET(
-    "https://simfin.com",
-    path =  list("api/v1/info/find-id", type, find),
+  find <- gsub(" ", "+", find, fixed = TRUE)
+  content <- call_api(
+    path = list("api/v1/info/find-id", type, find),
     query = list("api-key" = api_key)
   )
 
-  content <- httr::content(response, as = "text")
-  content <- jsonlite::fromJSON(content)
-
-  # stop if there was an error
-  error <- names(content)[[1L]] == "error"
-  if (length(error) == 0L) error <- FALSE
-  if (error) {
-    stop(content, call. = FALSE)
-  }
-
   # warn if there was no match
-  if (length(content) == 0) {
+  if (is.null(content)) {
     warning(call. = FALSE, sprintf("No match for '%s'.", find))
-    return(
-      data.table::data.table(
+    content <- data.table::data.table(
         simId = integer(),
         ticker = character(),
         name = character()
       )
-    )
   }
 
   content
@@ -49,9 +37,13 @@ sfa_get_id_ <- function(find, type, api_key = getOption("sfa_api_key")) {
 #'   `api_key` argument in all simfinapi functions.
 #' @importFrom checkmate assert_character assert_choice assert_string
 #' @importFrom future.apply future_lapply
-#' @importFrom data.table rbindlist setorderv
+#' @importFrom data.table rbindlist setkeyv
 #' @export
-sfa_get_id <- function(find, by = "ticker", api_key = getOption("sfa_api_key")) {
+sfa_get_id <- function(
+  find,
+  by = "ticker",
+  api_key = getOption("sfa_api_key")
+) {
   # input checks
   checkmate::assert_character(find)
   checkmate::assert_choice(by, c("ticker", "name"))
@@ -64,7 +56,5 @@ sfa_get_id <- function(find, by = "ticker", api_key = getOption("sfa_api_key")) 
 
   # make API calls
   result_list <- future.apply::future_lapply(find, sfa_get_id_, type, api_key)
-  result_DT <- data.table::rbindlist(result_list)
-  data.table::setorderv(result_DT, by)
-  result_DT
+  gather_result(result_list)
 }

@@ -7,6 +7,8 @@ Authors@R:
            family = "Gomolka",
            role = c("aut", "cre"),
            email = "matthias.gomolka@posteo.de")
+URL: https://github.com/Plebejer/simfinapi
+BugReports: https://github.com/Plebejer/simfinapi/issues
 Description: Through simfinapi, you can intuitively access the SimFin API 
     (<https://simfin.com/>) to make SimFin data easily available in R. To obtain
     an SimFin API key (and thus to use this package), you need to register at
@@ -21,8 +23,8 @@ Imports:
     glue (>= 1.3.2),
     jsonlite (>= 1.6.1),
     memoise (>= 1.1.0),
-    purrr (>= 0.3.3),
-    httr
+    httr,
+    utils
 Suggests: 
     covr (>= 3.5.0),
     secret,

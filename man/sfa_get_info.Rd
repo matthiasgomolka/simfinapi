@@ -4,12 +4,13 @@
 \alias{sfa_get_info}
 \title{Get basic company information}
 \usage{
-sfa_get_info(simIds, api_key = options("sfa_api_key"))
+sfa_get_info(simId, api_key = getOption("sfa_api_key"))
 }
 \arguments{
-\item{simIds}{\verb{[integer]} SimFin IDs of the companies of interest.}
+\item{simId}{\verb{[integer]} SimFin IDs of the companies of interest.}
 
-\item{api_key}{\verb{[character(1)]} Your SimFin API key. For simplicity use \code{sys.setenv(sfa_api_key = "yourapikey")}.}
+\item{api_key}{\verb{[character(1)]} Your SimFin API key. For simplicity use
+\code{options(sfa_api_key = "yourapikey")}.}
 }
 \description{
 Get basic company information

@@ -4,7 +4,8 @@ context("sfa_get_id")
 ref_msft <- data.table(
     simId = 59265L,
     ticker = "MSFT",
-    name = "MICROSOFT CORP"
+    name = "MICROSOFT CORP",
+    key = "simId"
 )
 test_that("search for single id works", {
     expect_identical(sfa_get_id("MSFT"), ref_msft)
@@ -19,6 +20,8 @@ ref_msft_gs <- rbind(
     ),
     ref_msft
 )
+setkeyv(ref_msft_gs, "simId")
+
 test_that("search for two id's works", {
     expect_identical(sfa_get_id(c("MSFT", "GS")), ref_msft_gs)
     expect_identical(
@@ -30,7 +33,8 @@ test_that("search for two id's works", {
 ref_0 <- data.table::data.table(
     simId = integer(),
     ticker = character(),
-    name = character()
+    name = character(),
+    key = "simId"
 )
 test_that("search for incorrect terms yields no result", {
     expect_warning(
@@ -57,7 +61,7 @@ test_that("sfa_get_id returns error if api key is incorrect", {
         "Assertion on 'api_key' failed: Must comply to pattern '[[:alnum:]]{32}'.",
         fixed = TRUE
     )
-    expect_error(
+    expect_warning(
         sfa_get_id("MSFT", api_key = "invalidApiKkeyOfCorrectLength123"),
         "Error, API key not found. Check your key at simfin.com/data/access/api or contact info@simfin.com",
         fixed = TRUE
