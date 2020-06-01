@@ -28,6 +28,17 @@ call_api <- function(...) {
         return(NULL)
     }
 
+    # catch empty results
+    if (identical(content, list())) {
+        warning(
+            "SimFin API delivered empty response.\nStatus ", response$status,
+            " for '", response$url, "'.\n",
+            "See 'https://simfin.com/api/v1/documentation/' for details.",
+            call. = FALSE
+        )
+        return(NULL)
+    }
+
     content
 }
 
@@ -37,10 +48,3 @@ gather_result <- function(result_list) {
     data.table::setkeyv(result_DT, "simId")
     result_DT
 }
-
-# not yet working properly; use tidyr::unnest()
-# sfa_unnest_statement <- function(dt) {
-#     list_col <- names(dt)[vapply(dt, is.list, FUN.VALUE = logical(1))]
-#     other_cols <- setdiff(names(dt), list_col)
-#     dt[, unlist(dt[[list_col]], recursive = FALSE), by = other_cols]
-# }

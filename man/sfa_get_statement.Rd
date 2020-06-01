@@ -7,9 +7,9 @@
 sfa_get_statement(
   simIds,
   statement,
-  period,
+  period = "TTM",
   fin_year,
-  api_key = Sys.getenv("sfa_api_key")
+  api_key = getOption("sfa_api_key")
 )
 }
 \arguments{
