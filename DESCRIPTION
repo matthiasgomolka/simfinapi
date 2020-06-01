@@ -27,7 +27,6 @@ Imports:
     utils
 Suggests: 
     covr (>= 3.5.0),
-    here,
     secret,
     testthat
 Encoding: UTF-8

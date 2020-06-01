@@ -1,14 +1,30 @@
-#' @importFrom memoise memoise cache_filesystem
-#' @importFrom httr GET
-mem_GET <- memoise::memoise(
-    httr::GET,
-    cache = memoise::cache_filesystem(getOption("sfa_cache_dir", tempdir()))
-)
-
 #' @importFrom httr content
 #' @importFrom jsonlite fromJSON
 #' @importFrom utils hasName
+#' @importFrom memoise memoise cache_filesystem
+#' @importFrom httr GET
 call_api <- function(...) {
+    # check for cache setup
+    if (dir.exists(getOption("sfa_cache_dir"))) {
+        mem_GET <- memoise::memoise(
+            httr::GET,
+            cache = memoise::cache_filesystem(tempdir())
+        )
+        warning(
+            "Cache is not set up (correctly)! API results will only be cached ",
+            "during this session. To cache results over the end of this ",
+            "session, use\n\n",
+            "    options(sfa_cache_dir = \"existing/dir/of/your/choice\")\n\n",
+            "to specify a non-temporary directory. See ",
+            "'?memoise::cache_filesystem()' for additional information.",
+            call. = FALSE)
+    } else {
+        mem_GET <- memoise::memoise(
+            httr::GET,
+            cache = memoise::cache_filesystem(getOption("sfa_cache_dir"))
+        )
+    }
+
     # call API and transform result to list
     response <- mem_GET(
         url = "https://simfin.com",
