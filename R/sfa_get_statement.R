@@ -11,18 +11,23 @@
 #'   `option(sfa_api_key = "yourapikey")`.
 #' @importFrom data.table data.table set .SD
 sfa_get_statement_ <- function(
-                               simId,
-                               statement,
-                               period,
-                               fin_year,
-                               api_key = getOption("sfa_api_key")) {
-  api_call <- glue::glue(
-    "https://simfin.com/api/v1/companies/id/{simId}/statements/standardised?api-key={api_key}&stype={statement}&ptype={period}&fyear={fin_year}"
+  simId,
+  statement,
+  period,
+  fin_year,
+  api_key = getOption("sfa_api_key")
+) {
+  content <- call_api(
+    path = sprintf("api/v1/companies/id/%s/statements/standardised", simId),
+    query = list(
+      "stype" = statement,
+      "ptype" = period,
+      "fyear" = fin_year,
+      "api-key" = api_key
+    )
   )
 
-  raw <- sfa_memoise_fromJSON(api_call)
-
-  if (is.null(raw)) {
+  if (is.null(content)) {
     return(NULL)
   }
 
@@ -31,19 +36,31 @@ sfa_get_statement_ <- function(
     statement = statement,
     period = period,
     fin_year = fin_year,
-    ref_date = raw$periodEndDate,
-    raw$values,
+    period_end_date = content$periodEndDate,
+    calculated = content$calculated,
+    calculation_scheme = list(content$calculationScheme),
+    data_quality_check = content$dataQualityCheck,
+    industry_template = content$industryTemplate,
+    content$values,
     key = "simId"
   )
 
-  data.table::set(dt, j = "ref_date", value = as.Date(dt[["ref_date"]]))
+  data.table::set(
+    dt, j = "period_end_date", value = as.Date(dt$period_end_date)
+  )
+
   for (var in c("fin_year", "tid", "uid", "parent_tid", "displayLevel")) {
     data.table::set(dt, j = var, value = as.integer(dt[[var]]))
   }
+
   for (var in paste0("value", c("Assigned", "Calculated", "Chosen"))) {
     data.table::set(dt, j = var, value = as.numeric(dt[[var]]))
+    data.table::set(
+      dt, i = which(dt[[var]] == 0), j = var, value = NA_real_
+    )
   }
-  dt[, list(values = list(.SD)), by = c("simId", "statement", "period", "fin_year", "ref_date")]
+
+  dt
 }
 
 #' Get basic company information
@@ -62,16 +79,18 @@ sfa_get_statement_ <- function(
 #' @importFrom data.table rbindlist
 #' @export
 sfa_get_statement <- function(
-                              simIds,
-                              statement,
-                              period,
-                              fin_year,
-                              api_key = Sys.getenv("sfa_api_key")) {
+  simIds,
+  statement,
+  period = "TTM",
+  fin_year,
+  api_key = getOption("sfa_api_key")
+) {
   checkmate::assert_choice(statement, c("pl", "bs", "cf"))
   checkmate::assert_choice(
     period,
     c("Q1", "Q2", "Q3", "Q4", "H1", "H2", "9M", "FY", "TTM")
   )
+  # checkmate::assert_integerish()
 
   result_list <- future.apply::future_lapply(
     simIds, sfa_get_statement_, statement, period, fin_year, api_key

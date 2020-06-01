@@ -15,5 +15,6 @@ sfa_get_entities <- function(api_key = getOption("sfa_api_key")) {
   if (!is.null(content)) {
     data.table::setDT(content, key = "simId")
   }
+
   content
 }

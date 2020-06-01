@@ -19,7 +19,12 @@ call_api <- function(...) {
 
     # stop if there was an error
     if (utils::hasName(content, "error")) {
-        warning(content[["error"]], call. = FALSE)
+        warning(
+            "SimFin API: ", content[["error"]], ".\nStatus ", response$status,
+            " for '", response$url, "'.\n",
+            "See 'https://simfin.com/api/v1/documentation/' for details.",
+            call. = FALSE
+        )
         return(NULL)
     }
 
