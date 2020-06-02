@@ -71,8 +71,9 @@ jobs:
 
       - name: Make API key available
         env:
-          SIMFIN_API_KEY: ${{ secrets.SIMFIN_API_KEY }}
-        run: echo "API key set"
+          FAKE_SECRET: ${{ secrets.FAKE_SECRET }}
+        run: echo "$FAKE_SECRET"
+        shell: bash
 
 
       - name: Check
