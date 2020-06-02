@@ -1,0 +1,30 @@
+---
+output:
+  md_document:
+    variant: gfm
+html_preview: false
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r include=FALSE}
+library(badger)
+```
+
+`r badge_lifecycle("experimental")`
+`r badger::badge_cran_release(color = "orange")`
+[![R build status](https://github.com/Plebejer/simfinapi/workflows/R-CMD-check/badge.svg)](https://github.com/Plebejer/sdcLog/actions)
+`r badger::badge_codecov()`
+`r badge_dependencies()`
+
+---
+
+This package wraps the https://simfin.com/ API to make SimFin data easily
+available in R. To obtain a SimFin API key (and thus to use this package), you
+need to register at https://simfin.com/login.
+
+---
+
+Please note that the 'simfinapi' project is released with a
+[Contributor Code of Conduct](.github/CODE_OF_CONDUCT.md).
+By contributing to this project, you agree to abide by its terms.   
