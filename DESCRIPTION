@@ -1,12 +1,13 @@
 Type: Package
 Package: simfinapi
-Title: What the Package Does (Title Case)
+Title: Accessing SimFin data
 Version: 0.1.0
 Authors@R: 
     person(given = "Matthias",
            family = "Gomolka",
            role = c("aut", "cre"),
            email = "matthias.gomolka@posteo.de")
+Maintainer: Matthias Gomolka <matthias.gomolka@posteo.de>
 Description: Through simfinapi, you can intuitively access the
     SimFin API (<https://simfin.com/>) to make SimFin data easily
     available in R. To obtain an SimFin API key (and thus to use this
