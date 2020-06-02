@@ -1,6 +1,6 @@
 Type: Package
 Package: simfinapi
-Title: Accessing SimFin data
+Title: Accessing SimFin Data
 Version: 0.1.0
 Authors@R: 
     person(given = "Matthias",
