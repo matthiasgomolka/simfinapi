@@ -21,4 +21,4 @@ if (sfa_api_key == "") {
   )
 }
 
-options(sfa_cache_dir = tempdir(check = TRUE))
+options(sfa_cache_dir = tempdir())
