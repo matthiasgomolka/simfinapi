@@ -75,6 +75,8 @@ jobs:
       - name: Make API key available
         env:
           SIMFIN_API_KEY: ${{ secrets.SIMFIN_API_KEY }}
+        run: echo "API key set"
+
 
       - name: Check
         env:
