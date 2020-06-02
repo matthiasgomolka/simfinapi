@@ -3,4 +3,4 @@
 .RData
 .Ruserdata
 *_api_key.R
-inst/vault/
+inst/vault
