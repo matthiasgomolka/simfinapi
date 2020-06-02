@@ -19,6 +19,8 @@ if (sfa_api_key == "") {
       )
     }
   )
+} else {
+  options(sfa_api_key = sfa_api_key)
 }
 
 options(sfa_cache_dir = tempdir())
