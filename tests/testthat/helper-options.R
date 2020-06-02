@@ -1,4 +1,5 @@
 # sfa_api_key <- Sys.getenv("SIMFIN_API_KEY")
+sfa_api_key <- ""
 
 if (sfa_api_key == "") {
   tryCatch(
