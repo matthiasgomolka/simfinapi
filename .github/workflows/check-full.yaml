@@ -67,13 +67,6 @@ jobs:
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
 
-      - name: Check via bash
-        env:
-          _R_CHECK_CRAN_INCOMING_REMOTE_: false
-          SIMFIN_API_KEY: ${{ secrets.SIMFIN_API_KEY }}
-        run: Rscript -e 'rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")'
-        shell: bash
-
       - name: Check
         env:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
