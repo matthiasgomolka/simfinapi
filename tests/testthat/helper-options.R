@@ -1,5 +1,5 @@
-# sfa_api_key <- Sys.getenv("SIMFIN_API_KEY")
-sfa_api_key <- Sys.getenv("FAKE_SECRET")
+sfa_api_key <- Sys.getenv("SIMFIN_API_KEY")
+# sfa_api_key <- Sys.getenv("FAKE_SECRET")
 
 
 if (sfa_api_key == "") {
