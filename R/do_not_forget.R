@@ -1,1 +1,0 @@
-# dcast(setDT(tidyr::unnest(stmts, cols = "values"))[uid %in% c(73, 84)], simId ~ standardisedName, value.var = "valueChosen")[, `Debt to Equity Ratio` := `Total Liabilities` / `Total Equity`][my_ids]

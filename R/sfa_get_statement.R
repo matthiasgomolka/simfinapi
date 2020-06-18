@@ -90,10 +90,73 @@ sfa_get_statement <- function(
     period,
     c("Q1", "Q2", "Q3", "Q4", "H1", "H2", "9M", "FY", "TTM")
   )
-  # checkmate::assert_integerish()
+  checkmate::assert_integerish(fin_year)
 
   result_list <- future.apply::future_lapply(
     simIds, sfa_get_statement_, statement, period, fin_year, api_key
   )
   data.table::rbindlist(result_list)
+}
+
+#' Get Profit and Loss Statements
+#' @description Convenience function which calls [sfa_get_statement] with
+#'   `statement = "pl"`.
+#' @param simIds `[integer]` SimFin IDs of the companies of interest.
+#' @param period `[character(1)]` One of "Q1" "Q2" "Q3" "Q4" "H1" "H2" "9M" "FY"
+#'   "TTM". See `ptype` on
+#'   https://simfin.com/api/v1/documentation/#operation/getCompStatementStandardised
+#'   for details.
+#' @param fin_year `[integer(1)]` The financial year of interest.
+#' @param api_key `[character(1)]` Your SimFin API key. For simplicity use
+#'   `options(sfa_api_key = "yourapikey")`.
+#' @importFrom checkmate assert_choice
+#' @importFrom future.apply future_lapply
+#' @importFrom data.table rbindlist
+#' @export
+sfa_get_pl <- function(
+  simIds, period = "TTM", fin_year, api_key = getOption("sfa_api_key")
+) {
+  sfa_get_statement(simIds, "pl", period, fin_year, api_key)
+}
+
+#' Get Balance Sheet Statements
+#' @description Convenience function which calls [sfa_get_statement] with
+#'   `statement = "bs"`.
+#' @param simIds `[integer]` SimFin IDs of the companies of interest.
+#' @param period `[character(1)]` One of "Q1" "Q2" "Q3" "Q4" "H1" "H2" "9M" "FY"
+#'   "TTM". See `ptype` on
+#'   https://simfin.com/api/v1/documentation/#operation/getCompStatementStandardised
+#'   for details.
+#' @param fin_year `[integer(1)]` The financial year of interest.
+#' @param api_key `[character(1)]` Your SimFin API key. For simplicity use
+#'   `options(sfa_api_key = "yourapikey")`.
+#' @importFrom checkmate assert_choice
+#' @importFrom future.apply future_lapply
+#' @importFrom data.table rbindlist
+#' @export
+sfa_get_bs <- function(
+  simIds, period = "TTM", fin_year, api_key = getOption("sfa_api_key")
+) {
+  sfa_get_statement(simIds, "bs", period, fin_year, api_key)
+}
+
+#' Get Cash Flow Statements
+#' @description Convenience function which calls [sfa_get_statement] with
+#'   `statement = "cf"`.
+#' @param simIds `[integer]` SimFin IDs of the companies of interest.
+#' @param period `[character(1)]` One of "Q1" "Q2" "Q3" "Q4" "H1" "H2" "9M" "FY"
+#'   "TTM". See `ptype` on
+#'   https://simfin.com/api/v1/documentation/#operation/getCompStatementStandardised
+#'   for details.
+#' @param fin_year `[integer(1)]` The financial year of interest.
+#' @param api_key `[character(1)]` Your SimFin API key. For simplicity use
+#'   `options(sfa_api_key = "yourapikey")`.
+#' @importFrom checkmate assert_choice
+#' @importFrom future.apply future_lapply
+#' @importFrom data.table rbindlist
+#' @export
+sfa_get_cf <- function(
+  simIds, period = "TTM", fin_year, api_key = getOption("sfa_api_key")
+) {
+  sfa_get_statement(simIds, "cf", period, fin_year, api_key)
 }
