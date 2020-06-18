@@ -2,5 +2,4 @@
 .Rhistory
 .RData
 .Ruserdata
-*_api_key.R
-inst/vault
+my_api_key.R
