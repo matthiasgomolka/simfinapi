@@ -12,20 +12,24 @@ sfa_get_info_ <- function(
     query = list("api-key" = api_key)
   )
 
-  if (!is.null(content)) {
-    data.table::setDT(content)
-  } else {
-    content <- data.table::data.table(
-      simId = integer(),
-      ticker = character(),
-      name = character(),
-      fyearEnd = integer(),
-      employees = integer(),
-      sectorName = character(),
-      sectorCode = integer()
-    )
+  # return early if no content returnded
+  if (is.null(content)) {
+    return(NULL)
   }
-  content
+
+  # set NULL values to NA to avoid errors in setDT
+  # (as.data.table is no options since it omits NULL elements)
+  content[which(vapply(content, is.null, FUN.VALUE = logical(1L)))] <- NA
+
+  dt <- data.table::setDT(content)
+  data.table::set(dt, j = "simId", value = as.integer(dt[["simId"]]))
+  data.table::set(dt, j = "ticker", value = as.character(dt[["ticker"]]))
+  data.table::set(dt, j = "name", value = as.character(dt[["name"]]))
+  data.table::set(dt, j = "fyearEnd", value = as.integer(dt[["fyearEnd"]]))
+  data.table::set(dt, j = "employees", value = as.integer(dt[["employees"]]))
+  data.table::set(dt, j = "sectorName", value = as.character(dt[["sectorName"]]))
+  data.table::set(dt, j = "sectorCode", value = as.integer(dt[["sectorCode"]]))
+  dt
 }
 
 #' Get basic company information
