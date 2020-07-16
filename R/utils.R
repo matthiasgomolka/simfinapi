@@ -61,6 +61,9 @@ call_api <- function(...) {
 
 #' @importFrom data.table rbindlist setkeyv
 gather_result <- function(result_list) {
+    if (all(vapply(result_list, is.null, FUN.VALUE = logical(1L)))) {
+        return(invisible(NULL))
+    }
     result_DT <- data.table::rbindlist(result_list, fill = TRUE)
     data.table::setkeyv(result_DT, "simId")
     result_DT
