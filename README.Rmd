@@ -13,7 +13,7 @@ library(badger)
 
 `r badge_lifecycle("experimental")`
 `r badger::badge_cran_release(color = "orange")`
-[![R build status](https://github.com/Plebejer/simfinapi/workflows/R-CMD-check/badge.svg)](https://github.com/Plebejer/sdcLog/actions)
+[![R build status](https://github.com/Plebejer/simfinapi/workflows/R-CMD-check/badge.svg)](https://github.com/Plebejer/simfinapi/actions)
 `r badger::badge_codecov()`
 `r badge_dependencies()`
 
