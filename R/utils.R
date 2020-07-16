@@ -1,5 +1,5 @@
 #' @importFrom httr content
-#' @importFrom jsonlite fromJSON
+#' @importFrom RcppSimdJson fparse
 #' @importFrom utils hasName
 #' @importFrom memoise memoise cache_filesystem
 #' @importFrom httr GET
@@ -32,7 +32,7 @@ call_api <- function(...) {
         ...
     )
     content <- httr::content(response, as = "text")
-    content <- jsonlite::fromJSON(content)
+    content <- RcppSimdJson::fparse(content)
 
     # stop if there was an error
     if (utils::hasName(content, "error")) {

@@ -6,7 +6,6 @@
 #'   API key globally via `options(sfa_api_key = "yourapikey")` and omit the
 #'   `api_key` argument in all simfinapi functions.
 #' @importFrom httr content
-#' @importFrom jsonlite fromJSON
 #' @importFrom data.table data.table
 #' @importFrom glue glue
 sfa_get_id_ <- function(find, type, api_key = getOption("sfa_api_key")) {
