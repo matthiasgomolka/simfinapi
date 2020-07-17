@@ -3,7 +3,7 @@
 [![](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![](https://www.r-pkg.org/badges/version/simfinapi?color=orange)](https://cran.r-project.org/package=simfinapi)
 [![R build
-status](https://github.com/Plebejer/simfinapi/workflows/R-CMD-check/badge.svg)](https://github.com/Plebejer/sdcLog/actions)
+status](https://github.com/Plebejer/simfinapi/workflows/R-CMD-check/badge.svg)](https://github.com/Plebejer/simfinapi/actions)
 [![](https://codecov.io/gh/Plebejer/simfinapi/branch/master/graph/badge.svg)](https://codecov.io/gh/Plebejer/simfinapi)
 [![Dependencies](https://tinyverse.netlify.com/badge/simfinapi)](https://cran.r-project.org/package=simfinapi)
 
