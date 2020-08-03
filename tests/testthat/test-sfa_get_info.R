@@ -4,11 +4,11 @@ context("sfa_get_info")
 ref <- data.table(
   simId = c(18L, 59265L),
   ticker = c("GOOG", "MSFT"),
-  name = c("Alphabet", "MICROSOFT CORP"),
-  fyearEnd = NA_integer_, #c(12L, 6L),
-  employees = NA_integer_, #c(98771L, 144000L),
+  name = c("Alphabet (Google)", "MICROSOFT CORP"),
+  employees = c(98771L, 144000L),
   sectorName = c("Online Media", "Application Software"),
   sectorCode = c(101002L, 101003L),
+  fyearEnd = c(12L, 6L),
   key = "simId"
 )
 
