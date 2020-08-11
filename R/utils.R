@@ -31,8 +31,8 @@ call_api <- function(...) {
         url = "https://simfin.com",
         ...
     )
-    content <- httr::content(response, as = "text")
-    content <- RcppSimdJson::fparse(content)
+
+    content <- RcppSimdJson::fparse(response$content)
 
     # stop if there was an error
     if (utils::hasName(content, "error")) {
