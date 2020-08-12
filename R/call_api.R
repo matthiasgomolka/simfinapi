@@ -9,16 +9,14 @@ call_api <- function(..., cache_dir) {
 
   if (is.null(cache_dir)) {
     warning(
-      "Option 'sfa_cache_dir' not set. Defaulting to 'tempdir()'.\n",
-      "Thus, API results will only be cached during this session. To ",
-      "cache results over the end of this session, set\n\n",
-      "    options(sfa_cache_dir = \"existing/dir/of/your/choice\")\n\n",
-      "to specify a non-temporary directory. See ",
-      "'?memoise::cache_filesystem()' for additional information. This ",
-      "warning is shown only once per session.",
+      "'cache_dir' not set. Defaulting to 'tempdir()'. Thus, API results will ",
+      "only be cached during this session. To learn why and how to cache ",
+      "results over the end of this session, see `?sfa_set_cache_dir`.\n\n",
+      "[This warning appears only once per session.]",
       call. = FALSE
     )
-    options(sfa_cache_dir = tempdir())
+    sfa_set_cache_dir(tempdir(), create = TRUE)
+    cache_dir <- getOption("sfa_cache_dir")
   }
 
   checkmate::assert_directory(cache_dir, access = "rw")

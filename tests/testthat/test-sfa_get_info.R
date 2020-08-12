@@ -41,3 +41,7 @@ test_that("search for non-existent Ticker / SimFinId yields warning", {
     fixed = TRUE
   )
 })
+
+test_that("supplying neiterh Ticker / SimFinId yields error", {
+  expect_error(sfa_get_info())
+})
