@@ -1,15 +1,30 @@
 ---
-output:
-  md_document:
-    variant: gfm
-html_preview: false
+output: github_document
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r include=FALSE}
 library(badger)
+library(knitr)
+library(ggplot2)
+
+opts_chunk$set(
+  fig.width = 8,
+  fig.height = 4.5,
+  dpi = 150,
+  collapse = TRUE,
+  comment = "#>",
+  out.width = "100%"
+)
+
+options(sfa_api_key = Sys.getenv("SIMFIN_API_KEY"))
+options(sfa_cache_dir = tempdir())
+
+theme_set(theme_minimal())
 ```
+
+# simfinapi
 
 `r badge_lifecycle("experimental")`
 `r badger::badge_cran_release(color = "orange")`
@@ -17,10 +32,83 @@ library(badger)
 `r badger::badge_codecov()`
 `r badge_dependencies()`
 
-This package wraps the https://simfin.com/ API to make SimFin data easily
-available in R. To obtain a SimFin API key (and thus to use this package), you
-need to register at https://simfin.com/login.
+## What does simfinapi do?
+simfinapi wraps the https://simfin.com/ Web-API to make SimFin data easily
+available in R. 
 
+*To use the package, you need to register at https://simfin.com/login and obtain
+a SimFin API key.*
+
+## Example
+
+In this example, we download some stock price data and turn these into a simple
+plot.
+```{r download_data}
+# load package
+library(simfinapi)
+
+# download stock price data
+tickers <- c("AMZN", "GOOG") # Amazon, Google
+prices <- sfa_get_prices(tickers)
+```
+
+Please note that all functions in simfinapi start with the prefix `sfa_`. This
+makes it easy to find all available functionality.
+
+The downloaded data looks like this:
+
+```{r show_data, echo=FALSE}
+kable(head(prices))
+```
+
+Let's turn that into a simple plot.
+
+```{r plot_data}
+# load ggplot2
+library(ggplot2)
+
+# create plot
+ggplot(prices) +
+  aes(x = Date, y = Close, color = Ticker) +
+  geom_line()
+```
+
+Suppose we would like to display the actual company name instead of the ticker.
+To do so, we download additional company information and merge it to the
+`prices` data:
+
+```{r download_info}
+company_info <- sfa_get_info(tickers)
+```
+
+`company_info` contains these information:
+
+```{r show_info, echo=FALSE}
+kable(company_info)
+```
+
+Now we merge both datasets and recreate the plot with the actual company names.
+
+```{r recreate_plot}
+# merge data
+merged <- merge(prices, company_info, by = "Ticker")
+
+# recreate plot
+ggplot(merged) +
+  aes(x = Date, y = Close, color = `Company Name`) +
+  geom_line()
+```
+
+## Installation
+
+simfinapi is not yet available on [CRAN](https://cran.r-project.org/), but you
+can install it from [GitHub](https://github.com/Plebejer/simfinapi):
+
+```{r installation, eval=FALSE}
+remotes::install_github("https://github.com/Plebejer/simfinapi")
+```
+
+## Code of Conduct
 Please note that the 'simfinapi' project is released with a
 [Contributor Code of Conduct](.github/CODE_OF_CONDUCT.md).
 By contributing to this project, you agree to abide by its terms.   
