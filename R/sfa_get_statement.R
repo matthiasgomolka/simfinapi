@@ -64,24 +64,26 @@ sfa_get_statement_ <- function(
 ) {
   # hack ttm and statement into the query since GET cannot handle such
   # parameters (at least I don't know how)
+
+  query_list <-list(
+    "ticker" = Ticker,
+    "statement" = statement,
+    "period" = period,
+    "fyear" = fyear,
+    "start" = start,
+    "end" = end,
+    "api-key" = api_key
+  )
   if (isTRUE(ttm)) {
-    statement <- paste0(statement, "&ttm")
+    query_list[["ttm"]] <- ""
   }
   if (isTRUE(shares)) {
-    statement <- paste0(statement, "&shares")
+    query_list[["shares"]] <- ""
   }
 
   content <- call_api(
     path = "api/v2/companies/statements",
-    query = list(
-      "ticker" = Ticker,
-      "statement" = statement,
-      "period" = period,
-      "fyear" = fyear,
-      "start" = start,
-      "end" = end,
-      "api-key" = api_key
-    ),
+    query = query_list,
     cache_dir = cache_dir
   )
 
