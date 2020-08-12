@@ -24,7 +24,7 @@ options(sfa_cache_dir = tempdir())
 theme_set(theme_minimal())
 ```
 
-# simfinapi
+# simfinapi <img src="https://github.com/Plebejer/simfinapi/blob/master/logo.png?raw=true" align="right" height="150">
 
 `r badge_lifecycle("experimental")`
 `r badger::badge_cran_release(color = "orange")`
@@ -39,10 +39,11 @@ available in R.
 *To use the package, you need to register at https://simfin.com/login and obtain
 a SimFin API key.*
 
-## Example
 
+## Example
 In this example, we download some stock price data and turn these into a simple
 plot.
+
 ```{r download_data}
 # load package
 library(simfinapi)
