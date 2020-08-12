@@ -23,7 +23,7 @@ Imports:
     future.apply (>= 1.4.0),
     httr,
     memoise (>= 1.1.0),
-    RcppSimdJson,
+    RcppSimdJson (>= 0.1.1),
     utils
 Suggests: 
     covr (>= 3.5.0),
