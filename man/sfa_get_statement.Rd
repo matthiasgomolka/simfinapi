@@ -5,16 +5,20 @@
 \title{Get basic company information}
 \usage{
 sfa_get_statement(
-  simIds,
+  Ticker = NULL,
+  SimFinId = NULL,
   statement,
-  period = "TTM",
-  fin_year,
-  api_key = getOption("sfa_api_key")
+  period = "fy",
+  fyear = data.table::year(Sys.Date()) - 1L,
+  start = NULL,
+  end = NULL,
+  ttm = FALSE,
+  shares = FALSE,
+  api_key = getOption("sfa_api_key"),
+  cache_dir = getOption("sfa_cache_dir")
 )
 }
 \arguments{
-\item{simIds}{\verb{[integer]} SimFin IDs of the companies of interest.}
-
 \item{statement}{\verb{[character(1)]} One of "pl" (Profit and Loss), "bs"
 (Balance Sheet), "cf" (Cash Flow).}
 
@@ -23,10 +27,12 @@ sfa_get_statement(
 https://simfin.com/api/v1/documentation/#operation/getCompStatementStandardised
 for details.}
 
-\item{fin_year}{\verb{[integer(1)]} The financial year of interest.}
-
 \item{api_key}{\verb{[character(1)]} Your SimFin API key. For simplicity use
 \code{options(sfa_api_key = "yourapikey")}.}
+
+\item{simIds}{\verb{[integer]} SimFin IDs of the companies of interest.}
+
+\item{fin_year}{\verb{[integer(1)]} The financial year of interest.}
 }
 \description{
 Get basic company information

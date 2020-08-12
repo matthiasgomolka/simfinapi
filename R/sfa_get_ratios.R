@@ -4,9 +4,8 @@
 #'   `option(sfa_api_key = "yourapikey")`.
 #' @importFrom data.table data.table set .SD
 sfa_get_ratios_ <- function(
-  simId,
-  api_key = getOption("sfa_api_key")
-) {
+                            simId,
+                            api_key = getOption("sfa_api_key")) {
   content <- call_api(
     path = sprintf("api/v1/companies/id/%s/ratios", simId),
     query = list("api-key" = api_key)
@@ -21,7 +20,8 @@ sfa_get_ratios_ <- function(
   data.table::set(dt, j = "simId", value = simId)
   data.table::set(dt, j = "value", value = as.numeric(dt[["value"]]))
   data.table::set(
-    dt, j = "period-end-date", value = as.Date(dt[["period-end-date"]])
+    dt,
+    j = "period-end-date", value = as.Date(dt[["period-end-date"]])
   )
   data.table::setnames(dt, "period-end-date", "period_end_date") # for consistency
   data.table::setcolorder(dt, "simId")
@@ -38,9 +38,8 @@ sfa_get_ratios_ <- function(
 #' @importFrom data.table rbindlist
 #' @export
 sfa_get_ratios <- function(
-  simIds,
-  api_key = getOption("sfa_api_key")
-) {
+                           simIds,
+                           api_key = getOption("sfa_api_key")) {
   result_list <- future.apply::future_lapply(simIds, sfa_get_ratios_, api_key)
   data.table::rbindlist(result_list)
 }

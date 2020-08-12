@@ -1,42 +1,43 @@
 library(data.table)
 
-context("sfa_get_info")
 ref <- data.table(
-  simId = c(18L, 59265L),
-  ticker = c("GOOG", "MSFT"),
-  name = c("Alphabet (Google)", "MICROSOFT CORP"),
-  employees = c(98771L, 144000L),
-  sectorName = c("Online Media", "Application Software"),
-  sectorCode = c(101002L, 101003L),
-  fyearEnd = c(12L, 6L),
-  key = "simId"
+  SimFinId = c(18L, 59265L),
+  Ticker = c("GOOG", "MSFT"),
+  `Company Name` = c("Alphabet (Google)", "MICROSOFT CORP"),
+  `IndustryId` = c(101002L, 101003L),
+  `Month FY End` = c(12L, 6L),
+  `Number Employees` = c(98771L, 144000L),
+  key = "Ticker"
 )
 
-test_that("search for single id works", {
-  expect_identical(sfa_get_info(59265L), ref[2])
-  expect_identical(sfa_get_info(59265),  ref[2])
+test_that("search via Tickers works", {
+  expect_identical(sfa_get_info(Ticker = c("GOOG", "MSFT")), ref)
+  expect_identical(sfa_get_info(Ticker = c("MSFT", "GOOG")), ref)
 })
 
-test_that("search for two id's works including correct order", {
-  expect_identical(sfa_get_info(c(18L, 59265L)), ref)
-  expect_identical(sfa_get_info(c(59265L, 18L)), ref)
-  expect_identical(sfa_get_info(c(18, 59265L)), ref)
+test_that("search via SimFinIds works", {
+  expect_identical(sfa_get_info(SimFinId = c(18L, 59265L)), ref)
+  expect_identical(sfa_get_info(SimFinId = c(18, 59265)), ref)
+  expect_identical(sfa_get_info(SimFinId = c(59265L, 18L)), ref)
 })
 
-test_that("search for non-existent ID yields warning from API", {
+test_that("search via Ticker and SimFinId works", {
+  expect_identical(sfa_get_info(Ticker = "GOOG", SimFinId = 59265L), ref)
+  expect_identical(sfa_get_info(Ticker = "MSFT", SimFinId = 18), ref)
+})
+
+
+test_that("search for non-existent Ticker / SimFinId yields warning", {
   expect_null(
     expect_warning(
-      sfa_get_info(1L),
-      "SimFin API: company not found, check SimFin ID.",
+      sfa_get_info("does_not_exist"),
+      'No company found for Ticker "does_not_exist".',
       fixed = TRUE
     )
   )
   expect_warning(
-    expect_identical(
-      sfa_get_info(c(1L, 18L)),
-      ref[1L]
-    ),
-    "SimFin API: company not found, check SimFin ID.",
+    expect_identical(sfa_get_info(SimFinId = c(1L, 18L, 59265L)), ref),
+    "No company found for SimFinId `1`",
     fixed = TRUE
   )
 })
