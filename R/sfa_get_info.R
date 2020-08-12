@@ -1,57 +1,77 @@
 #' Get basic company information
-#' @param simId `[integer(1)]` SimFin ID of the company of interest.
+#' @description Internal function.
+#' @param ticker [integer] Ticker of the companies of interest.
 #' @param api_key `[character(1)]` Your SimFin API key. For simplicity use
 #'   `options(sfa_api_key = "yourapikey")`.
+#' @param cache_dir [character] Your cache directory. It's recommended to set
+#'   the cache directory globally using [sfa_set_cache_dir].
 #' @importFrom data.table as.data.table
-sfa_get_info_ <- function(
-  simId,
-  api_key = Sys.getenv("sfa_api_key")
-) {
+sfa_get_info_ <- function(ticker, api_key, cache_dir) {
   content <- call_api(
-    path = list("api/v1/companies/id", simId),
-    query = list("api-key" = api_key)
+    path = list("api/v2/companies/general"),
+    query = list(
+      "ticker" = ticker,
+      "api-key" = api_key
+    ),
+    cache_dir = cache_dir
   )
 
-  # return early if no content returnded
-  if (is.null(content)) {
+  DT_list <- lapply(content, function(x) {
+    if (isFALSE(x[["found"]])) {
+      warning('No company found for Ticker "', ticker, '".', call. = FALSE)
+      return(NULL)
+    }
+    DT <- data.table::as.data.table(lapply(x[["data"]], t))
+    data.table::setnames(DT, x[["columns"]])
+  })
+
+  DT <- data.table::rbindlist(DT_list, use.names = TRUE)
+  if (nrow(DT) == 0L) {
     return(NULL)
   }
 
-  # set NULL values to NA to avoid errors in setDT
-  # (as.data.table is no options since it omits NULL elements)
-  content[which(vapply(content, is.null, FUN.VALUE = logical(1L)))] <- NA
+  for (var in c("SimFinId", "IndustryId", "Month FY End", "Number Employees")) {
+    data.table::set(DT, j = var, value = as.integer(DT[[var]]))
+  }
 
-  dt <- data.table::setDT(content)
-  data.table::set(dt, j = "simId", value = as.integer(dt[["simId"]]))
-  data.table::set(dt, j = "ticker", value = as.character(dt[["ticker"]]))
-  data.table::set(dt, j = "name", value = as.character(dt[["name"]]))
-  data.table::set(dt, j = "fyearEnd", value = as.integer(dt[["fyearEnd"]]))
-  data.table::set(dt, j = "employees", value = as.integer(dt[["employees"]]))
-  data.table::set(dt, j = "sectorName", value = as.character(dt[["sectorName"]]))
-  data.table::set(dt, j = "sectorCode", value = as.integer(dt[["sectorCode"]]))
-  dt
+  return(DT)
 }
 
 #' Get basic company information
-#' @param simId `[integer]` SimFin IDs of the companies of interest.
-#' @param api_key `[character(1)]` Your SimFin API key. For simplicity use
-#'   `options(sfa_api_key = "yourapikey")`.
-#' @importFrom checkmate assert_integerish assert_string
+#' @param Ticker [integer] Ticker of the companies of interest.
+#' @param SimFinId [integer] SimFin IDs of the companies of interest. Any
+#'   SimFinId will be internally translated to the respective `Ticker`. This
+#'   reduces the number of queries if you would query the same company via
+#'   `Ticker` *and* `SimFinId`.
+#' @param api_key [character] Your SimFin API key. It's recommended to set
+#'   the API key globally using [sfa_set_api_key].
+#' @param cache_dir [character] Your cache directory. It's recommended to set
+#'   the cache directory globally using [sfa_set_cache_dir].
+#' @importFrom checkmate assert_character assert_integerish assert_string
+#'   assert_directory
 #' @importFrom future.apply future_lapply
-#' @importFrom data.table rbindlist
 #' @export
 sfa_get_info <- function(
-  simId,
-  api_key = getOption("sfa_api_key")
+  Ticker = NULL,
+  SimFinId = NULL,
+  api_key = getOption("sfa_api_key"),
+  cache_dir = getOption("sfa_cache_dir")
 ) {
-  simId <- checkmate::assert_integerish(
-    simId,
-    lower = 1L,
-    upper = 999999L,
-    coerce = TRUE
+  check_inputs(
+    Ticker = Ticker,
+    SimFinId = SimFinId,
+    api_key = api_key,
+    cache_dir = cache_dir
   )
-  checkmate::assert_string(api_key, pattern = "[[:alnum:]]{32}")
+  if (all(is.null(Ticker), is.null(SimFinId))) {
+    stop("You need to specify at least one 'Ticker' or 'SimFinId")
+  }
 
-  result_list <- future.apply::future_lapply(simId, sfa_get_info_, api_key)
+  # translate SimFinId to Ticker to simplify API call
+  ticker <- gather_ticker(Ticker, SimFinId, api_key, cache_dir)
+
+  result_list <- future.apply::future_lapply(
+    ticker, sfa_get_info_, api_key, cache_dir
+  )
   gather_result(result_list)
 }

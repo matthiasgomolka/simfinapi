@@ -4,14 +4,17 @@
 \alias{sfa_get_info_}
 \title{Get basic company information}
 \usage{
-sfa_get_info_(simId, api_key = Sys.getenv("sfa_api_key"))
+sfa_get_info_(ticker, api_key, cache_dir)
 }
 \arguments{
-\item{simId}{\verb{[integer(1)]} SimFin ID of the company of interest.}
+\item{ticker}{\link{integer} Ticker of the companies of interest.}
 
 \item{api_key}{\verb{[character(1)]} Your SimFin API key. For simplicity use
 \code{options(sfa_api_key = "yourapikey")}.}
+
+\item{cache_dir}{\link{character} Your cache directory. It's recommended to set
+the cache directory globally using \link{sfa_set_cache_dir}.}
 }
 \description{
-Get basic company information
+Internal function.
 }

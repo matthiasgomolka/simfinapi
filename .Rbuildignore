@@ -6,3 +6,4 @@
 ^\.covrignore$
 ^\.github$
 ^README.Rmd$
+^simfinapi\.code-workspace$

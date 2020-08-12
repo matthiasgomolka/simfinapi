@@ -1,162 +1,218 @@
 #' Get basic company information
-#' @param simId `[integer(1)]` SimFin ID of the company of interest.
-#' @param statement `[character(1)]` One of "pl" (Profit and Loss), "bs"
-#'   (Balance Sheet), "cf" (Cash Flow).
-#' @param period `[character(1)]` One of "Q1" "Q2" "Q3" "Q4" "H1" "H2" "9M" "FY"
-#'   "TTM". See `ptype` on
-#'   https://simfin.com/api/v1/documentation/#operation/getCompStatementStandardised
-#'   for details.
-#' @param fin_year `[integer(1)]` The financial year of interest.
-#' @param api_key `[character(1)]` Your SimFin API key. For simplicity use
-#'   `option(sfa_api_key = "yourapikey")`.
-#' @importFrom data.table data.table set .SD
+#' @param Ticker [integer] Ticker of the companies of interest.
+#' @param statement [character] Statement to be retrieved. One of
+#'
+#'   - `"pl"`: Profit & Loss statement
+#'   - `"bs"`: Balance Sheet
+#'   - `"cf"`: Cash Flow statement
+#'   - `"derived"`: Derived figures & fundamental ratios
+#'   - `"all"`: Retrieves all 3 statements + ratios. Please note that this
+#'   option is reserved for SimFin+ users.
+#' @param period [character] Filter for periods. As a non-SimFin+ user, you have
+#'   to provide exactly one period. As SimFin+ user, this filter can be omitted
+#'   to retrieve all statements available for the company.
+#'
+#'   - `"q1"`: First fiscal quarter.
+#'   - `"q2"`: Second fiscal quarter.
+#'   - `"q3"`: Third fiscal quarter.
+#'   - `"q4"`: Fourth fiscal quarter.
+#'   - `"fy"`: Full fiscal year.
+#'   - `"h1"`: First 6 months of fiscal year.
+#'   - `"h2"`: Last 6 months of fiscal year.
+#'   - `"9m"`: First nine months of fiscal year.
+#'   - `"6m"`: Any fiscal 6 month period (first + second half years; reserved
+#'   for SimFin+ users).
+#'   - `"quarters"`: All quarters (q1 + q2 + q3 + q4; reserved for SimFin+
+#'   users).
+#'
+#' @param fyear [integer] Filter for fiscal year. As a non-SimFin+ user, you
+#'   have to provide exactly one fiscal year. As SimFin+ user, this filter can
+#'   be omitted to retrieve all statements available for the company.
+#' @param start [Date] Filter for the report dates (reserved for SimFin+ users).
+#'   With this filter you can filter the statements by the date on which the
+#'   reported period ended ('Report Date'). By specifying a value here, only
+#'   statements will be retrieved with report dates ending AFTER the specified
+#'   date.
+#' @param end [Date] Filter for the report dates (reserved for SimFin+ users).
+#'   With this filter you can filter the statements by the date on which the
+#'   reported period ended ('Report Date'). By specifying a value here, only
+#'   statements will be retrieved with report dates ending BEFORE the specified
+#'   date.
+#' @param ttm [logical] If `TRUE`, you can return the trailing twelve months
+#'   statements for all periods, meaning at every available point in time the
+#'   sum of the last 4 available quarterly figures.
+#' @param shares [logical] If `TRUE`, you can display the weighted average basic
+#'   & diluted shares outstanding for each period along with the fundamentals.
+#'   Reserved for SimFin+ users (as non-SimFin+ user, you can still use the
+#'   shares outstanding endpoints).
+#' @param api_key [character] Your SimFin API key. It's recommended to set
+#'   the API key globally using [sfa_set_api_key].
+#' @param cache_dir [character] Your cache directory. It's recommended to set
+#'   the cache directory globally using [sfa_set_cache_dir].
+#' @importFrom data.table as.data.table setnames set setcolorder rbindlist
 sfa_get_statement_ <- function(
-  simId,
+  Ticker,
   statement,
   period,
-  fin_year,
-  api_key = getOption("sfa_api_key")
+  fyear,
+  start,
+  end,
+  ttm,
+  shares,
+  api_key,
+  cache_dir
 ) {
+  # hack ttm and statement into the query since GET cannot handle such
+  # parameters (at least I don't know how)
+  if (isTRUE(ttm)) {
+    statement <- paste0(statement, "&ttm")
+  }
+  if (isTRUE(shares)) {
+    statement <- paste0(statement, "&shares")
+  }
+
   content <- call_api(
-    path = sprintf("api/v1/companies/id/%s/statements/standardised", simId),
+    path = "api/v2/companies/statements",
     query = list(
-      "stype" = statement,
-      "ptype" = period,
-      "fyear" = fin_year,
+      "ticker" = Ticker,
+      "statement" = statement,
+      "period" = period,
+      "fyear" = fyear,
+      "start" = start,
+      "end" = end,
       "api-key" = api_key
-    )
+    ),
+    cache_dir = cache_dir
   )
 
-  if (is.null(content)) {
+  # lapply necessary for SimFin+, where larger queries are possible
+  DT_list <- lapply(content, function(x) {
+    if (isFALSE(x[["found"]])) {
+      warning('No company found for Ticker "', Ticker, '".', call. = FALSE)
+      return(NULL)
+    }
+    DT <- data.table::as.data.table(lapply(x[["data"]], t))
+    data.table::setnames(DT, x[["columns"]])
+
+    data.table::set(DT, j = "Currency", value = x[["currency"]])
+  })
+
+  DT <- data.table::rbindlist(DT_list, use.names = TRUE)
+  if (nrow(DT) == 0L) {
     return(NULL)
   }
 
-  dt <- data.table::data.table(
-    simId = simId,
-    statement = statement,
-    period = period,
-    fin_year = fin_year,
-    period_end_date = content$periodEndDate,
-    calculated = content$calculated,
-    calculation_scheme = list(content$calculationScheme),
-    data_quality_check = content$dataQualityCheck,
-    industry_template = content$industryTemplate,
-    content$values,
-    key = "simId"
+  # prettify DT
+  col_order <- append(
+    setdiff(names(DT), "Currency"),
+    "Currency",
+    which(names(DT) == "Value Check")
   )
+  data.table::setcolorder(DT, col_order)
 
-  data.table::set(
-    dt, j = "period_end_date", value = as.Date(dt$period_end_date)
-  )
+  char_vars <- c("Ticker", "Fiscal Period", "Source", "Currency")
+  date_vars <- c("Report Date", "Publish Date", "Restated Date")
+  lgl_vars <- c("TTM", "Value Check")
+  int_vars <- c("SimFinId", "Fiscal Year")
+  num_vars <- setdiff(names(DT), c(char_vars, date_vars, lgl_vars, int_vars))
 
-  for (var in c("fin_year", "tid", "uid", "parent_tid", "displayLevel")) {
-    data.table::set(dt, j = var, value = as.integer(dt[[var]]))
-  }
+  setmany(DT, date_vars, as.Date)
+  setmany(DT, lgl_vars, as.logical)
+  setmany(DT, int_vars, as.integer)
+  setmany(DT, num_vars, as.numeric)
 
-  for (var in paste0("value", c("Assigned", "Calculated", "Chosen"))) {
-    data.table::set(dt, j = var, value = as.numeric(dt[[var]]))
-    data.table::set(
-      dt, i = which(dt[[var]] == 0), j = var, value = NA_real_
-    )
-  }
+  return(DT)
 
-  dt
 }
 
 #' Get basic company information
-#' @param simIds `[integer]` SimFin IDs of the companies of interest.
-#' @param statement `[character(1)]` One of "pl" (Profit and Loss), "bs"
-#'   (Balance Sheet), "cf" (Cash Flow).
-#' @param period `[character(1)]` One of "Q1" "Q2" "Q3" "Q4" "H1" "H2" "9M" "FY"
-#'   "TTM". See `ptype` on
-#'   https://simfin.com/api/v1/documentation/#operation/getCompStatementStandardised
-#'   for details.
-#' @param fin_year `[integer(1)]` The financial year of interest.
-#' @param api_key `[character(1)]` Your SimFin API key. For simplicity use
-#'   `options(sfa_api_key = "yourapikey")`.
+#' @param Ticker [integer] Ticker of the companies of interest.
+#' @param SimFinId [integer] SimFin IDs of the companies of interest. Any
+#'   SimFinId will be internally translated to the respective `Ticker`. This
+#'   reduces the number of queries if you would query the same company via
+#'   `Ticker` *and* `SimFinId`.
+#' @param statement [character] Statement to be retrieved. One of
+#'
+#'   - `"pl"`: Profit & Loss statement
+#'   - `"bs"`: Balance Sheet
+#'   - `"cf"`: Cash Flow statement
+#'   - `"derived"`: Derived figures & fundamental ratios
+#'   - `"all"`: Retrieves all 3 statements + ratios. Please note that this
+#'   option is reserved for SimFin+ users.
+#' @param period [character] Filter for periods. As a non-SimFin+ user, you have
+#'   to provide exactly one period. As SimFin+ user, this filter can be omitted
+#'   to retrieve all statements available for the company.
+#'
+#'   - `"q1"`: First fiscal quarter.
+#'   - `"q2"`: Second fiscal quarter.
+#'   - `"q3"`: Third fiscal quarter.
+#'   - `"q4"`: Fourth fiscal quarter.
+#'   - `"fy"`: Full fiscal year.
+#'   - `"h1"`: First 6 months of fiscal year.
+#'   - `"h2"`: Last 6 months of fiscal year.
+#'   - `"9m"`: First nine months of fiscal year.
+#'   - `"6m"`: Any fiscal 6 month period (first + second half years; reserved
+#'   for SimFin+ users).
+#'   - `"quarters"`: All quarters (q1 + q2 + q3 + q4; reserved for SimFin+
+#'   users).
+#'
+#' @param fyear [integer] Filter for fiscal year. As a non-SimFin+ user, you
+#'   have to provide exactly one fiscal year. As SimFin+ user, this filter can
+#'   be omitted to retrieve all statements available for the company.
+#' @param start [Date] Filter for the report dates (reserved for SimFin+ users).
+#'   With this filter you can filter the statements by the date on which the
+#'   reported period ended ('Report Date'). By specifying a value here, only
+#'   statements will be retrieved with report dates ending AFTER the specified
+#'   date.
+#' @param end [Date] Filter for the report dates (reserved for SimFin+ users).
+#'   With this filter you can filter the statements by the date on which the
+#'   reported period ended ('Report Date'). By specifying a value here, only
+#'   statements will be retrieved with report dates ending BEFORE the specified
+#'   date.
+#' @param ttm [logical] If `TRUE`, you can return the trailing twelve months
+#'   statements for all periods, meaning at every available point in time the
+#'   sum of the last 4 available quarterly figures.
+#' @param shares [logical] If `TRUE`, you can display the weighted average basic
+#'   & diluted shares outstanding for each period along with the fundamentals.
+#'   Reserved for SimFin+ users (as non-SimFin+ user, you can still use the
+#'   shares outstanding endpoints).
+#' @param api_key [character] Your SimFin API key. It's recommended to set
+#'   the API key globally using [sfa_set_api_key].
+#' @param cache_dir [character] Your cache directory. It's recommended to set
+#'   the cache directory globally using [sfa_set_cache_dir].
 #' @importFrom checkmate assert_choice
 #' @importFrom future.apply future_lapply
-#' @importFrom data.table rbindlist
 #' @export
 sfa_get_statement <- function(
-  simIds,
+  Ticker = NULL,
+  SimFinId = NULL,
   statement,
-  period = "TTM",
-  fin_year,
-  api_key = getOption("sfa_api_key")
+  period = "fy",
+  fyear = data.table::year(Sys.Date()) - 1L,
+  start = NULL,
+  end = NULL,
+  ttm = FALSE,
+  shares = FALSE,
+  api_key = getOption("sfa_api_key"),
+  cache_dir = getOption("sfa_cache_dir")
 ) {
-  checkmate::assert_choice(statement, c("pl", "bs", "cf"))
-  checkmate::assert_choice(
-    period,
-    c("Q1", "Q2", "Q3", "Q4", "H1", "H2", "9M", "FY", "TTM")
+  check_inputs(
+    Ticker = Ticker,
+    SimFinId = SimFinId,
+    statement = statement,
+    period = period,
+    fyear = fyear,
+    start = start,
+    end = end,
+    api_key = api_key,
+    cache_dir = cache_dir
   )
-  checkmate::assert_integerish(fin_year)
+
+  ticker <- gather_ticker(Ticker, SimFinId, api_key, cache_dir)
 
   result_list <- future.apply::future_lapply(
-    simIds, sfa_get_statement_, statement, period, fin_year, api_key
+    Ticker, sfa_get_statement_, statement, period, fyear, start, end, ttm,
+    shares, api_key, cache_dir
   )
-  data.table::rbindlist(result_list)
-}
-
-#' Get Profit and Loss Statements
-#' @description Convenience function which calls [sfa_get_statement] with
-#'   `statement = "pl"`.
-#' @param simIds `[integer]` SimFin IDs of the companies of interest.
-#' @param period `[character(1)]` One of "Q1" "Q2" "Q3" "Q4" "H1" "H2" "9M" "FY"
-#'   "TTM". See `ptype` on
-#'   https://simfin.com/api/v1/documentation/#operation/getCompStatementStandardised
-#'   for details.
-#' @param fin_year `[integer(1)]` The financial year of interest.
-#' @param api_key `[character(1)]` Your SimFin API key. For simplicity use
-#'   `options(sfa_api_key = "yourapikey")`.
-#' @importFrom checkmate assert_choice
-#' @importFrom future.apply future_lapply
-#' @importFrom data.table rbindlist
-#' @export
-sfa_get_pl <- function(
-  simIds, period = "TTM", fin_year, api_key = getOption("sfa_api_key")
-) {
-  sfa_get_statement(simIds, "pl", period, fin_year, api_key)
-}
-
-#' Get Balance Sheet Statements
-#' @description Convenience function which calls [sfa_get_statement] with
-#'   `statement = "bs"`.
-#' @param simIds `[integer]` SimFin IDs of the companies of interest.
-#' @param period `[character(1)]` One of "Q1" "Q2" "Q3" "Q4" "H1" "H2" "9M" "FY"
-#'   "TTM". See `ptype` on
-#'   https://simfin.com/api/v1/documentation/#operation/getCompStatementStandardised
-#'   for details.
-#' @param fin_year `[integer(1)]` The financial year of interest.
-#' @param api_key `[character(1)]` Your SimFin API key. For simplicity use
-#'   `options(sfa_api_key = "yourapikey")`.
-#' @importFrom checkmate assert_choice
-#' @importFrom future.apply future_lapply
-#' @importFrom data.table rbindlist
-#' @export
-sfa_get_bs <- function(
-  simIds, period = "TTM", fin_year, api_key = getOption("sfa_api_key")
-) {
-  sfa_get_statement(simIds, "bs", period, fin_year, api_key)
-}
-
-#' Get Cash Flow Statements
-#' @description Convenience function which calls [sfa_get_statement] with
-#'   `statement = "cf"`.
-#' @param simIds `[integer]` SimFin IDs of the companies of interest.
-#' @param period `[character(1)]` One of "Q1" "Q2" "Q3" "Q4" "H1" "H2" "9M" "FY"
-#'   "TTM". See `ptype` on
-#'   https://simfin.com/api/v1/documentation/#operation/getCompStatementStandardised
-#'   for details.
-#' @param fin_year `[integer(1)]` The financial year of interest.
-#' @param api_key `[character(1)]` Your SimFin API key. For simplicity use
-#'   `options(sfa_api_key = "yourapikey")`.
-#' @importFrom checkmate assert_choice
-#' @importFrom future.apply future_lapply
-#' @importFrom data.table rbindlist
-#' @export
-sfa_get_cf <- function(
-  simIds, period = "TTM", fin_year, api_key = getOption("sfa_api_key")
-) {
-  sfa_get_statement(simIds, "cf", period, fin_year, api_key)
+  gather_result(result_list)
 }
