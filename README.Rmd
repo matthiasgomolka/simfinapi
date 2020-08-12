@@ -25,7 +25,7 @@ options(sfa_cache_dir = tempdir())
 theme_set(theme_minimal())
 ```
 
-# simfinapi <img src="https://github.com/Plebejer/simfinapi/blob/master/logo.png?raw=true" align="right" height="150">
+# simfinapi <img src='man/figures/logo.png' align="right" height="139" />
 
 `r badge_lifecycle("experimental")`
 `r badger::badge_cran_release(color = "orange")`
