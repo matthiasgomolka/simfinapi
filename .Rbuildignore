@@ -3,6 +3,4 @@
 ^my_api_key.R$
 ^\.github$
 ^README\.Rmd$
-^README_files$
-^logo\.png$
 ^simfinapi\.code-workspace$
