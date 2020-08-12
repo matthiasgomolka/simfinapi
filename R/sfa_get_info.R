@@ -1,8 +1,10 @@
 #' Get basic company information
 #' @description Internal function.
-#' @param simId `[integer(1)]` SimFin ID of the company of interest.
+#' @param ticker [integer] Ticker of the companies of interest.
 #' @param api_key `[character(1)]` Your SimFin API key. For simplicity use
 #'   `options(sfa_api_key = "yourapikey")`.
+#' @param cache_dir [character] Your cache directory. It's recommended to set
+#'   the cache directory globally using [sfa_set_cache_dir].
 #' @importFrom data.table as.data.table
 sfa_get_info_ <- function(ticker, api_key, cache_dir) {
   content <- call_api(
@@ -48,7 +50,6 @@ sfa_get_info_ <- function(ticker, api_key, cache_dir) {
 #' @importFrom checkmate assert_character assert_integerish assert_string
 #'   assert_directory
 #' @importFrom future.apply future_lapply
-#' @importFrom data.table rbindlist
 #' @export
 sfa_get_info <- function(
   Ticker = NULL,

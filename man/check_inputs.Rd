@@ -45,5 +45,6 @@ check_inputs(
 \item{ratios}{See function using this argument.}
 }
 \description{
-This function covers all kinds of (recurring) input checks in \link{simfinapi}. This keeps the other functions cleaner.
+This function covers all kinds of (recurring) input checks in
+{simfinapi}. This keeps the other functions cleaner.
 }

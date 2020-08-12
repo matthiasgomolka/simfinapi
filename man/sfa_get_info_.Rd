@@ -7,10 +7,13 @@
 sfa_get_info_(ticker, api_key, cache_dir)
 }
 \arguments{
+\item{ticker}{\link{integer} Ticker of the companies of interest.}
+
 \item{api_key}{\verb{[character(1)]} Your SimFin API key. For simplicity use
 \code{options(sfa_api_key = "yourapikey")}.}
 
-\item{simId}{\verb{[integer(1)]} SimFin ID of the company of interest.}
+\item{cache_dir}{\link{character} Your cache directory. It's recommended to set
+the cache directory globally using \link{sfa_set_cache_dir}.}
 }
 \description{
 Internal function.

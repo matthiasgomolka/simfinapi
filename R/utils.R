@@ -1,5 +1,6 @@
 #' Generic input checks
-#' @description This function covers all kinds of (recurring) input checks in [simfinapi]. This keeps the other functions cleaner.
+#' @description This function covers all kinds of (recurring) input checks in
+#'   {simfinapi}. This keeps the other functions cleaner.
 #' @param api_key See function using this argument.
 #' @param cache_dir See function using this argument.
 #' @param Ticker See function using this argument.

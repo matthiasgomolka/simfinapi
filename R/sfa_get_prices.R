@@ -1,4 +1,4 @@
-sfa_get_price_ <- function(
+sfa_get_prices_ <- function(
   Ticker,
   ratios,
   start,
@@ -19,7 +19,7 @@ sfa_get_price_ <- function(
   # lapply necessary for SimFin+, where larger queries are possible
   DT_list <- lapply(content, function(x) {
     if (isFALSE(x[["found"]])) {
-      warning('No company found for Ticker "', ticker, '".', call. = FALSE)
+      warning('No company found for Ticker "', Ticker, '".', call. = FALSE)
       return(NULL)
     }
     DT <-  as.data.table(matrix(unlist(x[["data"]]), ncol = length(x[["columns"]]), byrow = TRUE))
@@ -55,9 +55,19 @@ sfa_get_price_ <- function(
 }
 
 
-#' @importFrom checkmate assert_int assert_string
+#' Get price data
+#' @param Ticker [character]
+#' @param SimFinId []
+#' @param ratios []
+#' @param start []
+#' @param end []
+#' @param api_key [character] Your SimFin API key. It's recommended to set
+#'   the API key globally using [sfa_set_api_key].
+#' @param cache_dir [character] Your cache directory. It's recommended to set
+#'   the cache directory globally using [sfa_set_cache_dir].
 #' @importFrom future.apply future_lapply
-sfa_get_price <- function(
+#' @export
+sfa_get_prices <- function(
   Ticker = NULL,
   SimFinId = NULL,
   ratios = NULL,
@@ -79,7 +89,7 @@ sfa_get_price <- function(
   ticker <- gather_ticker(Ticker, SimFinId, api_key, cache_dir)
 
   result_list <- future.apply::future_lapply(
-    ticker, sfa_get_price_, ratios, start, end, api_key, cache_dir
+    ticker, sfa_get_prices_, ratios, start, end, api_key, cache_dir
   )
 
   gather_result(result_list)
