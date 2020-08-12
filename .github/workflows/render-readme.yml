@@ -17,7 +17,7 @@ jobs:
       - name: Install simfinapi
         run: Rscript -e 'remotes::install_github("https://github.com/Plebejer/simfinapi")'
       - name: Render README
-        run: Rscript -e 'rmarkdown::render("README.Rmd", output_format = "md_document")'
+        run: Rscript -e 'rmarkdown::render("README.Rmd", output_format = "github_document")'
       - name: Commit results
         run: |
           git commit README.md -m 'Re-build README.Rmd' || echo "No changes to commit"
