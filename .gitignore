@@ -3,3 +3,4 @@
 .RData
 .Ruserdata
 my_api_key.R
+inst/doc

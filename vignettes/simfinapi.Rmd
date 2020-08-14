@@ -1,0 +1,27 @@
+---
+title: "Getting started"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Recommended initial settings
+
+```{r setup}
+library(simfinapi)
+```
+
+## Set API key globally
+
+## Set cache directory globally
+
+# Download your first data
