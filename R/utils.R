@@ -19,7 +19,7 @@ gather_ticker <- function(Ticker, SimFinId, api_key, cache_dir) {
 }
 
 #' @importFrom data.table set
-setmany <- function(DT, vars, as) {
+set_as <- function(DT, vars, as) {
   for (var in vars) {
     data.table::set(DT, j = var, value = as(DT[[var]]))
   }

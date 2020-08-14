@@ -16,33 +16,99 @@ check_inputs(
   end = NULL,
   ttm = NULL,
   shares = NULL,
-  ratios = NULL
+  ratios = NULL,
+  type = NULL
 )
 }
 \arguments{
-\item{api_key}{See function using this argument.}
+\item{api_key}{\link{character} Your SimFin API key. It's recommended to set
+the API key globally using \link{sfa_set_api_key}.}
 
-\item{cache_dir}{See function using this argument.}
+\item{cache_dir}{\link{character} Your cache directory. It's recommended to set
+the cache directory globally using \link{sfa_set_cache_dir}.}
 
-\item{Ticker}{See function using this argument.}
+\item{Ticker}{\link{integer} Ticker of the companies of interest.}
 
-\item{SimFinId}{See function using this argument.}
+\item{SimFinId}{\link{integer} SimFin IDs of the companies of interest. Any
+SimFinId will be internally translated to the respective \code{Ticker}. This
+reduces the number of queries if you would query the same company via
+\code{Ticker} \emph{and} \code{SimFinId}.}
 
-\item{statement}{See function using this argument.}
+\item{statement}{\link{character} Statement to be retrieved. One of
+\itemize{
+\item \code{"pl"}: Profit & Loss statement
+\item \code{"bs"}: Balance Sheet
+\item \code{"cf"}: Cash Flow statement
+\item \code{"derived"}: Derived figures & fundamental ratios
+\item \code{"all"}: Retrieves all 3 statements + ratios. Please note that this
+option is reserved for SimFin+ users.
+}}
 
-\item{period}{See function using this argument.}
+\item{period}{\link{character} Filter for periods. As a non-SimFin+ user, you have
+to provide exactly one period. As SimFin+ user, this filter can be omitted
+to retrieve all statements available for the company.
+\itemize{
+\item \code{"q1"}: First fiscal quarter.
+\item \code{"q2"}: Second fiscal quarter.
+\item \code{"q3"}: Third fiscal quarter.
+\item \code{"q4"}: Fourth fiscal quarter.
+\item \code{"fy"}: Full fiscal year.
+\item \code{"h1"}: First 6 months of fiscal year.
+\item \code{"h2"}: Last 6 months of fiscal year.
+\item \code{"9m"}: First nine months of fiscal year.
+\item \code{"6m"}: Any fiscal 6 month period (first + second half years; reserved
+for SimFin+ users).
+\item \code{"quarters"}: All quarters (q1 + q2 + q3 + q4; reserved for SimFin+
+users).
+}}
 
-\item{fyear}{See function using this argument.}
+\item{fyear}{\link{integer} Filter for fiscal year. As a non-SimFin+ user, you
+have to provide exactly one fiscal year. As SimFin+ user, this filter can
+be omitted to retrieve all statements available for the company.}
 
-\item{start}{See function using this argument.}
+\item{start}{\link{Date} Filter for the report dates (reserved for SimFin+ users).
+With this filter you can filter the statements by the date on which the
+reported period ended ('Report Date'). By specifying a value here, only
+statements will be retrieved with report dates ending AFTER the specified
+date.}
 
-\item{end}{See function using this argument.}
+\item{end}{\link{Date} Filter for the report dates (reserved for SimFin+ users).
+With this filter you can filter the statements by the date on which the
+reported period ended ('Report Date'). By specifying a value here, only
+statements will be retrieved with report dates ending BEFORE the specified
+date.}
 
-\item{ttm}{See function using this argument.}
+\item{ttm}{\link{logical} If \code{TRUE}, you can return the trailing twelve months
+statements for all periods, meaning at every available point in time the
+sum of the last 4 available quarterly figures.}
 
-\item{shares}{See function using this argument.}
+\item{shares}{\link{logical} If \code{TRUE}, you can display the weighted average basic
+& diluted shares outstanding for each period along with the fundamentals.
+Reserved for SimFin+ users (as non-SimFin+ user, you can still use the
+shares outstanding endpoints).}
 
-\item{ratios}{See function using this argument.}
+\item{ratios}{\link{logical} With \code{TRUE}, you can display some price related ratios along with the share price data (reserved for SimFin+ users). The ratios that will be displayed are:
+\itemize{
+\item Market-Cap
+\item Price to Earnings Ratio (quarterly)
+\item Price to Earnings Ratio (ttm)
+\item Price to Sales Ratio (quarterly)
+\item Price to Sales Ratio (ttm)
+\item Price to Book Value (ttm)
+\item Price to Free Cash Flow (quarterly)
+\item Price to Free Cash Flow (ttm)
+\item Enterprise Value (ttm)
+\item EV/EBITDA (ttm)
+\item EV/Sales (ttm)
+\item EV/FCF (ttm)
+\item Book to Market Value (ttm)
+\item Operating Income/EV (ttm).
+}}
+
+\item{type}{\link{character} Filter for fiscal year. Only works with \code{type = "wa-basic"} and \code{type = "wa-diluted"}. As SimFin+ user, this filter can be
+omitted to retrieve all shares outstanding available for the company. You
+can also chain this filter with a comma, to retrieve multiple years at once
+(e.g. \code{fyear = "2015,2016,2017"} to retrieve the data for 3 years at once).}
 }
 \description{
 This function covers all kinds of (recurring) input checks in

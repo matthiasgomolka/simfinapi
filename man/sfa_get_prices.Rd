@@ -15,15 +15,42 @@ sfa_get_prices(
 )
 }
 \arguments{
-\item{Ticker}{\link{character}}
+\item{Ticker}{\link{integer} Ticker of the companies of interest.}
 
-\item{SimFinId}{[]}
+\item{SimFinId}{\link{integer} SimFin IDs of the companies of interest. Any
+SimFinId will be internally translated to the respective \code{Ticker}. This
+reduces the number of queries if you would query the same company via
+\code{Ticker} \emph{and} \code{SimFinId}.}
 
-\item{ratios}{[]}
+\item{ratios}{\link{logical} With \code{TRUE}, you can display some price related ratios along with the share price data (reserved for SimFin+ users). The ratios that will be displayed are:
+\itemize{
+\item Market-Cap
+\item Price to Earnings Ratio (quarterly)
+\item Price to Earnings Ratio (ttm)
+\item Price to Sales Ratio (quarterly)
+\item Price to Sales Ratio (ttm)
+\item Price to Book Value (ttm)
+\item Price to Free Cash Flow (quarterly)
+\item Price to Free Cash Flow (ttm)
+\item Enterprise Value (ttm)
+\item EV/EBITDA (ttm)
+\item EV/Sales (ttm)
+\item EV/FCF (ttm)
+\item Book to Market Value (ttm)
+\item Operating Income/EV (ttm).
+}}
 
-\item{start}{[]}
+\item{start}{\link{Date} Filter for the report dates (reserved for SimFin+ users).
+With this filter you can filter the statements by the date on which the
+reported period ended ('Report Date'). By specifying a value here, only
+statements will be retrieved with report dates ending AFTER the specified
+date.}
 
-\item{end}{[]}
+\item{end}{\link{Date} Filter for the report dates (reserved for SimFin+ users).
+With this filter you can filter the statements by the date on which the
+reported period ended ('Report Date'). By specifying a value here, only
+statements will be retrieved with report dates ending BEFORE the specified
+date.}
 
 \item{api_key}{\link{character} Your SimFin API key. It's recommended to set
 the API key globally using \link{sfa_set_api_key}.}

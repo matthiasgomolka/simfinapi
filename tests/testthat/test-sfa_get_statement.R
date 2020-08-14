@@ -95,14 +95,30 @@ test_that("getting pl statement works", {
 
   ref_3 <- sfa_get_statement(c("GOOG", "AAPL"), statement = "pl", ttm = TRUE)
   checkmate::expect_data_table(
-    ref_2,
+    ref_3,
     key = "Ticker",
     types = exp_classes,
     nrows = 2L,
     ncols = length(exp_classes),
     col.names = "unique"
   )
-  expect_named(ref_2, names(exp_classes))
+  expect_named(ref_3, names(exp_classes))
+
+  exp_classes <- append(
+    exp_classes,
+    c(`Shares (Basic)` = "numeric", `Shares (Diluted)` = "numeric"),
+    after = which(names(exp_classes) == "Currency")
+  )
+  ref_4 <- sfa_get_statement(c("GOOG", "AAPL"), statement = "pl", shares = TRUE)
+  checkmate::expect_data_table(
+    ref_4,
+    key = "Ticker",
+    types = exp_classes,
+    nrows = 2L,
+    ncols = length(exp_classes),
+    col.names = "unique"
+  )
+  expect_named(ref_4, names(exp_classes))
 })
 
 
@@ -230,3 +246,12 @@ test_that("getting bs statement works", {
 })
 
 # TODO: Test all kinds of statements
+test_that("warning is trigged when no company was found", {
+  expect_null(
+    expect_warning(
+      sfa_get_statement("doesnotexist", statement = "cf"),
+      'No company found for Ticker "doesnotexist".',
+      fixed = TRUE
+    )
+  )
+})

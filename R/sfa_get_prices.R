@@ -47,24 +47,32 @@ sfa_get_prices_ <- function(
   int_vars <- c("SimFinId")
   num_vars <- setdiff(names(DT), c(char_vars, date_vars, int_vars))
 
-  setmany(DT, date_vars, as.Date)
-  setmany(DT, int_vars, as.integer)
-  setmany(DT, num_vars, as.numeric)
+  set_as(DT, date_vars, as.Date)
+  set_as(DT, int_vars, as.integer)
+  set_as(DT, num_vars, as.numeric)
 
   return(DT)
 }
 
 
 #' Get price data
-#' @param Ticker [character]
-#' @param SimFinId []
-#' @param ratios []
-#' @param start []
-#' @param end []
-#' @param api_key [character] Your SimFin API key. It's recommended to set
-#'   the API key globally using [sfa_set_api_key].
-#' @param cache_dir [character] Your cache directory. It's recommended to set
-#'   the cache directory globally using [sfa_set_cache_dir].
+#' @param ratios [logical] With `TRUE`, you can display some price related ratios along with the share price data (reserved for SimFin+ users). The ratios that will be displayed are:
+#'
+#'   - Market-Cap
+#'   - Price to Earnings Ratio (quarterly)
+#'   - Price to Earnings Ratio (ttm)
+#'   - Price to Sales Ratio (quarterly)
+#'   - Price to Sales Ratio (ttm)
+#'   - Price to Book Value (ttm)
+#'   - Price to Free Cash Flow (quarterly)
+#'   - Price to Free Cash Flow (ttm)
+#'   - Enterprise Value (ttm)
+#'   - EV/EBITDA (ttm)
+#'   - EV/Sales (ttm)
+#'   - EV/FCF (ttm)
+#'   - Book to Market Value (ttm)
+#'   - Operating Income/EV (ttm).
+#' @inheritParams sfa_get_statement
 #' @importFrom future.apply future_lapply
 #' @export
 sfa_get_prices <- function(

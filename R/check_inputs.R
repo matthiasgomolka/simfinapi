@@ -1,25 +1,16 @@
 #' Generic input checks
 #' @description This function covers all kinds of (recurring) input checks in
 #'   {simfinapi}. This keeps the other functions cleaner.
-#' @param api_key See function using this argument.
-#' @param cache_dir See function using this argument.
-#' @param Ticker See function using this argument.
-#' @param SimFinId See function using this argument.
-#' @param statement See function using this argument.
-#' @param period See function using this argument.
-#' @param fyear See function using this argument.
-#' @param start See function using this argument.
-#' @param end See function using this argument.
-#' @param ttm See function using this argument.
-#' @param shares See function using this argument.
-#' @param ratios See function using this argument.
+#' @inheritParams sfa_get_statement
+#' @inheritParams sfa_get_prices
+#' @inheritParams sfa_get_shares
 #' @importFrom checkmate assert_string assert_directory assert_character
 #'   assert_integerish assert_choice assert_date
 #' @importFrom data.table year
 check_inputs <- function(
   api_key = NULL, cache_dir = NULL, Ticker = NULL, SimFinId = NULL,
   statement = NULL, period = NULL, fyear = NULL, start = NULL, end = NULL,
-  ttm = NULL, shares = NULL, ratios = NULL
+  ttm = NULL, shares = NULL, ratios = NULL, type = NULL
 ) {
   if (!is.null(api_key)) {
     checkmate::assert_string(api_key, pattern = "^[[:alnum:]]{32}$")
@@ -45,12 +36,17 @@ check_inputs <- function(
     )
   }
   if (!is.null(statement)) {
-    checkmate::assert_choice(statement, c("pl", "bs", "cf", "derived", "all"))
+    checkmate::assert_choice(
+      statement,
+      c("pl", "bs", "cf", "derived", "all"),
+      fmatch = TRUE
+    )
   }
   if (!is.null(period)) {
     checkmate::assert_choice(
       period,
-      c("q1", "q2", "q3", "q4", "fy", "h1", "h2", "9m", "6m", "quarters")
+      c("q1", "q2", "q3", "q4", "fy", "h1", "h2", "9m", "6m", "quarters"),
+      fmatch = TRUE
     )
   }
   if (!is.null(fyear)) {
@@ -83,4 +79,26 @@ check_inputs <- function(
   if (!is.null(ratios)) {
     checkmate::assert_logical(ratios, any.missing = FALSE, len = 1L)
   }
+  if (!is.null(type)) {
+    checkmate::assert_choice(
+      type,
+      choices = c("common", "wa-basic", "wa-diluted"),
+      fmatch = TRUE
+    )
+  }
 }
+
+
+#' @param api_key See function using this argument.
+#' @param cache_dir See function using this argument.
+#' @param Ticker See function using this argument.
+#' @param SimFinId See function using this argument.
+#' @param statement See function using this argument.
+#' @param period See function using this argument.
+#' @param fyear See function using this argument.
+#' @param start See function using this argument.
+#' @param end See function using this argument.
+#' @param ttm See function using this argument.
+#' @param shares See function using this argument.
+#' @param ratios See function using this argument.
+#' @param type See function using this argument.
