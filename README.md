@@ -102,8 +102,8 @@ remotes::install_github("https://github.com/Plebejer/simfinapi")
 
 ## Setup
 
-Using simfinapi is much more convenient if you set you API key and cache
-directory globally before you start downloading data. See
+Using simfinapi is much more convenient if you set your API key and
+cache directory\[1\] globally before you start downloading data. See
 `?sfa_set_api_key` and `?sfa_set_cache_dir` for details.
 
 ## Code of Conduct
@@ -111,3 +111,9 @@ directory globally before you start downloading data. See
 Please note that the ‘simfinapi’ project is released with a [Contributor
 Code of Conduct](.github/CODE_OF_CONDUCT.md). By contributing to this
 project, you agree to abide by its terms.
+
+1.  simfinapi always caches the results from your API calls to obtain
+    results quicker and to reduce the number of API calls. If you set
+    the cache directory to a permanent directory (the default is
+    `tempdir()`), simfinapi will be able to reuse this cache in
+    subsequent R sessions.
