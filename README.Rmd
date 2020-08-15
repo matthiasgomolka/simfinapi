@@ -101,13 +101,17 @@ ggplot(merged) +
 ```
 
 ## Installation
-
 simfinapi is not yet available on [CRAN](https://cran.r-project.org/), but you
 can install it from [GitHub](https://github.com/Plebejer/simfinapi):
 
 ```{r installation, eval=FALSE}
 remotes::install_github("https://github.com/Plebejer/simfinapi")
 ```
+
+## Setup
+Using simfinapi is much more convenient if you set you API key and cache
+directory globally before you start downloading data. See `?sfa_set_api_key` and
+`?sfa_set_cache_dir` for details.
 
 ## Code of Conduct
 Please note that the 'simfinapi' project is released with a

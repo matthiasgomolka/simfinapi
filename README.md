@@ -100,6 +100,12 @@ but you can install it from
 remotes::install_github("https://github.com/Plebejer/simfinapi")
 ```
 
+## Setup
+
+Using simfinapi is much more convenient if you set you API key and cache
+directory globally before you start downloading data. See
+`?sfa_set_api_key` and `?sfa_set_cache_dir` for details.
+
 ## Code of Conduct
 
 Please note that the ‘simfinapi’ project is released with a [Contributor
