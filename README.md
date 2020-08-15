@@ -58,7 +58,7 @@ ggplot(prices) +
   geom_line()
 ```
 
-<img src="README_files/figure-gfm/plot_data-1.png" width="100%" />
+<img src="man/figures/README-plot_data-1.png" width="100%" />
 
 Suppose we would like to display the actual company name instead of the
 ticker. To do so, we download additional company information and merge
@@ -88,7 +88,7 @@ ggplot(merged) +
   geom_line()
 ```
 
-<img src="README_files/figure-gfm/recreate_plot-1.png" width="100%" />
+<img src="man/figures/README-recreate_plot-1.png" width="100%" />
 
 ## Installation
 
