@@ -5,3 +5,4 @@
 ^README\.Rmd$
 ^simfinapi\.code-workspace$
 ^cran-comments\.md$
+^CRAN-RELEASE$
