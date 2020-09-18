@@ -118,6 +118,6 @@ be able to reuse this cache in subsequent R sessions.] globally before you start
 downloading data. See `?sfa_set_api_key` and `?sfa_set_cache_dir` for details.
 
 ## Code of Conduct
-Please note that the 'simfinapi' project is released with a
-[Contributor Code of Conduct](.github/CODE_OF_CONDUCT.md).
-By contributing to this project, you agree to abide by its terms.   
+Please note that the 'simfinapi' project is released with a [Contributor Code of
+Conduct](https://github.com/Plebejer/simfinapi/blob/master/.github/CODE_OF_CONDUCT.md).
+By contributing to this project, you agree to abide by its terms.

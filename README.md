@@ -109,8 +109,9 @@ cache directory\[1\] globally before you start downloading data. See
 ## Code of Conduct
 
 Please note that the ‘simfinapi’ project is released with a [Contributor
-Code of Conduct](.github/CODE_OF_CONDUCT.md). By contributing to this
-project, you agree to abide by its terms.
+Code of
+Conduct](https://github.com/Plebejer/simfinapi/blob/master/.github/CODE_OF_CONDUCT.md).
+By contributing to this project, you agree to abide by its terms.
 
 1.  simfinapi always caches the results from your API calls to obtain
     results quicker and to reduce the number of API calls. If you set
