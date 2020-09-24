@@ -12,11 +12,11 @@ status](https://github.com/Plebejer/simfinapi/workflows/R-CMD-check/badge.svg)](
 
 ## What does simfinapi do?
 
-simfinapi wraps the <https://simfin.com/> Web-API to make SimFin data
+simfinapi wraps the <https://simfin.com/> Web-API to make ‘SimFin’ data
 easily available in R.
 
 *To use the package, you need to register at <https://simfin.com/login>
-and obtain a SimFin API key.*
+and obtain a ‘SimFin’ API key.*
 
 ## Example
 

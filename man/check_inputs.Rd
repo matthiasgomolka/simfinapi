@@ -21,7 +21,7 @@ check_inputs(
 )
 }
 \arguments{
-\item{api_key}{\link{character} Your SimFin API key. It's recommended to set
+\item{api_key}{\link{character} Your 'SimFin' API key. It's recommended to set
 the API key globally using \link{sfa_set_api_key}.}
 
 \item{cache_dir}{\link{character} Your cache directory. It's recommended to set
@@ -29,7 +29,7 @@ the cache directory globally using \link{sfa_set_cache_dir}.}
 
 \item{Ticker}{\link{integer} Ticker of the companies of interest.}
 
-\item{SimFinId}{\link{integer} SimFin IDs of the companies of interest. Any
+\item{SimFinId}{\link{integer} 'SimFin' IDs of the companies of interest. Any
 SimFinId will be internally translated to the respective \code{Ticker}. This
 reduces the number of queries if you would query the same company via
 \code{Ticker} \emph{and} \code{SimFinId}.}

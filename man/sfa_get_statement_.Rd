@@ -73,7 +73,7 @@ sum of the last 4 available quarterly figures.}
 Reserved for SimFin+ users (as non-SimFin+ user, you can still use the
 shares outstanding endpoints).}
 
-\item{api_key}{\link{character} Your SimFin API key. It's recommended to set
+\item{api_key}{\link{character} Your 'SimFin' API key. It's recommended to set
 the API key globally using \link{sfa_set_api_key}.}
 
 \item{cache_dir}{\link{character} Your cache directory. It's recommended to set

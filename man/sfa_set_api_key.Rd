@@ -2,7 +2,7 @@
 % Please edit documentation in R/sfa_set_api_key.R
 \name{sfa_set_api_key}
 \alias{sfa_set_api_key}
-\title{Set your SimFin API key globally}
+\title{Set your 'SimFin' API key globally}
 \usage{
 sfa_set_api_key(api_key, env_var)
 }

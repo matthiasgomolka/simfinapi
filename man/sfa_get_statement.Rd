@@ -21,7 +21,7 @@ sfa_get_statement(
 \arguments{
 \item{Ticker}{\link{integer} Ticker of the companies of interest.}
 
-\item{SimFinId}{\link{integer} SimFin IDs of the companies of interest. Any
+\item{SimFinId}{\link{integer} 'SimFin' IDs of the companies of interest. Any
 SimFinId will be internally translated to the respective \code{Ticker}. This
 reduces the number of queries if you would query the same company via
 \code{Ticker} \emph{and} \code{SimFinId}.}
@@ -79,7 +79,7 @@ sum of the last 4 available quarterly figures.}
 Reserved for SimFin+ users (as non-SimFin+ user, you can still use the
 shares outstanding endpoints).}
 
-\item{api_key}{\link{character} Your SimFin API key. It's recommended to set
+\item{api_key}{\link{character} Your 'SimFin' API key. It's recommended to set
 the API key globally using \link{sfa_set_api_key}.}
 
 \item{cache_dir}{\link{character} Your cache directory. It's recommended to set

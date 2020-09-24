@@ -1,4 +1,4 @@
-#' Set your SimFin API key globally
+#' Set your 'SimFin' API key globally
 #' @description It is highly recommended to set the API key globally as it makes
 #'   specifying the `api_key` argument of other `sfa_*` functions obsolete.
 #'

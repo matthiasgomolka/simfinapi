@@ -2,7 +2,7 @@
 % Please edit documentation in R/sfa_get_entities.R
 \name{sfa_get_entities}
 \alias{sfa_get_entities}
-\title{Get a table of all available SimFin ID's with ticker and name.}
+\title{Get a table of all available 'SimFin' ID's with ticker and name.}
 \usage{
 sfa_get_entities(
   api_key = getOption("sfa_api_key"),
@@ -10,12 +10,12 @@ sfa_get_entities(
 )
 }
 \arguments{
-\item{api_key}{\link{character} Your SimFin API key. It's recommended to set
+\item{api_key}{\link{character} Your 'SimFin' API key. It's recommended to set
 the API key globally using \link{sfa_set_api_key}.}
 
 \item{cache_dir}{\link{character} Your cache directory. It's recommended to set
 the cache directory globally using \link{sfa_set_cache_dir}.}
 }
 \description{
-Get a table of all available SimFin ID's with ticker and name.
+Get a table of all available 'SimFin' ID's with ticker and name.
 }

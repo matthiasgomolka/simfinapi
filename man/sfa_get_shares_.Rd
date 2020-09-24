@@ -47,7 +47,7 @@ reported period ended ('Report Date'). By specifying a value here, only
 statements will be retrieved with report dates ending BEFORE the specified
 date.}
 
-\item{api_key}{\link{character} Your SimFin API key. It's recommended to set
+\item{api_key}{\link{character} Your 'SimFin' API key. It's recommended to set
 the API key globally using \link{sfa_set_api_key}.}
 
 \item{cache_dir}{\link{character} Your cache directory. It's recommended to set

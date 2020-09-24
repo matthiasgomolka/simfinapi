@@ -80,7 +80,7 @@ sfa_get_statement_ <- function(
 
 #' Get basic company information
 #' @param Ticker [integer] Ticker of the companies of interest.
-#' @param SimFinId [integer] SimFin IDs of the companies of interest. Any
+#' @param SimFinId [integer] 'SimFin' IDs of the companies of interest. Any
 #'   SimFinId will be internally translated to the respective `Ticker`. This
 #'   reduces the number of queries if you would query the same company via
 #'   `Ticker` *and* `SimFinId`.
@@ -129,7 +129,7 @@ sfa_get_statement_ <- function(
 #'   & diluted shares outstanding for each period along with the fundamentals.
 #'   Reserved for SimFin+ users (as non-SimFin+ user, you can still use the
 #'   shares outstanding endpoints).
-#' @param api_key [character] Your SimFin API key. It's recommended to set
+#' @param api_key [character] Your 'SimFin' API key. It's recommended to set
 #'   the API key globally using [sfa_set_api_key].
 #' @param cache_dir [character] Your cache directory. It's recommended to set
 #'   the cache directory globally using [sfa_set_cache_dir].

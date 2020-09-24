@@ -1,7 +1,7 @@
 #' Get basic company information
 #' @description Internal function.
 #' @param ticker [integer] Ticker of the companies of interest.
-#' @param api_key `[character(1)]` Your SimFin API key. For simplicity use
+#' @param api_key `[character(1)]` Your 'SimFin' API key. For simplicity use
 #'   `options(sfa_api_key = "yourapikey")`.
 #' @param cache_dir [character] Your cache directory. It's recommended to set
 #'   the cache directory globally using [sfa_set_cache_dir].
@@ -39,11 +39,11 @@ sfa_get_info_ <- function(ticker, api_key, cache_dir) {
 
 #' Get basic company information
 #' @param Ticker [integer] Ticker of the companies of interest.
-#' @param SimFinId [integer] SimFin IDs of the companies of interest. Any
+#' @param SimFinId [integer] 'SimFin' IDs of the companies of interest. Any
 #'   SimFinId will be internally translated to the respective `Ticker`. This
 #'   reduces the number of queries if you would query the same company via
 #'   `Ticker` *and* `SimFinId`.
-#' @param api_key [character] Your SimFin API key. It's recommended to set
+#' @param api_key [character] Your 'SimFin' API key. It's recommended to set
 #'   the API key globally using [sfa_set_api_key].
 #' @param cache_dir [character] Your cache directory. It's recommended to set
 #'   the cache directory globally using [sfa_set_cache_dir].

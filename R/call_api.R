@@ -37,7 +37,7 @@ call_api <- function(..., cache_dir) {
   )
 
   if (utils::hasName(content, "error")) {
-    warning("From SimFin API: '", content[["error"]], "'", call. = FALSE)
+    warning("From 'SimFin' API: '", content[["error"]], "'", call. = FALSE)
     return(NULL)
   }
 

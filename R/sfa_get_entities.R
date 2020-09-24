@@ -1,5 +1,5 @@
-#' Get a table of all available SimFin ID's with ticker and name.
-#' @param api_key [character] Your SimFin API key. It's recommended to set
+#' Get a table of all available 'SimFin' ID's with ticker and name.
+#' @param api_key [character] Your 'SimFin' API key. It's recommended to set
 #'   the API key globally using [sfa_set_api_key].
 #' @param cache_dir [character] Your cache directory. It's recommended to set
 #'   the cache directory globally using [sfa_set_cache_dir].
