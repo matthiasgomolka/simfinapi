@@ -26,7 +26,6 @@ Imports:
     utils
 Suggests: 
     covr (>= 3.5.0),
-    secret,
     testthat,
     knitr,
     rmarkdown,
