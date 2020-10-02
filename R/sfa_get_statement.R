@@ -16,7 +16,7 @@ sfa_get_statement_ <- function(
   # hack ttm and statement into the query since GET cannot handle such
   # parameters (at least I don't know how)
 
-  query_list <-list(
+  query_list <- list(
     "ticker" = Ticker,
     "statement" = statement,
     "period" = period,

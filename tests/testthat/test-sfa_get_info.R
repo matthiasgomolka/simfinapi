@@ -6,7 +6,7 @@ ref <- data.table(
   `Company Name` = c("Alphabet (Google)", "MICROSOFT CORP"),
   `IndustryId` = c(101002L, 101003L),
   `Month FY End` = c(12L, 6L),
-  `Number Employees` = c(98771L, 144000L),
+  `Number Employees` = c(98771L, 163000L),
   key = "Ticker"
 )
 
