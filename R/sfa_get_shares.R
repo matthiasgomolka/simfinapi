@@ -1,4 +1,4 @@
-#' Get basic company information
+#' Shares Outstanding
 #' @inheritParams sfa_get_shares
 #' @importFrom data.table as.data.table setnames set setcolorder rbindlist
 sfa_get_shares_ <- function(
@@ -51,7 +51,7 @@ sfa_get_shares_ <- function(
   return(DT)
 }
 
-#' Get basic company information
+#' Shares Outstanding
 #' @param type [character] Type of shares outstanding to be retrieved.
 #'
 #'   - `"common"`: Common shares outstanding.
@@ -73,7 +73,7 @@ sfa_get_shares_ <- function(
 #'   - `"9m"`: First nine months of fiscal year.
 #'   - `"6m"`: Any fiscal 6 month period (first + second half years).
 #'   - `"quarters"`: All quarters (q1 + q2 + q3 + q4).
-#' @param type [character] Filter for fiscal year. Only works with `type =
+#' @param fyear [character] Filter for fiscal year. Only works with `type =
 #'   "wa-basic"` and `type = "wa-diluted"`. As SimFin+ user, this filter can be
 #'   omitted to retrieve all shares outstanding available for the company. You
 #'   can also chain this filter with a comma, to retrieve multiple years at once

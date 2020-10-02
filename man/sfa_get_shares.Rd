@@ -2,7 +2,7 @@
 % Please edit documentation in R/sfa_get_shares.R
 \name{sfa_get_shares}
 \alias{sfa_get_shares}
-\title{Get basic company information}
+\title{Shares Outstanding}
 \usage{
 sfa_get_shares(
   Ticker = NULL,
@@ -24,10 +24,12 @@ SimFinId will be internally translated to the respective \code{Ticker}. This
 reduces the number of queries if you would query the same company via
 \code{Ticker} \emph{and} \code{SimFinId}.}
 
-\item{type}{\link{character} Filter for fiscal year. Only works with \code{type = "wa-basic"} and \code{type = "wa-diluted"}. As SimFin+ user, this filter can be
-omitted to retrieve all shares outstanding available for the company. You
-can also chain this filter with a comma, to retrieve multiple years at once
-(e.g. \code{fyear = "2015,2016,2017"} to retrieve the data for 3 years at once).}
+\item{type}{\link{character} Type of shares outstanding to be retrieved.
+\itemize{
+\item \code{"common"}: Common shares outstanding.
+\item \code{"wa-basic"}: Weighted average basic shares outstanding for a period.
+\item \code{"wa-diluted"}: Weighted average diluted shares outstanding for a period.
+}}
 
 \item{period}{\link{character} Filter for periods. Only works with \code{type = "wa-basic"} and \code{type = "wa-diluted"}. This filter can be omitted to
 retrieve all shares outstanding available for the company. You can also
@@ -46,9 +48,10 @@ all quarters and the full financial year figures).
 \item \code{"quarters"}: All quarters (q1 + q2 + q3 + q4).
 }}
 
-\item{fyear}{\link{integer} Filter for fiscal year. As a non-SimFin+ user, you
-have to provide exactly one fiscal year. As SimFin+ user, this filter can
-be omitted to retrieve all statements available for the company.}
+\item{fyear}{\link{character} Filter for fiscal year. Only works with \code{type = "wa-basic"} and \code{type = "wa-diluted"}. As SimFin+ user, this filter can be
+omitted to retrieve all shares outstanding available for the company. You
+can also chain this filter with a comma, to retrieve multiple years at once
+(e.g. \code{fyear = "2015,2016,2017"} to retrieve the data for 3 years at once).}
 
 \item{start}{\link{Date} Filter for the report dates (reserved for SimFin+ users).
 With this filter you can filter the statements by the date on which the
@@ -69,5 +72,5 @@ the API key globally using \link{sfa_set_api_key}.}
 the cache directory globally using \link{sfa_set_cache_dir}.}
 }
 \description{
-Get basic company information
+Shares Outstanding
 }

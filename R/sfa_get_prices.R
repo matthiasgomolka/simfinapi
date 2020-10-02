@@ -6,14 +6,20 @@ sfa_get_prices_ <- function(
   api_key,
   cache_dir
 ) {
+  query_list <- list(
+    "ticker" = Ticker,
+    "start" = start,
+    "end" = end,
+    "api-key" = api_key
+  )
+
+  if (isTRUE(ratios)) {
+    query_list[["ratios"]] <- ""
+  }
+
   content <- call_api(
     path = "api/v2/companies/prices",
-    query = list(
-      "ticker" = Ticker,
-      "start" = start,
-      "end" = end,
-      "api-key" = api_key
-    ),
+    query = query_list,
     cache_dir = cache_dir
   )
   # lapply necessary for SimFin+, where larger queries are possible

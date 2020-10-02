@@ -71,7 +71,7 @@ sfa_get_info <- function(
   ticker <- gather_ticker(Ticker, SimFinId, api_key, cache_dir)
 
   result_list <- future.apply::future_lapply(
-    ticker, sfa_get_info_, api_key, cache_dir
+    ticker, sfa_get_info_, api_key, cache_dir, future.seed = TRUE
   )
   gather_result(result_list)
 }

@@ -105,10 +105,12 @@ shares outstanding endpoints).}
 \item Operating Income/EV (ttm).
 }}
 
-\item{type}{\link{character} Filter for fiscal year. Only works with \code{type = "wa-basic"} and \code{type = "wa-diluted"}. As SimFin+ user, this filter can be
-omitted to retrieve all shares outstanding available for the company. You
-can also chain this filter with a comma, to retrieve multiple years at once
-(e.g. \code{fyear = "2015,2016,2017"} to retrieve the data for 3 years at once).}
+\item{type}{\link{character} Type of shares outstanding to be retrieved.
+\itemize{
+\item \code{"common"}: Common shares outstanding.
+\item \code{"wa-basic"}: Weighted average basic shares outstanding for a period.
+\item \code{"wa-diluted"}: Weighted average diluted shares outstanding for a period.
+}}
 }
 \description{
 This function covers all kinds of (recurring) input checks in
