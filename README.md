@@ -7,7 +7,7 @@
 [![](https://www.r-pkg.org/badges/version/simfinapi?color=orange)](https://cran.r-project.org/package=simfinapi)
 [![R build
 status](https://github.com/matthiasgomolka/simfinapi/workflows/R-CMD-check/badge.svg)](https://github.com/matthiasgomolka/simfinapi/actions)
-[![](https://codecov.io/gh/Plebejer/simfinapi/branch/master/graph/badge.svg)](https://codecov.io/gh/Plebejer/simfinapi)
+[![](https://codecov.io/gh/matthiasgomolka/simfinapi/branch/master/graph/badge.svg)](https://codecov.io/gh/matthiasgomolka/simfinapi)
 [![Dependencies](https://tinyverse.netlify.com/badge/simfinapi)](https://cran.r-project.org/package=simfinapi)
 
 ## What does simfinapi do?
