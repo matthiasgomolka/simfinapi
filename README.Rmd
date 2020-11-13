@@ -2,8 +2,6 @@
 output: github_document
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 ```{r include=FALSE}
 library(badger)
 library(knitr)
@@ -29,7 +27,7 @@ theme_set(theme_minimal())
 
 `r badge_lifecycle("experimental")`
 `r badger::badge_cran_release(color = "orange")`
-[![R build status](https://github.com/Plebejer/simfinapi/workflows/R-CMD-check/badge.svg)](https://github.com/Plebejer/simfinapi/actions)
+[![R build status](https://github.com/matthiasgomolka/simfinapi/workflows/R-CMD-check/badge.svg)](https://github.com/matthiasgomolka/simfinapi/actions)
 `r badger::badge_codecov()`
 `r badge_dependencies()`
 
@@ -108,10 +106,10 @@ install.packages("simfinapi")
 ```
 If you want to try out the newest features you may want to give the development
 version a try and install it from
-[GitHub](https://github.com/Plebejer/simfinapi):
+[GitHub](https://github.com/matthiasgomolka/simfinapi):
 
 ```{r install_github, eval=FALSE}
-remotes::install_github("https://github.com/Plebejer/simfinapi")
+remotes::install_github("https://github.com/matthiasgomolka/simfinapi")
 ```
 
 ## Setup
@@ -124,5 +122,5 @@ downloading data. See `?sfa_set_api_key` and `?sfa_set_cache_dir` for details.
 
 ## Code of Conduct
 Please note that the 'simfinapi' project is released with a [Contributor Code of
-Conduct](https://github.com/Plebejer/simfinapi/blob/master/.github/CODE_OF_CONDUCT.md).
+Conduct](https://github.com/matthiasgomolka/simfinapi/blob/master/.github/CODE_OF_CONDUCT.md).
 By contributing to this project, you agree to abide by its terms.

@@ -6,7 +6,7 @@
 [![](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![](https://www.r-pkg.org/badges/version/simfinapi?color=orange)](https://cran.r-project.org/package=simfinapi)
 [![R build
-status](https://github.com/Plebejer/simfinapi/workflows/R-CMD-check/badge.svg)](https://github.com/Plebejer/simfinapi/actions)
+status](https://github.com/matthiasgomolka/simfinapi/workflows/R-CMD-check/badge.svg)](https://github.com/matthiasgomolka/simfinapi/actions)
 [![](https://codecov.io/gh/Plebejer/simfinapi/branch/master/graph/badge.svg)](https://codecov.io/gh/Plebejer/simfinapi)
 [![Dependencies](https://tinyverse.netlify.com/badge/simfinapi)](https://cran.r-project.org/package=simfinapi)
 
@@ -108,10 +108,10 @@ install.packages("simfinapi")
 
 If you want to try out the newest features you may want to give the
 development version a try and install it from
-[GitHub](https://github.com/Plebejer/simfinapi):
+[GitHub](https://github.com/matthiasgomolka/simfinapi):
 
 ``` r
-remotes::install_github("https://github.com/Plebejer/simfinapi")
+remotes::install_github("https://github.com/matthiasgomolka/simfinapi")
 ```
 
 ## Setup
@@ -124,7 +124,7 @@ cache directory\[1\] globally before you start downloading data. See
 
 Please note that the ‘simfinapi’ project is released with a [Contributor
 Code of
-Conduct](https://github.com/Plebejer/simfinapi/blob/master/.github/CODE_OF_CONDUCT.md).
+Conduct](https://github.com/matthiasgomolka/simfinapi/blob/master/.github/CODE_OF_CONDUCT.md).
 By contributing to this project, you agree to abide by its terms.
 
 1.  simfinapi always caches the results from your API calls to obtain
