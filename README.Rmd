@@ -19,6 +19,7 @@ opts_chunk$set(
 
 options(sfa_api_key = Sys.getenv("SIMFIN_API_KEY"))
 options(sfa_cache_dir = tempdir())
+options('future.rng.onMisuse' = "ignore")
 
 theme_set(theme_minimal())
 ```
@@ -26,9 +27,10 @@ theme_set(theme_minimal())
 # simfinapi <img src='man/figures/logo.png' align="right" height="139" />
 
 `r badge_lifecycle("experimental")`
-`r badger::badge_cran_release(color = "orange")`
+[![CRAN release](https://www.r-pkg.org/badges/version/simfinapi)](https://CRAN.R-project.org/package=simfinapi)
+[![Status](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![R build status](https://github.com/matthiasgomolka/simfinapi/workflows/R-CMD-check/badge.svg)](https://github.com/matthiasgomolka/simfinapi/actions)
-`r badger::badge_codecov()`
+[![](https://codecov.io/gh/matthiasgomolka/simfinapi/branch/main/graph/badge.svg)](https://codecov.io/gh/matthiasgomolka/simfinapi)
 `r badge_dependencies()`
 
 ## What does simfinapi do?

@@ -1,13 +1,13 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 # simfinapi <img src='man/figures/logo.png' align="right" height="139" />
 
 [![](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
-[![](https://www.r-pkg.org/badges/version/simfinapi?color=orange)](https://cran.r-project.org/package=simfinapi)
+[![CRAN
+release](https://www.r-pkg.org/badges/version/simfinapi)](https://CRAN.R-project.org/package=simfinapi)
+[![Status](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![R build
 status](https://github.com/matthiasgomolka/simfinapi/workflows/R-CMD-check/badge.svg)](https://github.com/matthiasgomolka/simfinapi/actions)
-[![](https://codecov.io/gh/matthiasgomolka/simfinapi/branch/master/graph/badge.svg)](https://codecov.io/gh/matthiasgomolka/simfinapi)
+[![](https://codecov.io/gh/matthiasgomolka/simfinapi/branch/main/graph/badge.svg)](https://codecov.io/gh/matthiasgomolka/simfinapi)
 [![Dependencies](https://tinyverse.netlify.com/badge/simfinapi)](https://cran.r-project.org/package=simfinapi)
 
 ## What does simfinapi do?
@@ -30,13 +30,6 @@ library(simfinapi)
 # download stock price data
 tickers <- c("AMZN", "GOOG") # Amazon, Google
 prices <- sfa_get_prices(tickers)
-#> Warning: UNRELIABLE VALUE: Future ('future_lapply-1') unexpectedly generated
-#> random numbers without specifying argument '[future.]seed'. There is a risk that
-#> those random numbers are not statistically sound and the overall results might
-#> be invalid. To fix this, specify argument '[future.]seed', e.g. 'seed=TRUE'.
-#> This ensures that proper, parallel-safe random numbers are produced via the
-#> L'Ecuyer-CMRG method. To disable this check, use [future].seed=NULL, or set
-#> option 'future.rng.onMisuse' to "ignore".
 ```
 
 Please note that all functions in simfinapi start with the prefix
