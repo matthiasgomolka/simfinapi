@@ -9,7 +9,7 @@ sfa_get_statement(
   SimFinId = NULL,
   statement,
   period = "fy",
-  fyear = data.table::year(Sys.Date()) - 1L,
+  fyear = NULL,
   start = NULL,
   end = NULL,
   ttm = FALSE,
