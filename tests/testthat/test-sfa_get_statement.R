@@ -71,7 +71,7 @@ test_that("getting pl statement works", {
     `Net Income (Common)` = "numeric"
   )
 
-  ref_1 <- sfa_get_statement("GOOG", statement = "pl")
+  ref_1 <- sfa_get_statement("GOOG", statement = "pl", fyear = 2015)
   checkmate::expect_data_table(
     ref_1,
     key = "Ticker",
@@ -82,7 +82,19 @@ test_that("getting pl statement works", {
   )
   expect_named(ref_1, names(exp_classes))
 
-  ref_2 <- sfa_get_statement(c("GOOG", "AAPL"), statement = "pl")
+  ref_1_plus <- sfa_get_statement("GOOG", statement = "pl")
+  checkmate::expect_data_table(
+    ref_1_plus,
+    key = "Ticker",
+    types = exp_classes,
+    min.rows = 13L,
+    ncols = length(exp_classes),
+    col.names = "unique"
+  )
+  expect_named(ref_1_plus, names(exp_classes))
+
+
+  ref_2 <- sfa_get_statement(c("GOOG", "AAPL"), statement = "pl", fyear = 2015)
   checkmate::expect_data_table(
     ref_2,
     key = "Ticker",
@@ -93,7 +105,20 @@ test_that("getting pl statement works", {
   )
   expect_named(ref_2, names(exp_classes))
 
-  ref_3 <- sfa_get_statement(c("GOOG", "AAPL"), statement = "pl", ttm = TRUE)
+  ref_2_plus <- sfa_get_statement(c("GOOG", "AAPL"), statement = "pl")
+  checkmate::expect_data_table(
+    ref_2_plus,
+    key = "Ticker",
+    types = exp_classes,
+    min.rows = 35L,
+    ncols = length(exp_classes),
+    col.names = "unique"
+  )
+  expect_named(ref_2_plus, names(exp_classes))
+
+  ref_3 <- sfa_get_statement(
+    c("GOOG", "AAPL"), statement = "pl", ttm = TRUE, fyear = 2015
+  )
   checkmate::expect_data_table(
     ref_3,
     key = "Ticker",
@@ -104,12 +129,27 @@ test_that("getting pl statement works", {
   )
   expect_named(ref_3, names(exp_classes))
 
+  ref_3_plus <- sfa_get_statement(
+    c("GOOG", "AAPL"), statement = "pl", ttm = TRUE
+  )
+  checkmate::expect_data_table(
+    ref_3_plus,
+    key = "Ticker",
+    types = exp_classes,
+    min.rows = 33L,
+    ncols = length(exp_classes),
+    col.names = "unique"
+  )
+  expect_named(ref_3_plus, names(exp_classes))
+
   exp_classes <- append(
     exp_classes,
     c(`Shares (Basic)` = "numeric", `Shares (Diluted)` = "numeric"),
     after = which(names(exp_classes) == "Currency")
   )
-  ref_4 <- sfa_get_statement(c("GOOG", "AAPL"), statement = "pl", shares = TRUE)
+  ref_4 <- sfa_get_statement(
+    c("GOOG", "AAPL"), statement = "pl", shares = TRUE, fyear = 2015
+  )
   checkmate::expect_data_table(
     ref_4,
     key = "Ticker",
@@ -119,6 +159,19 @@ test_that("getting pl statement works", {
     col.names = "unique"
   )
   expect_named(ref_4, names(exp_classes))
+
+  ref_4_plus <- sfa_get_statement(
+    c("GOOG", "AAPL"), statement = "pl", shares = TRUE
+  )
+  checkmate::expect_data_table(
+    ref_4_plus,
+    key = "Ticker",
+    types = exp_classes,
+    min.rows = 35L,
+    ncols = length(exp_classes),
+    col.names = "unique"
+  )
+  expect_named(ref_4_plus, names(exp_classes))
 })
 
 
@@ -222,7 +275,7 @@ test_that("getting bs statement works", {
     `Total Liabilities & Equity` = "numeric"
   )
 
-  ref_1 <- sfa_get_statement("GOOG", statement = "bs")
+  ref_1 <- sfa_get_statement("GOOG", statement = "bs", fyear = 2015)
   checkmate::expect_data_table(
     ref_1,
     key = "Ticker",
@@ -233,7 +286,19 @@ test_that("getting bs statement works", {
   )
   expect_named(ref_1, names(exp_classes))
 
-  ref_2 <- sfa_get_statement(c("GOOG", "AAPL"), statement = "bs")
+  ref_1_plus <- sfa_get_statement("GOOG", statement = "bs")
+  checkmate::expect_data_table(
+    ref_1_plus,
+    key = "Ticker",
+    types = exp_classes,
+    min.rows = 12L,
+    ncols = length(exp_classes),
+    col.names = "unique"
+  )
+  expect_named(ref_1_plus, names(exp_classes))
+
+
+  ref_2 <- sfa_get_statement(c("GOOG", "AAPL"), statement = "bs", fyear = 2015)
   checkmate::expect_data_table(
     ref_2,
     key = "Ticker",
@@ -243,6 +308,130 @@ test_that("getting bs statement works", {
     col.names = "unique"
   )
   expect_named(ref_2, names(exp_classes))
+
+  ref_2_plus <- sfa_get_statement(c("GOOG", "AAPL"), statement = "bs")
+  checkmate::expect_data_table(
+    ref_2_plus,
+    key = "Ticker",
+    types = exp_classes,
+    nrows = 33L,
+    ncols = length(exp_classes),
+    col.names = "unique"
+  )
+  expect_named(ref_2_plus, names(exp_classes))
+})
+
+test_that("getting cf statement works", {
+  exp_classes <- c(
+    SimFinId = "integer",
+    Ticker = "character",
+    `Fiscal Period` = "character",
+    `Fiscal Year` = "integer",
+    `Report Date` = "Date",
+    `Publish Date` = "Date",
+    `Restated Date` = "Date",
+    Source = "character",
+    TTM = "logical",
+    `Value Check` = "logical",
+    Currency = "character",
+    `Net Income/Starting Line` = "numeric",
+    `Net Income` = "numeric",
+    `Net Income from Discontinued Operations` = "numeric",
+    `Other Adjustments` = "numeric",
+    `Depreciation & Amortization` = "numeric",
+    `Non-Cash Items` = "numeric",
+    `Stock-Based Compensation` = "numeric",
+    `Deferred Income Taxes` = "numeric",
+    `Other Non-Cash Adjustments` = "numeric",
+    `Change in Working Capital` = "numeric",
+    `Change in Accounts Receivable` = "numeric",
+    `Change in Inventories` = "numeric",
+    `Change in Accounts Payable` = "numeric",
+    `Change in Other` = "numeric",
+    `Net Cash from Discontinued Operations (Operating)` = "numeric",
+    `Net Cash from Operating Activities` = "numeric",
+    `Change in Fixed Assets & Intangibles` = "numeric",
+    `Disposition of Fixed Assets & Intangibles` = "numeric",
+    `Disposition of Fixed Assets` = "numeric",
+    `Disposition of Intangible Assets` = "numeric",
+    `Acquisition of Fixed Assets & Intangibles` = "numeric",
+    `Purchase of Fixed Assets` = "numeric",
+    `Acquisition of Intangible Assets` = "numeric",
+    `Other Change in Fixed Assets & Intangibles` = "numeric",
+    `Net Change in Long Term Investment` = "numeric",
+    `Decrease in Long Term Investment` = "numeric",
+    `Increase in Long Term Investment` = "numeric",
+    `Net Cash from Acquisitions & Divestitures` = "numeric",
+    `Net Cash from Divestitures` = "numeric",
+    `Cash for Acquisition of Subsidiaries` = "numeric",
+    `Cash for Joint Ventures` = "numeric",
+    `Net Cash from Other Acquisitions` = "numeric",
+    `Other Investing Activities` = "numeric",
+    `Net Cash from Discontinued Operations (Investing)` = "numeric",
+    `Net Cash from Investing Activities` = "numeric",
+    `Dividends Paid` = "numeric",
+    `Cash from (Repayment of) Debt` = "numeric",
+    `Cash from (Repayment of) Short Term Debt, Net` = "numeric",
+    `Cash from (Repayment of) Long Term Debt, Net` = "numeric",
+    `Repayments of Long Term Debt` = "numeric",
+    `Cash from Long Term Debt` = "numeric",
+    `Cash from (Repurchase of) Equity` = "numeric",
+    `Increase in Capital Stock` = "numeric",
+    `Decrease in Capital Stock` = "numeric",
+    `Other Financing Activities` = "numeric",
+    `Net Cash from Discontinued Operations (Financing)` = "numeric",
+    `Net Cash from Financing Activities` = "numeric",
+    `Net Cash Before Disc. Operations and FX` = "numeric",
+    `Change in Cash from Disc. Operations and Other` = "numeric",
+    `Net Cash Before FX` = "numeric",
+    `Effect of Foreign Exchange Rates` = "numeric",
+    `Net Change in Cash` = "numeric"
+  )
+
+  ref_1 <- sfa_get_statement("GOOG", statement = "cf", fyear = 2015)
+  checkmate::expect_data_table(
+    ref_1,
+    key = "Ticker",
+    types = exp_classes,
+    nrows = 1L,
+    ncols = length(exp_classes),
+    col.names = "unique"
+  )
+  expect_named(ref_1, names(exp_classes))
+
+  ref_1_plus <- sfa_get_statement("GOOG", statement = "cf")
+  checkmate::expect_data_table(
+    ref_1_plus,
+    key = "Ticker",
+    types = exp_classes,
+    min.rows = 12L,
+    ncols = length(exp_classes),
+    col.names = "unique"
+  )
+  expect_named(ref_1_plus, names(exp_classes))
+
+
+  ref_2 <- sfa_get_statement(c("GOOG", "AAPL"), statement = "cf", fyear = 2015)
+  checkmate::expect_data_table(
+    ref_2,
+    key = "Ticker",
+    types = exp_classes,
+    nrows = 2L,
+    ncols = length(exp_classes),
+    col.names = "unique"
+  )
+  expect_named(ref_2, names(exp_classes))
+
+  ref_2_plus <- sfa_get_statement(c("GOOG", "AAPL"), statement = "cf")
+  checkmate::expect_data_table(
+    ref_2_plus,
+    key = "Ticker",
+    types = exp_classes,
+    nrows = 35L,
+    ncols = length(exp_classes),
+    col.names = "unique"
+  )
+  expect_named(ref_2_plus, names(exp_classes))
 })
 
 # TODO: Test all kinds of statements

@@ -146,7 +146,7 @@ sfa_get_statement <- function(
   SimFinId = NULL,
   statement,
   period = "fy",
-  fyear = data.table::year(Sys.Date()) - 1L,
+  fyear = NULL,
   start = NULL,
   end = NULL,
   ttm = FALSE,
@@ -167,7 +167,7 @@ sfa_get_statement <- function(
   )
 
   ticker <- gather_ticker(Ticker, SimFinId, api_key, cache_dir)
-  fyear <- paste(fyear, collapse = ",")
+  if (!is.null(fyear)) fyear <- paste(fyear, collapse = ",")
 
   result_list <- future.apply::future_lapply(
     Ticker, sfa_get_statement_, statement, period, fyear, start, end, ttm,

@@ -12,3 +12,6 @@ are a 'SimFin+' user).
 * It's now possible to download "all" statements at once (if you are a 'SimFin+'
 user). Some column names occur in several statements and duplicates are numbered
 with `_2`.
+* Argument `fyear` from `sfa_get_statement()` no longer has a default value.
+This prevents errors for SimFin+ users, who set `start` or `end`. (#13, reported
+by MislavSag)
