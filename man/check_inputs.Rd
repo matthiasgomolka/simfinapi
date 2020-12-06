@@ -17,7 +17,8 @@ check_inputs(
   ttm = NULL,
   shares = NULL,
   ratios = NULL,
-  type = NULL
+  type = NULL,
+  ref_data = NULL
 )
 }
 \arguments{
@@ -111,6 +112,8 @@ shares outstanding endpoints).}
 \item \code{"wa-basic"}: Weighted average basic shares outstanding for a period.
 \item \code{"wa-diluted"}: Weighted average diluted shares outstanding for a period.
 }}
+
+\item{ref_data}{\link{character} Either "industries" or "markets".}
 }
 \description{
 This function covers all kinds of (recurring) input checks in

@@ -1,6 +1,7 @@
 #' Get basic company information
 #' @inheritParams sfa_get_statement
-#' @importFrom data.table as.data.table setnames set setcolorder rbindlist
+#' @importFrom data.table transpose as.data.table setnames set setcolorder
+#'   rbindlist
 sfa_get_statement_ <- function(
   Ticker,
   statement,
@@ -44,7 +45,11 @@ sfa_get_statement_ <- function(
       warning('No company found for Ticker "', Ticker, '".', call. = FALSE)
       return(NULL)
     }
-    DT <- data.table::as.data.table(lapply(x[["data"]], t))
+    DT <- data.table::transpose(data.table::as.data.table(x[["data"]]))
+
+    # remove duplicate column names and set those
+    duplicates <- which(duplicated(x[["columns"]]))
+    x[["columns"]][duplicates] <- paste0(x[["columns"]][duplicates], "_2")
     data.table::setnames(DT, x[["columns"]])
 
     data.table::set(DT, j = "Currency", value = x[["currency"]])
@@ -58,8 +63,8 @@ sfa_get_statement_ <- function(
   # prettify DT
   col_order <- append(
     setdiff(names(DT), "Currency"),
-    "Currency",
-    which(names(DT) == "Value Check")
+    values = "Currency",
+    after = which(names(DT) == "Value Check")
   )
   data.table::setcolorder(DT, col_order)
 
@@ -142,7 +147,7 @@ sfa_get_statement <- function(
   SimFinId = NULL,
   statement,
   period = "fy",
-  fyear = data.table::year(Sys.Date()) - 1L,
+  fyear = NULL,
   start = NULL,
   end = NULL,
   ttm = FALSE,
@@ -163,6 +168,7 @@ sfa_get_statement <- function(
   )
 
   ticker <- gather_ticker(Ticker, SimFinId, api_key, cache_dir)
+  if (!is.null(fyear)) fyear <- paste(fyear, collapse = ",")
 
   progressr::with_progress({
     prg <- progressr::progressor(along = ticker)

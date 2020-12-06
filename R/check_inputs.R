@@ -4,13 +4,14 @@
 #' @inheritParams sfa_get_statement
 #' @inheritParams sfa_get_prices
 #' @inheritParams sfa_get_shares
+#' @inheritParams sfa_get_ref
 #' @importFrom checkmate assert_string assert_directory assert_character
 #'   assert_integerish assert_choice assert_date
 #' @importFrom data.table year
 check_inputs <- function(
   api_key = NULL, cache_dir = NULL, Ticker = NULL, SimFinId = NULL,
   statement = NULL, period = NULL, fyear = NULL, start = NULL, end = NULL,
-  ttm = NULL, shares = NULL, ratios = NULL, type = NULL
+  ttm = NULL, shares = NULL, ratios = NULL, type = NULL, ref_data = NULL
 ) {
   if (!is.null(api_key)) {
     checkmate::assert_string(api_key, pattern = "^[[:alnum:]]{32}$")
@@ -82,6 +83,13 @@ check_inputs <- function(
     checkmate::assert_choice(
       type,
       choices = c("common", "wa-basic", "wa-diluted"),
+      fmatch = TRUE
+    )
+  }
+  if (!is.null(ref_data)) {
+    checkmate::assert_choice(
+      ref_data,
+      choices = c("industries", "markets"),
       fmatch = TRUE
     )
   }
