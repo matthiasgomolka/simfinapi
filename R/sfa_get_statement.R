@@ -135,6 +135,7 @@ sfa_get_statement_ <- function(
 #'   the cache directory globally using [sfa_set_cache_dir].
 #' @importFrom checkmate assert_choice
 #' @importFrom future.apply future_lapply
+#' @importFrom progressr with_progress progressor
 #' @export
 sfa_get_statement <- function(
   Ticker = NULL,
@@ -163,9 +164,17 @@ sfa_get_statement <- function(
 
   ticker <- gather_ticker(Ticker, SimFinId, api_key, cache_dir)
 
-  result_list <- future.apply::future_lapply(
-    Ticker, sfa_get_statement_, statement, period, fyear, start, end, ttm,
-    shares, api_key, cache_dir
-  )
+  progressr::with_progress({
+    prg <- progressr::progressor(along = ticker)
+    result_list <- future.apply::future_lapply(ticker, function(x) {
+      prg(x)
+      sfa_get_statement_(
+        Ticker = x, statement, period, fyear, start, end, ttm, shares, api_key,
+        cache_dir
+      )
+    },
+    future.seed = TRUE)
+  })
+
   gather_result(result_list)
 }

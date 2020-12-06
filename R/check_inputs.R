@@ -21,7 +21,7 @@ check_inputs <- function(
   if (!is.null(Ticker)) {
     checkmate::assert_character(
       Ticker,
-      pattern = "^[A-Za-z0-9_.]+$",
+      pattern = "^[A-Za-z0-9_\\.\\-]+$",
       any.missing = FALSE,
       null.ok = TRUE
     )
@@ -30,7 +30,6 @@ check_inputs <- function(
     checkmate::assert_integerish(
       SimFinId,
       lower = 1L,
-      upper = 999999L,
       any.missing = FALSE,
       null.ok = TRUE
     )

@@ -80,6 +80,7 @@ sfa_get_prices_ <- function(
 #'   - Operating Income/EV (ttm).
 #' @inheritParams sfa_get_statement
 #' @importFrom future.apply future_lapply
+#' @importFrom progressr with_progress progressor
 #' @export
 sfa_get_prices <- function(
   Ticker = NULL,
@@ -102,9 +103,14 @@ sfa_get_prices <- function(
 
   ticker <- gather_ticker(Ticker, SimFinId, api_key, cache_dir)
 
-  result_list <- future.apply::future_lapply(
-    ticker, sfa_get_prices_, ratios, start, end, api_key, cache_dir
-  )
+  progressr::with_progress({
+    prg <- progressr::progressor(along = ticker)
+    result_list <- future.apply::future_lapply(ticker, function(x) {
+      prg(x)
+      sfa_get_prices_(Ticker = x, ratios, start, end, api_key, cache_dir)
+    },
+    future.seed = TRUE)
+  })
 
   gather_result(result_list)
 }

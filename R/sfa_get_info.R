@@ -50,6 +50,7 @@ sfa_get_info_ <- function(ticker, api_key, cache_dir) {
 #' @importFrom checkmate assert_character assert_integerish assert_string
 #'   assert_directory
 #' @importFrom future.apply future_lapply
+#' @importFrom progressr with_progress progressor
 #' @export
 sfa_get_info <- function(
   Ticker = NULL,
@@ -70,8 +71,13 @@ sfa_get_info <- function(
   # translate SimFinId to Ticker to simplify API call
   ticker <- gather_ticker(Ticker, SimFinId, api_key, cache_dir)
 
-  result_list <- future.apply::future_lapply(
-    ticker, sfa_get_info_, api_key, cache_dir, future.seed = TRUE
-  )
+  progressr::with_progress({
+    prg <- progressr::progressor(along = ticker)
+    result_list <- future.apply::future_lapply(ticker, function(x) {
+      prg(x)
+      sfa_get_info_(ticker = x, api_key, cache_dir)
+    },
+    future.seed = TRUE)
+  })
   gather_result(result_list)
 }

@@ -247,11 +247,9 @@ test_that("getting bs statement works", {
 
 # TODO: Test all kinds of statements
 test_that("warning is trigged when no company was found", {
-  expect_null(
-    expect_warning(
-      sfa_get_statement("doesnotexist", statement = "cf"),
-      'No company found for Ticker "doesnotexist".',
-      fixed = TRUE
-    )
+  expect_warning(
+    expect_null(sfa_get_statement("doesnotexist", statement = "cf")),
+    'No company found for Ticker "doesnotexist".',
+    fixed = TRUE
   )
 })

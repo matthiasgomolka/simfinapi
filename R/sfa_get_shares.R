@@ -81,6 +81,7 @@ sfa_get_shares_ <- function(
 #' @inheritParams sfa_get_statement
 #' @importFrom checkmate assert_choice
 #' @importFrom future.apply future_lapply
+#' @importFrom progressr with_progress progressor
 #' @export
 sfa_get_shares <- function(
   Ticker = NULL,
@@ -107,8 +108,16 @@ sfa_get_shares <- function(
 
   ticker <- gather_ticker(Ticker, SimFinId, api_key, cache_dir)
 
-  result_list <- future.apply::future_lapply(
-    Ticker, sfa_get_shares_, type, period, fyear, start, end, api_key, cache_dir
-  )
+  progressr::with_progress({
+    prg <- progressr::progressor(along = ticker)
+    result_list <- future.apply::future_lapply(ticker, function(x) {
+      prg(x)
+      sfa_get_shares_(
+        Ticker = x, type, period, fyear, start, end, api_key, cache_dir
+      )
+    },
+    future.seed = TRUE)
+  })
+
   gather_result(result_list)
 }
