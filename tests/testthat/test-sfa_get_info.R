@@ -11,19 +11,42 @@ ref <- data.table(
 )
 
 test_that("search via Tickers works", {
-  expect_identical(sfa_get_info(Ticker = c("GOOG", "MSFT")), ref)
-  expect_identical(sfa_get_info(Ticker = c("MSFT", "GOOG")), ref)
+  # Restrict columns to those which are in 'ref'. This way, I don't need to
+  # update the test so often.
+  expect_identical(
+    sfa_get_info(Ticker = c("GOOG", "MSFT"))[, names(ref), with = FALSE],
+    ref
+  )
+  expect_identical(
+    sfa_get_info(Ticker = c("MSFT", "GOOG"))[, names(ref), with = FALSE],
+    ref
+  )
 })
 
 test_that("search via SimFinIds works", {
-  expect_identical(sfa_get_info(SimFinId = c(18L, 59265L)), ref)
-  expect_identical(sfa_get_info(SimFinId = c(18, 59265)), ref)
-  expect_identical(sfa_get_info(SimFinId = c(59265L, 18L)), ref)
+  expect_identical(
+    sfa_get_info(SimFinId = c(18L, 59265L))[, names(ref), with = FALSE],
+    ref
+  )
+  expect_identical(
+    sfa_get_info(SimFinId = c(18, 59265))[, names(ref), with = FALSE],
+    ref
+  )
+  expect_identical(
+    sfa_get_info(SimFinId = c(59265L, 18L))[, names(ref), with = FALSE],
+    ref
+  )
 })
 
 test_that("search via Ticker and SimFinId works", {
-  expect_identical(sfa_get_info(Ticker = "GOOG", SimFinId = 59265L), ref)
-  expect_identical(sfa_get_info(Ticker = "MSFT", SimFinId = 18), ref)
+  expect_identical(
+    sfa_get_info(Ticker = "GOOG", SimFinId = 59265L)[, names(ref), with = FALSE],
+    ref
+  )
+  expect_identical(
+    sfa_get_info(Ticker = "MSFT", SimFinId = 18)[, names(ref), with = FALSE],
+    ref
+  )
 })
 
 
@@ -34,7 +57,10 @@ test_that("search for non-existent Ticker / SimFinId yields warning", {
     fixed = TRUE
   )
   expect_warning(
-    expect_identical(sfa_get_info(SimFinId = c(1L, 18L, 59265L)), ref),
+    expect_identical(
+      sfa_get_info(SimFinId = c(1L, 18L, 59265L))[, names(ref), with = FALSE],
+      ref
+    ),
     "No company found for SimFinId `1`",
     fixed = TRUE
   )

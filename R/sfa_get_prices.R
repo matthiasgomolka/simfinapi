@@ -22,17 +22,21 @@ sfa_get_prices_ <- function(
     query = query_list,
     cache_dir = cache_dir
   )
+
   # lapply necessary for SimFin+, where larger queries are possible
   DT_list <- lapply(content, function(x) {
     if (isFALSE(x[["found"]])) {
       warning('No company found for Ticker "', Ticker, '".', call. = FALSE)
       return(NULL)
     }
-    DT <-  as.data.table(matrix(unlist(x[["data"]]), ncol = length(x[["columns"]]), byrow = TRUE))
+    DT <- data.table::as.data.table(
+      matrix(unlist(x[["data"]]), ncol = length(x[["columns"]]), byrow = TRUE)
+    )
 
     data.table::setnames(DT, x[["columns"]])
 
     data.table::set(DT, j = "Currency", value = x[["currency"]])
+    return(DT)
   })
 
   DT <- data.table::rbindlist(DT_list, use.names = TRUE)
@@ -41,14 +45,18 @@ sfa_get_prices_ <- function(
   }
 
   # prettify DT
-  col_order <- append(
-    setdiff(names(DT), "Currency"),
-    "Currency",
-    which(names(DT) == "Date")
-  )
-  data.table::setcolorder(DT, col_order)
+  if ("Currency" %in% names(DT)) { # Currency may be missing
+    col_order <- append(
+      setdiff(names(DT), "Currency"),
+      values = "Currency",
+      after = which(names(DT) == "Date")
+    )
+    data.table::setcolorder(DT, col_order)
+    char_vars <- c("Ticker", "Currency")
+  } else {
+    char_vars <- "Ticker"
+  }
 
-  char_vars <- c("Ticker", "Currency")
   date_vars <- c("Date")
   int_vars <- c("SimFinId")
   num_vars <- setdiff(names(DT), c(char_vars, date_vars, int_vars))

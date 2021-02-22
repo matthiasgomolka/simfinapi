@@ -314,7 +314,7 @@ test_that("getting bs statement works", {
     ref_2_plus,
     key = "Ticker",
     types = exp_classes,
-    nrows = 33L,
+    min.rows = 34L,
     ncols = length(exp_classes),
     col.names = "unique"
   )
@@ -427,7 +427,7 @@ test_that("getting cf statement works", {
     ref_2_plus,
     key = "Ticker",
     types = exp_classes,
-    nrows = 35L,
+    min.rows = 36L,
     ncols = length(exp_classes),
     col.names = "unique"
   )
