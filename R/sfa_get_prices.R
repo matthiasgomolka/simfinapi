@@ -35,7 +35,12 @@ sfa_get_prices_ <- function(
 
     data.table::setnames(DT, x[["columns"]])
 
-    data.table::set(DT, j = "Currency", value = x[["currency"]])
+    data.table::set(
+      DT,
+      j = "Currency",
+      # ifelse handles the case where c[["currency"]] is NULL
+      value = ifelse(is.null(x[["currency"]]), NA_character_, x[["currency"]])
+    )
     return(DT)
   })
 
@@ -45,18 +50,19 @@ sfa_get_prices_ <- function(
   }
 
   # prettify DT
-  if ("Currency" %in% names(DT)) { # Currency may be missing
-    col_order <- append(
-      setdiff(names(DT), "Currency"),
-      values = "Currency",
-      after = which(names(DT) == "Date")
-    )
-    data.table::setcolorder(DT, col_order)
-    char_vars <- c("Ticker", "Currency")
-  } else {
-    char_vars <- "Ticker"
-  }
+  # if ("Currency" %in% names(DT)) { # Currency may be missing
+  col_order <- append(
+    setdiff(names(DT), "Currency"),
+    values = "Currency",
+    after = which(names(DT) == "Date")
+  )
+  data.table::setcolorder(DT, col_order)
+  # } else {
+  #   browser()
+  #   char_vars <- "Ticker"
+  # }
 
+  char_vars <- c("Ticker", "Currency")
   date_vars <- c("Date")
   int_vars <- c("SimFinId")
   num_vars <- setdiff(names(DT), c(char_vars, date_vars, int_vars))
