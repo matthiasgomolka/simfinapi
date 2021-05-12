@@ -1,9 +1,11 @@
 ref_names <- c("SimFinId", "Ticker", "Date", "Currency", "Open", "High", "Low", "Close", "Adj. Close", "Volume", "Dividend", "Common Shares Outstanding")
+ref_names <- clean_names(ref_names)
 ref_classes <- c(
   "integer", "character", "Date", "character", "numeric", "numeric", "numeric",
   "numeric", "numeric", "numeric", "numeric", "numeric"
 )
 names(ref_classes) <- ref_names
+
 
 ref_1 <- sfa_get_prices("GOOG")
 ref_2 <- sfa_get_prices(c("GOOG", "AAPL"))
@@ -11,28 +13,35 @@ ref_2 <- sfa_get_prices(c("GOOG", "AAPL"))
 test_that("search for single Ticker works", {
   checkmate::expect_data_table(
     ref_1,
-    key = "Ticker",
+    key = "ticker",
     types = ref_classes,
     ncols = length(ref_names)
   )
   expect_named(ref_1, ref_names)
-  expect_identical(unique(ref_1[["Ticker"]]), "GOOG")
-  expect_identical(ref_1[["Date"]], sort(ref_1[["Date"]]))
+  expect_identical(unique(ref_1[["ticker"]]), "GOOG")
+  expect_identical(
+    ref_1[["date"]],
+    `attr<-`(sort(ref_1[["date"]]), "label", "Date")
+  )
 })
 
 test_that("search for two Tickers works including correct order", {
   checkmate::expect_data_table(
     ref_2,
-    key = "Ticker",
+    key = "ticker",
     types = ref_classes,
     ncols = length(ref_names)
   )
   expect_named(ref_2, ref_names)
   expect_gt(nrow(ref_2), nrow(ref_1))
-  expect_identical(unique(ref_2[["Ticker"]]), c("AAPL", "GOOG"))
+  expect_identical(unique(ref_2[["ticker"]]), c("AAPL", "GOOG"))
   expect_identical(
-    ref_2[["Date"]],
-    Reduce(c, tapply(ref_2[["Date"]], ref_2[["Ticker"]], sort))
+    ref_2[["date"]],
+    `attr<-`(
+      Reduce(c, tapply(ref_2[["date"]], ref_2[["ticker"]], sort)),
+      "label",
+      "Date"
+    )
   )
 })
 
@@ -40,14 +49,14 @@ test_that("search for two Tickers works including correct order", {
 
 test_that("sfa_get_price returns null and warnings if Ticker not found", {
   expect_warning(
-    expect_null(sfa_get_prices("Z")),
-    'No company found for Ticker "Z".',
+    expect_null(sfa_get_prices("ZZZZZ")),
+    'No company found for Ticker "ZZZZZ".',
     fixed = TRUE
   )
-  warnings <- capture_warnings(expect_null(sfa_get_prices(c("Z", "ZZ"))))
+  warnings <- capture_warnings(expect_null(sfa_get_prices(c("ZZZZZ", "ZZZZZZ"))))
   expect_identical(
     warnings,
-    paste0('No company found for Ticker "', c("Z", "ZZ"), '".')
+    paste0('No company found for Ticker "', c("ZZZZZ", "ZZZZZZ"), '".')
   )
 })
 
@@ -63,3 +72,4 @@ test_that("sfa_get_price returns null and warnings if SimFinId not found", {
     paste0('No company found for SimFinId `', 1:2, '`.')
   )
 })
+

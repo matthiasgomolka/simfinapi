@@ -117,6 +117,8 @@ sfa_get_prices <- function(
 
   ticker <- gather_ticker(Ticker, SimFinId, api_key, cache_dir)
 
+  if (length(ticker) == 0L) return(invisible(NULL))
+
   progressr::with_progress({
     prg <- progressr::progressor(along = ticker)
     result_list <- future.apply::future_lapply(ticker, function(x) {

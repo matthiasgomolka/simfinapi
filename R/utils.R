@@ -32,5 +32,30 @@ gather_result <- function(result_list) {
   }
   result_DT <- data.table::rbindlist(result_list, fill = TRUE)
   data.table::setkeyv(result_DT, "Ticker")
-  result_DT
+  set_clean_names(result_DT)
+  result_DT[]
+}
+
+#' Clean names
+#' @description Cleans column names so that they comply to R naming conventions.
+#'   Keeps the original names in the `label` attribute.
+#' @param DT A [data.table].
+#' @return A [data.table] with cleaned names and labels.
+#' @importFrom data.table setattr setnames
+set_clean_names <- function(DT) {
+  for (var in names(DT)) {
+    data.table::setattr(DT[[var]], "label", var)
+  }
+  data.table::setnames(DT, clean_names)
+}
+
+clean_names <- function(x) {
+  # clean camelCase -> snake_case
+  x <- gsub("(?<=[a-z])([A-Z])", "_\\1", perl = TRUE, x)
+  # clean spaces and special chars to _
+  x <- gsub("\\.+", "_", tolower(make.names(x)))
+  # remove trailing _
+  x <- gsub("_$", "", x)
+  # sim_fin_id -> simfim_id
+  gsub("sim_fin", "simfin", fixed = TRUE, x)
 }

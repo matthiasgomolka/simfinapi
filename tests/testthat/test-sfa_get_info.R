@@ -1,14 +1,21 @@
 library(data.table)
 
 ref <- data.table(
-  SimFinId = c(18L, 59265L),
-  Ticker = c("GOOG", "MSFT"),
-  `Company Name` = c("Alphabet (Google)", "MICROSOFT CORP"),
-  `IndustryId` = c(101002L, 101003L),
-  `Month FY End` = c(12L, 6L),
-  `Number Employees` = c(98771L, 163000L),
-  key = "Ticker"
+  simfin_id = c(18L, 59265L),
+  ticker = c("GOOG", "MSFT"),
+  company_name = c("Alphabet (Google)", "MICROSOFT CORP"),
+  industry_id = c(101002L, 101003L),
+  month_fy_end = c(12L, 6L),
+  number_employees = c(98771L, 166475L),
+  key = "ticker"
 )
+labels <- c(
+  "SimFinId", "Ticker", "Company Name", "IndustryId", "Month FY End",
+  "Number Employees"
+)
+for (i in seq_along(ref)) {
+  setattr(ref[[i]], "label", labels[i])
+}
 
 test_that("search via Tickers works", {
   # Restrict columns to those which are in 'ref'. This way, I don't need to
