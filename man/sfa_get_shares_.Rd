@@ -4,10 +4,10 @@
 \alias{sfa_get_shares_}
 \title{Shares Outstanding}
 \usage{
-sfa_get_shares_(Ticker, type, period, fyear, start, end, api_key, cache_dir)
+sfa_get_shares_(ticker, type, period, fyear, start, end, api_key, cache_dir)
 }
 \arguments{
-\item{Ticker}{\link{integer} Ticker of the companies of interest.}
+\item{ticker}{\link{integer} Ticker of the companies of interest.}
 
 \item{type}{\link{character} Type of shares outstanding to be retrieved.
 \itemize{

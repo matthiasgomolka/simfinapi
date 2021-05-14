@@ -443,7 +443,7 @@ test_that("getting cf statement works", {
 test_that("warning is trigged when no company was found", {
   expect_warning(
     expect_null(sfa_get_statement("doesnotexist", statement = "cf")),
-    'No company found for Ticker "doesnotexist".',
+    'No company found for ticker "doesnotexist".',
     fixed = TRUE
   )
 })

@@ -7,8 +7,8 @@
 check_inputs(
   api_key = NULL,
   cache_dir = NULL,
-  Ticker = NULL,
-  SimFinId = NULL,
+  ticker = NULL,
+  simfin_id = NULL,
   statement = NULL,
   period = NULL,
   fyear = NULL,
@@ -28,12 +28,12 @@ the API key globally using \link{sfa_set_api_key}.}
 \item{cache_dir}{\link{character} Your cache directory. It's recommended to set
 the cache directory globally using \link{sfa_set_cache_dir}.}
 
-\item{Ticker}{\link{integer} Ticker of the companies of interest.}
+\item{ticker}{\link{integer} Ticker of the companies of interest.}
 
-\item{SimFinId}{\link{integer} 'SimFin' IDs of the companies of interest. Any
-SimFinId will be internally translated to the respective \code{Ticker}. This
+\item{simfin_id}{\link{integer} 'SimFin' IDs of the companies of interest. Any
+simfin_id will be internally translated to the respective \code{ticker}. This
 reduces the number of queries if you would query the same company via
-\code{Ticker} \emph{and} \code{SimFinId}.}
+\code{ticker} \emph{and} \code{simfin_id}.}
 
 \item{statement}{\link{character} Statement to be retrieved. One of
 \itemize{

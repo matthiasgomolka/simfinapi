@@ -1,10 +1,10 @@
-test_that("checks on Ticker and SimFinId are not too strict", {
+test_that("checks on ticker and simfin_id are not too strict", {
   entities <- sfa_get_entities()
 
   checkmate::expect_data_table(
-    sfa_get_info(SimFinId = entities[["SimFinId"]])
+    sfa_get_info(simfin_id = entities[["simfin_id"]])
   )
   checkmate::expect_data_table(
-    sfa_get_info(Ticker = entities[["Ticker"]])
+    sfa_get_info(ticker = entities[["ticker"]])
   )
 })

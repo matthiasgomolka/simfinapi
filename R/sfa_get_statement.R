@@ -3,7 +3,7 @@
 #' @importFrom data.table transpose as.data.table setnames set setcolorder
 #'   rbindlist
 sfa_get_statement_ <- function(
-  Ticker,
+  ticker,
   statement,
   period,
   fyear,
@@ -18,7 +18,7 @@ sfa_get_statement_ <- function(
   # parameters (at least I don't know how)
 
   query_list <- list(
-    "ticker" = Ticker,
+    "ticker" = ticker,
     "statement" = statement,
     "period" = period,
     "fyear" = fyear,
@@ -42,7 +42,7 @@ sfa_get_statement_ <- function(
   # lapply necessary for SimFin+, where larger queries are possible
   DT_list <- lapply(content, function(x) {
     if (isFALSE(x[["found"]])) {
-      warning('No company found for Ticker "', Ticker, '".', call. = FALSE)
+      warning('No company found for ticker "', ticker, '".', call. = FALSE)
       return(NULL)
     }
     DT <- data.table::transpose(data.table::as.data.table(x[["data"]]))
@@ -84,11 +84,11 @@ sfa_get_statement_ <- function(
 }
 
 #' Get basic company information
-#' @param Ticker [integer] Ticker of the companies of interest.
-#' @param SimFinId [integer] 'SimFin' IDs of the companies of interest. Any
-#'   SimFinId will be internally translated to the respective `Ticker`. This
+#' @param ticker [integer] Ticker of the companies of interest.
+#' @param simfin_id [integer] 'SimFin' IDs of the companies of interest. Any
+#'   simfin_id will be internally translated to the respective `ticker`. This
 #'   reduces the number of queries if you would query the same company via
-#'   `Ticker` *and* `SimFinId`.
+#'   `ticker` *and* `simfin_id`.
 #' @param statement [character] Statement to be retrieved. One of
 #'
 #'   - `"pl"`: Profit & Loss statement
@@ -143,8 +143,8 @@ sfa_get_statement_ <- function(
 #' @importFrom progressr with_progress progressor
 #' @export
 sfa_get_statement <- function(
-  Ticker = NULL,
-  SimFinId = NULL,
+  ticker = NULL,
+  simfin_id = NULL,
   statement,
   period = "fy",
   fyear = NULL,
@@ -156,8 +156,8 @@ sfa_get_statement <- function(
   cache_dir = getOption("sfa_cache_dir")
 ) {
   check_inputs(
-    Ticker = Ticker,
-    SimFinId = SimFinId,
+    ticker = ticker,
+    simfin_id = simfin_id,
     statement = statement,
     period = period,
     fyear = fyear,
@@ -167,7 +167,7 @@ sfa_get_statement <- function(
     cache_dir = cache_dir
   )
 
-  ticker <- gather_ticker(Ticker, SimFinId, api_key, cache_dir)
+  ticker <- gather_ticker(ticker, simfin_id, api_key, cache_dir)
   if (!is.null(fyear)) fyear <- paste(fyear, collapse = ",")
 
   progressr::with_progress({
@@ -175,7 +175,7 @@ sfa_get_statement <- function(
     result_list <- future.apply::future_lapply(ticker, function(x) {
       prg(x)
       sfa_get_statement_(
-        Ticker = x, statement, period, fyear, start, end, ttm, shares, api_key,
+        ticker = x, statement, period, fyear, start, end, ttm, shares, api_key,
         cache_dir
       )
     },

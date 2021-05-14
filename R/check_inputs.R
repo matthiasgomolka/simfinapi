@@ -9,7 +9,7 @@
 #'   assert_integerish assert_choice assert_date
 #' @importFrom data.table year
 check_inputs <- function(
-  api_key = NULL, cache_dir = NULL, Ticker = NULL, SimFinId = NULL,
+  api_key = NULL, cache_dir = NULL, ticker = NULL, simfin_id = NULL,
   statement = NULL, period = NULL, fyear = NULL, start = NULL, end = NULL,
   ttm = NULL, shares = NULL, ratios = NULL, type = NULL, ref_data = NULL
 ) {
@@ -19,17 +19,17 @@ check_inputs <- function(
   if (!is.null(cache_dir)) {
     checkmate::assert_directory(cache_dir, access = "rw")
   }
-  if (!is.null(Ticker)) {
+  if (!is.null(ticker)) {
     checkmate::assert_character(
-      Ticker,
+      ticker,
       pattern = "^[A-Za-z0-9_\\.\\-]+$",
       any.missing = FALSE,
       null.ok = TRUE
     )
   }
-  if (!is.null(SimFinId)) {
+  if (!is.null(simfin_id)) {
     checkmate::assert_integerish(
-      SimFinId,
+      simfin_id,
       lower = 1L,
       any.missing = FALSE,
       null.ok = TRUE
@@ -98,8 +98,8 @@ check_inputs <- function(
 
 #' @param api_key See function using this argument.
 #' @param cache_dir See function using this argument.
-#' @param Ticker See function using this argument.
-#' @param SimFinId See function using this argument.
+#' @param ticker See function using this argument.
+#' @param simfin_id See function using this argument.
 #' @param statement See function using this argument.
 #' @param period See function using this argument.
 #' @param fyear See function using this argument.

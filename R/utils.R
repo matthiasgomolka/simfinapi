@@ -1,21 +1,21 @@
-gather_ticker <- function(Ticker, SimFinId, api_key, cache_dir) {
-  if (is.null(SimFinId)) {
-    return(Ticker)
+gather_ticker <- function(ticker, simfin_id, api_key, cache_dir) {
+  if (is.null(simfin_id)) {
+    return(ticker)
   }
 
-  # translate SimFinId to Ticker
+  # translate simfin_id to ticker
   entities <- sfa_get_entities(api_key = api_key, cache_dir = cache_dir)
-  simfinid <- SimFinId # necessary for filtering
-  translated_simfinid_DT <- entities[SimFinId %in% simfinid]
+  simfinid <- simfin_id # necessary for filtering
+  translated_simfinid_DT <- entities[simfin_id %in% simfinid]
 
-  if (nrow(translated_simfinid_DT) < length(SimFinId)) {
-    not_found <- setdiff(SimFinId, translated_simfinid_DT[["SimFinId"]])
+  if (nrow(translated_simfinid_DT) < length(simfin_id)) {
+    not_found <- setdiff(simfin_id, translated_simfinid_DT[["simfin_id"]])
     for (id in not_found) {
-      warning('No company found for SimFinId `', id, '`.', call. = FALSE)
+      warning('No company found for simfin_id `', id, '`.', call. = FALSE)
     }
   }
-  translated_simfinid <- translated_simfinid_DT[["Ticker"]]
-  unique(c(Ticker, translated_simfinid))
+  translated_simfinid <- translated_simfinid_DT[["ticker"]]
+  unique(c(ticker, translated_simfinid))
 }
 
 #' @importFrom data.table set
@@ -31,8 +31,8 @@ gather_result <- function(result_list) {
     return(invisible(NULL))
   }
   result_DT <- data.table::rbindlist(result_list, fill = TRUE)
-  data.table::setkeyv(result_DT, "Ticker")
   set_clean_names(result_DT)
+  data.table::setkeyv(result_DT, "ticker")
   result_DT[]
 }
 

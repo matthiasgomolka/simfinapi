@@ -5,14 +5,14 @@ test_that("sfa_get_entities returns correctly structured data.table", {
 
   expect_data_table(
     entities,
-    key = "Ticker",
+    key = "ticker",
     types = c("integer", "character"),
     any.missing = FALSE,
     min.rows = 2000L,
     ncols = 2L,
     col.names = "strict"
   )
-  expect_named(entities, c("SimFinId", "Ticker"))
+  expect_named(entities, c("simfin_id", "ticker"))
 })
 
 test_that("sfa_get_entities returns error if api key is incorrect", {

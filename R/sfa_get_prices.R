@@ -1,5 +1,5 @@
 sfa_get_prices_ <- function(
-  Ticker,
+  ticker,
   ratios,
   start,
   end,
@@ -7,7 +7,7 @@ sfa_get_prices_ <- function(
   cache_dir
 ) {
   query_list <- list(
-    "ticker" = Ticker,
+    "ticker" = ticker,
     "start" = start,
     "end" = end,
     "api-key" = api_key
@@ -26,7 +26,7 @@ sfa_get_prices_ <- function(
   # lapply necessary for SimFin+, where larger queries are possible
   DT_list <- lapply(content, function(x) {
     if (isFALSE(x[["found"]])) {
-      warning('No company found for Ticker "', Ticker, '".', call. = FALSE)
+      warning('No company found for ticker "', ticker, '".', call. = FALSE)
       return(NULL)
     }
     DT <- data.table::as.data.table(
@@ -59,7 +59,7 @@ sfa_get_prices_ <- function(
   data.table::setcolorder(DT, col_order)
   # } else {
   #   browser()
-  #   char_vars <- "Ticker"
+  #   char_vars <- "ticker"
   # }
 
   char_vars <- c("Ticker", "Currency")
@@ -97,8 +97,8 @@ sfa_get_prices_ <- function(
 #' @importFrom progressr with_progress progressor
 #' @export
 sfa_get_prices <- function(
-  Ticker = NULL,
-  SimFinId = NULL,
+  ticker = NULL,
+  simfin_id = NULL,
   ratios = NULL,
   start = NULL,
   end = NULL,
@@ -106,8 +106,8 @@ sfa_get_prices <- function(
   cache_dir = getOption("sfa_cache_dir")
 ) {
   check_inputs(
-    Ticker = Ticker,
-    SimFinId = SimFinId,
+    ticker = ticker,
+    simfin_id = simfin_id,
     ratios = ratios,
     start = start,
     end = end,
@@ -115,7 +115,7 @@ sfa_get_prices <- function(
     cache_dir = cache_dir
   )
 
-  ticker <- gather_ticker(Ticker, SimFinId, api_key, cache_dir)
+  ticker <- gather_ticker(ticker, simfin_id, api_key, cache_dir)
 
   if (length(ticker) == 0L) return(invisible(NULL))
 
@@ -123,7 +123,7 @@ sfa_get_prices <- function(
     prg <- progressr::progressor(along = ticker)
     result_list <- future.apply::future_lapply(ticker, function(x) {
       prg(x)
-      sfa_get_prices_(Ticker = x, ratios, start, end, api_key, cache_dir)
+      sfa_get_prices_(ticker = x, ratios, start, end, api_key, cache_dir)
     },
     future.seed = TRUE)
   })
