@@ -5,7 +5,7 @@
 \title{Get basic company information}
 \usage{
 sfa_get_statement_(
-  Ticker,
+  ticker,
   statement,
   period,
   fyear,
@@ -18,7 +18,7 @@ sfa_get_statement_(
 )
 }
 \arguments{
-\item{Ticker}{\link{integer} Ticker of the companies of interest.}
+\item{ticker}{\link{integer} Ticker of the companies of interest.}
 
 \item{statement}{\link{character} Statement to be retrieved. One of
 \itemize{

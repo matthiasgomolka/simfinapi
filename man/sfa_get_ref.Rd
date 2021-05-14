@@ -4,10 +4,13 @@
 \alias{sfa_get_ref}
 \title{Download reference data}
 \usage{
-sfa_get_ref(ref_data)
+sfa_get_ref(ref_data, api_key = getOption("sfa_api_key"))
 }
 \arguments{
 \item{ref_data}{\link{character} Either "industries" or "markets".}
+
+\item{api_key}{\verb{[character(1)]} Your 'SimFin' API key. For simplicity use
+\code{options(sfa_api_key = "yourapikey")}.}
 }
 \description{
 Download reference data

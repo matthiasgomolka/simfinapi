@@ -70,11 +70,12 @@ test_that("getting pl statement works", {
     `Other Adjustments` = "numeric",
     `Net Income (Common)` = "numeric"
   )
+  names(exp_classes) <- clean_names(names(exp_classes))
 
   ref_1 <- sfa_get_statement("GOOG", statement = "pl", fyear = 2015)
   checkmate::expect_data_table(
     ref_1,
-    key = "Ticker",
+    key = "ticker",
     types = exp_classes,
     nrows = 1L,
     ncols = length(exp_classes),
@@ -85,7 +86,7 @@ test_that("getting pl statement works", {
   ref_1_plus <- sfa_get_statement("GOOG", statement = "pl")
   checkmate::expect_data_table(
     ref_1_plus,
-    key = "Ticker",
+    key = "ticker",
     types = exp_classes,
     min.rows = 13L,
     ncols = length(exp_classes),
@@ -97,7 +98,7 @@ test_that("getting pl statement works", {
   ref_2 <- sfa_get_statement(c("GOOG", "AAPL"), statement = "pl", fyear = 2015)
   checkmate::expect_data_table(
     ref_2,
-    key = "Ticker",
+    key = "ticker",
     types = exp_classes,
     nrows = 2L,
     ncols = length(exp_classes),
@@ -108,7 +109,7 @@ test_that("getting pl statement works", {
   ref_2_plus <- sfa_get_statement(c("GOOG", "AAPL"), statement = "pl")
   checkmate::expect_data_table(
     ref_2_plus,
-    key = "Ticker",
+    key = "ticker",
     types = exp_classes,
     min.rows = 35L,
     ncols = length(exp_classes),
@@ -121,7 +122,7 @@ test_that("getting pl statement works", {
   )
   checkmate::expect_data_table(
     ref_3,
-    key = "Ticker",
+    key = "ticker",
     types = exp_classes,
     nrows = 2L,
     ncols = length(exp_classes),
@@ -134,7 +135,7 @@ test_that("getting pl statement works", {
   )
   checkmate::expect_data_table(
     ref_3_plus,
-    key = "Ticker",
+    key = "ticker",
     types = exp_classes,
     min.rows = 33L,
     ncols = length(exp_classes),
@@ -145,14 +146,16 @@ test_that("getting pl statement works", {
   exp_classes <- append(
     exp_classes,
     c(`Shares (Basic)` = "numeric", `Shares (Diluted)` = "numeric"),
-    after = which(names(exp_classes) == "Currency")
+    after = which(names(exp_classes) == "currency")
   )
+  names(exp_classes) <- clean_names(names(exp_classes))
+
   ref_4 <- sfa_get_statement(
     c("GOOG", "AAPL"), statement = "pl", shares = TRUE, fyear = 2015
   )
   checkmate::expect_data_table(
     ref_4,
-    key = "Ticker",
+    key = "ticker",
     types = exp_classes,
     nrows = 2L,
     ncols = length(exp_classes),
@@ -165,7 +168,7 @@ test_that("getting pl statement works", {
   )
   checkmate::expect_data_table(
     ref_4_plus,
-    key = "Ticker",
+    key = "ticker",
     types = exp_classes,
     min.rows = 35L,
     ncols = length(exp_classes),
@@ -274,11 +277,12 @@ test_that("getting bs statement works", {
     `Total Equity` = "numeric",
     `Total Liabilities & Equity` = "numeric"
   )
+  names(exp_classes) <- clean_names(names(exp_classes))
 
   ref_1 <- sfa_get_statement("GOOG", statement = "bs", fyear = 2015)
   checkmate::expect_data_table(
     ref_1,
-    key = "Ticker",
+    key = "ticker",
     types = exp_classes,
     nrows = 1L,
     ncols = length(exp_classes),
@@ -289,7 +293,7 @@ test_that("getting bs statement works", {
   ref_1_plus <- sfa_get_statement("GOOG", statement = "bs")
   checkmate::expect_data_table(
     ref_1_plus,
-    key = "Ticker",
+    key = "ticker",
     types = exp_classes,
     min.rows = 12L,
     ncols = length(exp_classes),
@@ -301,7 +305,7 @@ test_that("getting bs statement works", {
   ref_2 <- sfa_get_statement(c("GOOG", "AAPL"), statement = "bs", fyear = 2015)
   checkmate::expect_data_table(
     ref_2,
-    key = "Ticker",
+    key = "ticker",
     types = exp_classes,
     nrows = 2L,
     ncols = length(exp_classes),
@@ -312,7 +316,7 @@ test_that("getting bs statement works", {
   ref_2_plus <- sfa_get_statement(c("GOOG", "AAPL"), statement = "bs")
   checkmate::expect_data_table(
     ref_2_plus,
-    key = "Ticker",
+    key = "ticker",
     types = exp_classes,
     min.rows = 34L,
     ncols = length(exp_classes),
@@ -387,11 +391,12 @@ test_that("getting cf statement works", {
     `Effect of Foreign Exchange Rates` = "numeric",
     `Net Change in Cash` = "numeric"
   )
+  names(exp_classes) <- clean_names(names(exp_classes))
 
   ref_1 <- sfa_get_statement("GOOG", statement = "cf", fyear = 2015)
   checkmate::expect_data_table(
     ref_1,
-    key = "Ticker",
+    key = "ticker",
     types = exp_classes,
     nrows = 1L,
     ncols = length(exp_classes),
@@ -402,7 +407,7 @@ test_that("getting cf statement works", {
   ref_1_plus <- sfa_get_statement("GOOG", statement = "cf")
   checkmate::expect_data_table(
     ref_1_plus,
-    key = "Ticker",
+    key = "ticker",
     types = exp_classes,
     min.rows = 12L,
     ncols = length(exp_classes),
@@ -414,7 +419,7 @@ test_that("getting cf statement works", {
   ref_2 <- sfa_get_statement(c("GOOG", "AAPL"), statement = "cf", fyear = 2015)
   checkmate::expect_data_table(
     ref_2,
-    key = "Ticker",
+    key = "ticker",
     types = exp_classes,
     nrows = 2L,
     ncols = length(exp_classes),
@@ -425,7 +430,7 @@ test_that("getting cf statement works", {
   ref_2_plus <- sfa_get_statement(c("GOOG", "AAPL"), statement = "cf")
   checkmate::expect_data_table(
     ref_2_plus,
-    key = "Ticker",
+    key = "ticker",
     types = exp_classes,
     min.rows = 36L,
     ncols = length(exp_classes),
@@ -438,7 +443,7 @@ test_that("getting cf statement works", {
 test_that("warning is trigged when no company was found", {
   expect_warning(
     expect_null(sfa_get_statement("doesnotexist", statement = "cf")),
-    'No company found for Ticker "doesnotexist".',
+    'No company found for ticker "doesnotexist".',
     fixed = TRUE
   )
 })

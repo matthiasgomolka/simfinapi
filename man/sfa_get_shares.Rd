@@ -5,8 +5,8 @@
 \title{Shares Outstanding}
 \usage{
 sfa_get_shares(
-  Ticker = NULL,
-  SimFinId = NULL,
+  ticker = NULL,
+  simfin_id = NULL,
   type,
   period = "fy",
   fyear = data.table::year(Sys.Date()) - 1L,
@@ -17,12 +17,12 @@ sfa_get_shares(
 )
 }
 \arguments{
-\item{Ticker}{\link{integer} Ticker of the companies of interest.}
+\item{ticker}{\link{integer} Ticker of the companies of interest.}
 
-\item{SimFinId}{\link{integer} 'SimFin' IDs of the companies of interest. Any
-SimFinId will be internally translated to the respective \code{Ticker}. This
+\item{simfin_id}{\link{integer} 'SimFin' IDs of the companies of interest. Any
+simfin_id will be internally translated to the respective \code{ticker}. This
 reduces the number of queries if you would query the same company via
-\code{Ticker} \emph{and} \code{SimFinId}.}
+\code{ticker} \emph{and} \code{simfin_id}.}
 
 \item{type}{\link{character} Type of shares outstanding to be retrieved.
 \itemize{

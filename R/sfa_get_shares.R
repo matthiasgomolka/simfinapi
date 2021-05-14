@@ -2,7 +2,7 @@
 #' @inheritParams sfa_get_shares
 #' @importFrom data.table as.data.table setnames set setcolorder rbindlist
 sfa_get_shares_ <- function(
-  Ticker,
+  ticker,
   type,
   period,
   fyear,
@@ -15,7 +15,7 @@ sfa_get_shares_ <- function(
   content <- call_api(
     path = "api/v2/companies/shares",
     query = list(
-      "ticker" = Ticker,
+      "ticker" = ticker,
       "type" = type,
       "period" = period,
       "fyear" = fyear,
@@ -29,7 +29,7 @@ sfa_get_shares_ <- function(
   # lapply necessary for SimFin+, where larger queries are possible
   DT_list <- lapply(content, function(x) {
     if (isFALSE(x[["found"]])) {
-      warning('No company found for Ticker "', Ticker, '".', call. = FALSE)
+      warning('No company found for ticker "', ticker, '".', call. = FALSE)
       return(NULL)
     }
     DT <- as.data.table(
@@ -84,8 +84,8 @@ sfa_get_shares_ <- function(
 #' @importFrom progressr with_progress progressor
 #' @export
 sfa_get_shares <- function(
-  Ticker = NULL,
-  SimFinId = NULL,
+  ticker = NULL,
+  simfin_id = NULL,
   type,
   period = "fy",
   fyear = data.table::year(Sys.Date()) - 1L,
@@ -95,8 +95,8 @@ sfa_get_shares <- function(
   cache_dir = getOption("sfa_cache_dir")
 ) {
   check_inputs(
-    Ticker = Ticker,
-    SimFinId = SimFinId,
+    ticker = ticker,
+    simfin_id = simfin_id,
     type = type,
     period = period,
     fyear = fyear,
@@ -106,14 +106,14 @@ sfa_get_shares <- function(
     cache_dir = cache_dir
   )
 
-  ticker <- gather_ticker(Ticker, SimFinId, api_key, cache_dir)
+  ticker <- gather_ticker(ticker, simfin_id, api_key, cache_dir)
 
   progressr::with_progress({
     prg <- progressr::progressor(along = ticker)
     result_list <- future.apply::future_lapply(ticker, function(x) {
       prg(x)
       sfa_get_shares_(
-        Ticker = x, type, period, fyear, start, end, api_key, cache_dir
+        ticker = x, type, period, fyear, start, end, api_key, cache_dir
       )
     },
     future.seed = TRUE)

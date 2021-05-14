@@ -27,9 +27,10 @@ sfa_get_entities <- function(
   })
 
   DT <- data.table::rbindlist(DT_list)
-  data.table::setnames(DT, content[["columns"]])
-  data.table::set(DT, j = "SimFinId", value = as.integer(DT[["SimFinId"]]))
-  data.table::set(DT, j = "Ticker", value = trimws(DT[["Ticker"]], "both"))
-  data.table::setkeyv(DT, "Ticker")
+  data.table::setnames(DT, clean_names(content[["columns"]]))
+  data.table::set(DT, j = "simfin_id", value = as.integer(DT[["simfin_id"]]))
+  data.table::set(DT, j = "ticker", value = trimws(DT[["ticker"]], "both"))
+  data.table::setkeyv(DT, "ticker")
+
   return(DT[])
 }
