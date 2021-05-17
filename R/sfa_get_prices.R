@@ -1,3 +1,4 @@
+#' @importFrom data.table as.data.table setnames set rbindlist setcolorder
 sfa_get_prices_ <- function(
   ticker,
   ratios,
@@ -50,17 +51,12 @@ sfa_get_prices_ <- function(
   }
 
   # prettify DT
-  # if ("Currency" %in% names(DT)) { # Currency may be missing
   col_order <- append(
     setdiff(names(DT), "Currency"),
     values = "Currency",
     after = which(names(DT) == "Date")
   )
   data.table::setcolorder(DT, col_order)
-  # } else {
-  #   browser()
-  #   char_vars <- "ticker"
-  # }
 
   char_vars <- c("Ticker", "Currency")
   date_vars <- c("Date")
@@ -76,7 +72,17 @@ sfa_get_prices_ <- function(
 
 
 #' Get price data
-#' @param ratios [logical] With `TRUE`, you can display some price related ratios along with the share price data (reserved for SimFin+ users). The ratios that will be displayed are:
+#'
+#' @description Share price data and ratios can be retrieved here. All share
+#'   prices are adjusted for stock splits. If you are interested in more
+#'   details, take a look at this page:
+#'   https://simfin.com/data/help/main?topic=apiv2-prices
+#'
+#' @inheritParams param_doc
+#'
+#' @param ratios [logical] With `TRUE`, you can display some price related
+#'   ratios along with the share price data (reserved for SimFin+ users). The
+#'   ratios that will be displayed are:
 #'
 #'   - Market-Cap
 #'   - Price to Earnings Ratio (quarterly)
@@ -92,10 +98,14 @@ sfa_get_prices_ <- function(
 #'   - EV/FCF (ttm)
 #'   - Book to Market Value (ttm)
 #'   - Operating Income/EV (ttm).
-#' @inheritParams sfa_get_statement
+#'
+#' @inheritSection param_doc Parallel processing
+#'
 #' @importFrom future.apply future_lapply
 #' @importFrom progressr with_progress progressor
+#'
 #' @export
+#'
 sfa_get_prices <- function(
   ticker = NULL,
   simfin_id = NULL,
@@ -105,6 +115,7 @@ sfa_get_prices <- function(
   api_key = getOption("sfa_api_key"),
   cache_dir = getOption("sfa_cache_dir")
 ) {
+
   check_inputs(
     ticker = ticker,
     simfin_id = simfin_id,
