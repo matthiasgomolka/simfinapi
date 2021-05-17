@@ -31,8 +31,8 @@ the cache directory globally using \link{sfa_set_cache_dir}.}
 \item{ticker}{\link{integer} Ticker of the companies of interest.}
 
 \item{simfin_id}{\link{integer} 'SimFin' IDs of the companies of interest. Any
-simfin_id will be internally translated to the respective \code{ticker}. This
-reduces the number of queries if you would query the same company via
+\code{simfin_id} will be internally translated to the respective \code{ticker}. This
+reduces the number of queries in case you query the same company via
 \code{ticker} \emph{and} \code{simfin_id}.}
 
 \item{statement}{\link{character} Statement to be retrieved. One of
@@ -65,7 +65,8 @@ users).
 
 \item{fyear}{\link{integer} Filter for fiscal year. As a non-SimFin+ user, you
 have to provide exactly one fiscal year. As SimFin+ user, this filter can
-be omitted to retrieve all statements available for the company.}
+be omitted to retrieve data available for the company. You can also chain
+this filter with a comma, to retrieve multiple years at once (e.g. \code{fyear = "2015,2016,2017"} to retrieve the data for 3 years at once).}
 
 \item{start}{\link{Date} Filter for the report dates (reserved for SimFin+ users).
 With this filter you can filter the statements by the date on which the
@@ -88,7 +89,9 @@ sum of the last 4 available quarterly figures.}
 Reserved for SimFin+ users (as non-SimFin+ user, you can still use the
 shares outstanding endpoints).}
 
-\item{ratios}{\link{logical} With \code{TRUE}, you can display some price related ratios along with the share price data (reserved for SimFin+ users). The ratios that will be displayed are:
+\item{ratios}{\link{logical} With \code{TRUE}, you can display some price related
+ratios along with the share price data (reserved for SimFin+ users). The
+ratios that will be displayed are:
 \itemize{
 \item Market-Cap
 \item Price to Earnings Ratio (quarterly)
