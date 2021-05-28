@@ -20,8 +20,8 @@ sfa_get_shares(
 \item{ticker}{\link{integer} Ticker of the companies of interest.}
 
 \item{simfin_id}{\link{integer} 'SimFin' IDs of the companies of interest. Any
-simfin_id will be internally translated to the respective \code{ticker}. This
-reduces the number of queries if you would query the same company via
+\code{simfin_id} will be internally translated to the respective \code{ticker}. This
+reduces the number of queries in case you query the same company via
 \code{ticker} \emph{and} \code{simfin_id}.}
 
 \item{type}{\link{character} Type of shares outstanding to be retrieved.
@@ -31,10 +31,9 @@ reduces the number of queries if you would query the same company via
 \item \code{"wa-diluted"}: Weighted average diluted shares outstanding for a period.
 }}
 
-\item{period}{\link{character} Filter for periods. Only works with \code{type = "wa-basic"} and \code{type = "wa-diluted"}. This filter can be omitted to
-retrieve all shares outstanding available for the company. You can also
-chain this filter with a comma (e.g. \code{period = "quarters,fy"} to retrieve
-all quarters and the full financial year figures).
+\item{period}{\link{character} Filter for periods. As a non-SimFin+ user, you have
+to provide exactly one period. As SimFin+ user, this filter can be omitted
+to retrieve all statements available for the company.
 \itemize{
 \item \code{"q1"}: First fiscal quarter.
 \item \code{"q2"}: Second fiscal quarter.
@@ -44,14 +43,16 @@ all quarters and the full financial year figures).
 \item \code{"h1"}: First 6 months of fiscal year.
 \item \code{"h2"}: Last 6 months of fiscal year.
 \item \code{"9m"}: First nine months of fiscal year.
-\item \code{"6m"}: Any fiscal 6 month period (first + second half years).
-\item \code{"quarters"}: All quarters (q1 + q2 + q3 + q4).
+\item \code{"6m"}: Any fiscal 6 month period (first + second half years; reserved
+for SimFin+ users).
+\item \code{"quarters"}: All quarters (q1 + q2 + q3 + q4; reserved for SimFin+
+users).
 }}
 
-\item{fyear}{\link{character} Filter for fiscal year. Only works with \code{type = "wa-basic"} and \code{type = "wa-diluted"}. As SimFin+ user, this filter can be
-omitted to retrieve all shares outstanding available for the company. You
-can also chain this filter with a comma, to retrieve multiple years at once
-(e.g. \code{fyear = "2015,2016,2017"} to retrieve the data for 3 years at once).}
+\item{fyear}{\link{integer} Filter for fiscal year. As a non-SimFin+ user, you
+have to provide exactly one fiscal year. As SimFin+ user, this filter can
+be omitted to retrieve data available for the company. You can also chain
+this filter with a comma, to retrieve multiple years at once (e.g. \code{fyear = "2015,2016,2017"} to retrieve the data for 3 years at once).}
 
 \item{start}{\link{Date} Filter for the report dates (reserved for SimFin+ users).
 With this filter you can filter the statements by the date on which the
@@ -72,5 +73,21 @@ the API key globally using \link{sfa_set_api_key}.}
 the cache directory globally using \link{sfa_set_cache_dir}.}
 }
 \description{
-Shares Outstanding
+Common shares outstanding (point-in-time) and weighted average
+basic/diluted shares outstanding for all periods can be retrieved here.
+These shares are the aggregate figures for the entire company. If you are
+interested in more details, take a look at this page:
+https://simfin.com/data/help/main?topic=apiv2-shares
 }
+\section{Fiscal year}{
+
+Only works with \code{type = "wa-basic"} and \code{type = "wa-diluted"}.
+}
+
+\section{Parallel processing}{
+
+This function supports parallel processing via \code{future.apply}. If your
+machine has several cores (most have), you can make the API calls in
+parallel. To do so, define a \code{future::plan()} before calling the function.
+}
+

@@ -1,5 +1,3 @@
-#' Shares Outstanding
-#' @inheritParams sfa_get_shares
 #' @importFrom data.table as.data.table setnames set setcolorder rbindlist
 sfa_get_shares_ <- function(
   ticker,
@@ -51,38 +49,34 @@ sfa_get_shares_ <- function(
   return(DT)
 }
 
+
 #' Shares Outstanding
+#'
+#' @description Common shares outstanding (point-in-time) and weighted average
+#'   basic/diluted shares outstanding for all periods can be retrieved here.
+#'   These shares are the aggregate figures for the entire company. If you are
+#'   interested in more details, take a look at this page:
+#'   https://simfin.com/data/help/main?topic=apiv2-shares
+#'
+#' @inheritParams param_doc
+#'
 #' @param type [character] Type of shares outstanding to be retrieved.
 #'
 #'   - `"common"`: Common shares outstanding.
 #'   - `"wa-basic"`: Weighted average basic shares outstanding for a period.
 #'   - `"wa-diluted"`: Weighted average diluted shares outstanding for a period.
-#' @param period [character] Filter for periods. Only works with `type =
-#'   "wa-basic"` and `type = "wa-diluted"`. This filter can be omitted to
-#'   retrieve all shares outstanding available for the company. You can also
-#'   chain this filter with a comma (e.g. `period = "quarters,fy"` to retrieve
-#'   all quarters and the full financial year figures).
 #'
-#'   - `"q1"`: First fiscal quarter.
-#'   - `"q2"`: Second fiscal quarter.
-#'   - `"q3"`: Third fiscal quarter.
-#'   - `"q4"`: Fourth fiscal quarter.
-#'   - `"fy"`: Full fiscal year.
-#'   - `"h1"`: First 6 months of fiscal year.
-#'   - `"h2"`: Last 6 months of fiscal year.
-#'   - `"9m"`: First nine months of fiscal year.
-#'   - `"6m"`: Any fiscal 6 month period (first + second half years).
-#'   - `"quarters"`: All quarters (q1 + q2 + q3 + q4).
-#' @param fyear [character] Filter for fiscal year. Only works with `type =
-#'   "wa-basic"` and `type = "wa-diluted"`. As SimFin+ user, this filter can be
-#'   omitted to retrieve all shares outstanding available for the company. You
-#'   can also chain this filter with a comma, to retrieve multiple years at once
-#'   (e.g. `fyear = "2015,2016,2017"` to retrieve the data for 3 years at once).
-#' @inheritParams sfa_get_statement
+#' @section Fiscal year:
+#' Only works with `type = "wa-basic"` and `type = "wa-diluted"`.
+#'
+#' @inheritSection param_doc Parallel processing
+#'
 #' @importFrom checkmate assert_choice
 #' @importFrom future.apply future_lapply
 #' @importFrom progressr with_progress progressor
+#'
 #' @export
+#'
 sfa_get_shares <- function(
   ticker = NULL,
   simfin_id = NULL,
@@ -94,6 +88,7 @@ sfa_get_shares <- function(
   api_key = getOption("sfa_api_key"),
   cache_dir = getOption("sfa_cache_dir")
 ) {
+
   check_inputs(
     ticker = ticker,
     simfin_id = simfin_id,

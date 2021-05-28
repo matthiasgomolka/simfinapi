@@ -1,5 +1,3 @@
-#' Get basic company information
-#' @inheritParams sfa_get_statement
 #' @importFrom data.table transpose as.data.table setnames set setcolorder
 #'   rbindlist
 sfa_get_statement_ <- function(
@@ -84,11 +82,11 @@ sfa_get_statement_ <- function(
 }
 
 #' Get basic company information
-#' @param ticker [integer] Ticker of the companies of interest.
-#' @param simfin_id [integer] 'SimFin' IDs of the companies of interest. Any
-#'   simfin_id will be internally translated to the respective `ticker`. This
-#'   reduces the number of queries if you would query the same company via
-#'   `ticker` *and* `simfin_id`.
+#'
+#' @description Fundamentals and derived figures can be retrieved here.
+#'
+#' @inheritParams param_doc
+#'
 #' @param statement [character] Statement to be retrieved. One of
 #'
 #'   - `"pl"`: Profit & Loss statement
@@ -97,50 +95,24 @@ sfa_get_statement_ <- function(
 #'   - `"derived"`: Derived figures & fundamental ratios
 #'   - `"all"`: Retrieves all 3 statements + ratios. Please note that this
 #'   option is reserved for SimFin+ users.
-#' @param period [character] Filter for periods. As a non-SimFin+ user, you have
-#'   to provide exactly one period. As SimFin+ user, this filter can be omitted
-#'   to retrieve all statements available for the company.
 #'
-#'   - `"q1"`: First fiscal quarter.
-#'   - `"q2"`: Second fiscal quarter.
-#'   - `"q3"`: Third fiscal quarter.
-#'   - `"q4"`: Fourth fiscal quarter.
-#'   - `"fy"`: Full fiscal year.
-#'   - `"h1"`: First 6 months of fiscal year.
-#'   - `"h2"`: Last 6 months of fiscal year.
-#'   - `"9m"`: First nine months of fiscal year.
-#'   - `"6m"`: Any fiscal 6 month period (first + second half years; reserved
-#'   for SimFin+ users).
-#'   - `"quarters"`: All quarters (q1 + q2 + q3 + q4; reserved for SimFin+
-#'   users).
-#'
-#' @param fyear [integer] Filter for fiscal year. As a non-SimFin+ user, you
-#'   have to provide exactly one fiscal year. As SimFin+ user, this filter can
-#'   be omitted to retrieve all statements available for the company.
-#' @param start [Date] Filter for the report dates (reserved for SimFin+ users).
-#'   With this filter you can filter the statements by the date on which the
-#'   reported period ended ('Report Date'). By specifying a value here, only
-#'   statements will be retrieved with report dates ending AFTER the specified
-#'   date.
-#' @param end [Date] Filter for the report dates (reserved for SimFin+ users).
-#'   With this filter you can filter the statements by the date on which the
-#'   reported period ended ('Report Date'). By specifying a value here, only
-#'   statements will be retrieved with report dates ending BEFORE the specified
-#'   date.
 #' @param ttm [logical] If `TRUE`, you can return the trailing twelve months
 #'   statements for all periods, meaning at every available point in time the
 #'   sum of the last 4 available quarterly figures.
+#'
 #' @param shares [logical] If `TRUE`, you can display the weighted average basic
 #'   & diluted shares outstanding for each period along with the fundamentals.
 #'   Reserved for SimFin+ users (as non-SimFin+ user, you can still use the
 #'   shares outstanding endpoints).
-#' @param api_key [character] Your 'SimFin' API key. It's recommended to set
-#'   the API key globally using [sfa_set_api_key].
-#' @param cache_dir [character] Your cache directory. It's recommended to set
-#'   the cache directory globally using [sfa_set_cache_dir].
+#'
+#' @return [data.table] containing the statement(s) data.
+#'
+#' @inheritSection param_doc Parallel processing
+#'
 #' @importFrom checkmate assert_choice
 #' @importFrom future.apply future_lapply
 #' @importFrom progressr with_progress progressor
+#'
 #' @export
 sfa_get_statement <- function(
   ticker = NULL,
