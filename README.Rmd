@@ -19,7 +19,7 @@ opts_chunk$set(
 
 options(sfa_api_key = Sys.getenv("SIMFIN_API_KEY"))
 options(sfa_cache_dir = tempdir())
-options('future.rng.onMisuse' = "ignore")
+options("future.rng.onMisuse" = "ignore")
 
 theme_set(theme_minimal())
 ```
@@ -71,7 +71,7 @@ library(ggplot2)
 
 # create plot
 ggplot(prices) +
-  aes(x = Date, y = Close, color = Ticker) +
+  aes(x = date, y = close, color = ticker) +
   geom_line()
 ```
 
@@ -93,11 +93,11 @@ Now we merge both datasets and recreate the plot with the actual company names.
 
 ```{r recreate_plot}
 # merge data
-merged <- merge(prices, company_info, by = "Ticker")
+merged <- merge(prices, company_info, by = "ticker")
 
 # recreate plot
 ggplot(merged) +
-  aes(x = Date, y = Close, color = `Company Name`) +
+  aes(x = date, y = close, color = company_name) +
   geom_line()
 ```
 
@@ -126,3 +126,12 @@ downloading data. See `?sfa_set_api_key` and `?sfa_set_cache_dir` for details.
 Please note that the 'simfinapi' project is released with a [Contributor Code of
 Conduct](https://github.com/matthiasgomolka/simfinapi/blob/master/.github/CODE_OF_CONDUCT.md).
 By contributing to this project, you agree to abide by its terms.
+
+## Relation to `simfinR`
+
+In case you also found `simfinR` ([CRAN](https://CRAN.R-project.org/package=simfinR), 
+[GitHub](https://github.com/msperlin/simfinR/)) you might want to know about the
+differences between the `simfinapi` and `simfinR`. I tried to compile a list in 
+[this issue](https://github.com/matthiasgomolka/simfinapi/issues/22#issuecomment-847270864).
+
+---
