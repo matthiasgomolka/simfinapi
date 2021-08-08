@@ -3,6 +3,7 @@
 ^my_api_key.R$
 ^\.github$
 ^README\.Rmd$
+^README\.html$
 ^simfinapi\.code-workspace$
 ^cran-comments\.md$
 ^CRAN-RELEASE$

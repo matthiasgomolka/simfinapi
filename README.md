@@ -226,7 +226,7 @@ ggplot(merged) +
 
 ## Installation
 
-From [CRAN](https://cran.r-project.org/web/packages/simfinapi/index.html):
+From [CRAN](https://CRAN.R-project.org/package=simfinapi):
 
 ``` r
 install.packages("simfinapi")
