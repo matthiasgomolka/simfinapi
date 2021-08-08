@@ -29,7 +29,7 @@ theme_set(theme_minimal())
 `r badge_lifecycle("experimental")`
 [![CRAN release](https://www.r-pkg.org/badges/version/simfinapi)](https://CRAN.R-project.org/package=simfinapi)
 [![Status](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![R build status](https://github.com/matthiasgomolka/simfinapi/workflows/R-CMD-check/badge.svg)](https://github.com/matthiasgomolka/simfinapi/actions)
+[![R-CMD-check](https://github.com/matthiasgomolka/simfinapi/workflows/R-CMD-check/badge.svg)](https://github.com/matthiasgomolka/simfinapi/actions)
 [![](https://codecov.io/gh/matthiasgomolka/simfinapi/branch/main/graph/badge.svg)](https://codecov.io/gh/matthiasgomolka/simfinapi)
 `r badge_dependencies()`
 
