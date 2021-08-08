@@ -2,7 +2,7 @@
 ^\.Rproj\.user$
 ^my_api_key.R$
 ^\.github$
-^README\.Rmd$
+^README\.(Rmd|html)$
 ^simfinapi\.code-workspace$
 ^cran-comments\.md$
 ^CRAN-RELEASE$

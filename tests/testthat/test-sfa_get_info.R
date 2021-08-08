@@ -6,7 +6,7 @@ ref <- data.table(
   company_name = c("Alphabet (Google)", "MICROSOFT CORP"),
   industry_id = c(101002L, 101003L),
   month_fy_end = c(12L, 6L),
-  number_employees = c(98771L, 166475L),
+  number_employees = c(135301L, 166475L),
   key = "ticker"
 )
 labels <- c(
@@ -76,3 +76,4 @@ test_that("search for non-existent ticker / simfin_id yields warning", {
 test_that("supplying neiterh ticker / simfin_id yields error", {
   expect_error(sfa_get_info())
 })
+
