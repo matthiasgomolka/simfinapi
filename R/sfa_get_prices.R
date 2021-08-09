@@ -27,7 +27,7 @@ sfa_get_prices_ <- function(
   # lapply necessary for SimFin+, where larger queries are possible
   DT_list <- lapply(content, function(x) {
     if (isFALSE(x[["found"]])) {
-      warning('No company found for ticker "', ticker, '".', call. = FALSE)
+      warning('No data returned. Please double-check your inputs.', call. = FALSE)
       return(NULL)
     }
     DT <- data.table::as.data.table(
