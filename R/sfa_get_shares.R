@@ -10,7 +10,7 @@ sfa_get_shares_ <- function(
   cache_dir
 ) {
 
-  content <- call_api(
+  response_light <- call_api(
     path = "api/v2/companies/shares",
     query = list(
       "ticker" = ticker,
@@ -23,11 +23,12 @@ sfa_get_shares_ <- function(
     ),
     cache_dir = cache_dir
   )
+  content <- response_light[["content"]]
 
   # lapply necessary for SimFin+, where larger queries are possible
   DT_list <- lapply(content, function(x) {
     if (isFALSE(x[["found"]])) {
-      warning('No data returned. Please double-check your inputs.', call. = FALSE)
+      warn_not_found(response_light[["request"]])
       return(NULL)
     }
     DT <- as.data.table(

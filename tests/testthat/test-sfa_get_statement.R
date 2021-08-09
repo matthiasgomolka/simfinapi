@@ -439,11 +439,25 @@ test_that("getting cf statement works", {
   expect_named(ref_2_plus, names(exp_classes))
 })
 
+test_that("warning is triggered if the API did not return any data", {
+  fyear <- year(Sys.Date())
+  expect_warning(
+    expect_null(
+      sfa_get_statement("GOOG", statement = "bs", fyear = fyear)
+    ),
+    paste0(
+      "Please double-check your inputs. The SimFin API returned no data for request 'https://simfin.com/api/v2/companies/statements?ticker=GOOG&statement=bs&period=fy&fyear=2021&api-key=",
+      getOption("sfa_api_key"), "'."
+    ),
+    fixed = TRUE
+  )
+})
+
 # TODO: Test all kinds of statements
 test_that("warning is trigged when no company was found", {
   expect_warning(
     expect_null(sfa_get_statement("doesnotexist", statement = "cf")),
-    'No company found for ticker "doesnotexist".',
+    'No company found for ticker `doesnotexist`.',
     fixed = TRUE
   )
 })

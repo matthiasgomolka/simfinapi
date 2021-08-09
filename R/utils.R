@@ -1,21 +1,34 @@
 gather_ticker <- function(ticker, simfin_id, api_key, cache_dir) {
-  if (is.null(simfin_id)) {
-    return(ticker)
-  }
-
-  # translate simfin_id to ticker
+  # get entities in order to verify the existence of ticker / simfin_id
   entities <- sfa_get_entities(api_key = api_key, cache_dir = cache_dir)
-  simfinid <- simfin_id # necessary for filtering
-  translated_simfinid_DT <- entities[simfin_id %in% simfinid]
 
-  if (nrow(translated_simfinid_DT) < length(simfin_id)) {
-    not_found <- setdiff(simfin_id, translated_simfinid_DT[["simfin_id"]])
-    for (id in not_found) {
-      warning('No company found for simfin_id `', id, '`.', call. = FALSE)
-    }
+  # find valid tickers
+  valid_tickers <- find_and_warn(entities, ticker, "ticker")
+
+  # find valid simfin_ids and translate them to tickers
+  valid_simfin_ids <- find_and_warn(entities, simfin_id, "simfin_id")
+  simfin_id_as_ticker <- entities[simfin_id %in% valid_simfin_ids, ticker]
+
+  valid_ids <- unique(c(valid_tickers, simfin_id_as_ticker))
+  if (length(valid_ids) == 0L) {
+    return(invisible(NULL))
   }
-  translated_simfinid <- translated_simfinid_DT[["ticker"]]
-  unique(c(ticker, translated_simfinid))
+  return(valid_ids)
+}
+
+find_and_warn <- function(entities, ids, id_name) {
+  ids_ <- ids # necessary for filtering
+  found_DT <- subset(entities, get(id_name) %in% ids_)
+
+  if (nrow(found_DT) < length(ids)) {
+    not_found <- setdiff(ids, found_DT[[id_name]])
+    for (id in not_found) {
+      warning('No company found for ', id_name, ' `', id, '`.', call. = FALSE)
+    }
+    return(setdiff(ids, not_found))
+  }
+  return(ids)
+
 }
 
 #' @importFrom data.table set
@@ -58,4 +71,12 @@ clean_names <- function(x) {
   x <- gsub("_$", "", x)
   # sim_fin_id -> simfim_id
   gsub("sim_fin", "simfin", fixed = TRUE, x)
+}
+
+warn_not_found <- function(request) {
+  warning(
+    "Please double-check your inputs. The SimFin API returned no data for request '",
+    request, "'.",
+    call. = FALSE
+  )
 }

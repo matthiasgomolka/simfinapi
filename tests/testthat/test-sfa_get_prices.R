@@ -50,13 +50,13 @@ test_that("search for two Tickers works including correct order", {
 test_that("sfa_get_price returns null and warnings if ticker not found", {
   expect_warning(
     expect_null(sfa_get_prices("ZZZZZ")),
-    'No company found for ticker "ZZZZZ".',
+    "No company found for ticker `ZZZZZ`.",
     fixed = TRUE
   )
   warnings <- capture_warnings(expect_null(sfa_get_prices(c("ZZZZZ", "ZZZZZZ"))))
   expect_identical(
     warnings,
-    paste0('No company found for ticker "', c("ZZZZZ", "ZZZZZZ"), '".')
+    paste0("No company found for ticker `", c("ZZZZZ", "ZZZZZZ"), "`.")
   )
 })
 
@@ -72,4 +72,3 @@ test_that("sfa_get_price returns null and warnings if simfin_id not found", {
     paste0('No company found for simfin_id `', 1:2, '`.')
   )
 })
-

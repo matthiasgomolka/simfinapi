@@ -8,11 +8,12 @@ sfa_get_entities <- function(
 ) {
   check_inputs(api_key = api_key, cache_dir = cache_dir)
 
-  content <- call_api(
+  response_light <- call_api(
     path = list("api/v2/companies/list/"),
     query = list("api-key" = api_key),
     cache_dir = cache_dir
   )
+  content <- response_light[["content"]]
 
   # return early of no content
   if (is.null(content)) {

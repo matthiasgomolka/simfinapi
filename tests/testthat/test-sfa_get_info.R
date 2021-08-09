@@ -60,7 +60,7 @@ test_that("search via ticker and simfin_id works", {
 test_that("search for non-existent ticker / simfin_id yields warning", {
   expect_warning(
     expect_null(sfa_get_info("does_not_exist")),
-    'No company found for ticker "does_not_exist".',
+    'No company found for ticker `does_not_exist`.',
     fixed = TRUE
   )
   expect_warning(

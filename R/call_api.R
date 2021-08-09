@@ -31,6 +31,7 @@ call_api <- function(..., cache_dir) {
     url = "https://simfin.com",
     ...
   )
+  request <- response[["request"]][["url"]]
   content <- RcppSimdJson::fparse(
     response[["content"]],
     max_simplify_lvl = "vector"
@@ -41,5 +42,6 @@ call_api <- function(..., cache_dir) {
     return(NULL)
   }
 
-  return(content)
+
+  return(list(request = request, content = content))
 }

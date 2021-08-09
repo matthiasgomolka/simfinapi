@@ -7,7 +7,8 @@
 #'   the cache directory globally using [sfa_set_cache_dir].
 #' @importFrom data.table as.data.table
 sfa_get_info_ <- function(ticker, api_key, cache_dir) {
-  content <- call_api(
+
+  response_light <- call_api(
     path = list("api/v2/companies/general"),
     query = list(
       "ticker" = ticker,
@@ -15,6 +16,7 @@ sfa_get_info_ <- function(ticker, api_key, cache_dir) {
     ),
     cache_dir = cache_dir
   )
+  content <- response_light[["content"]]
 
   DT_list <- lapply(content, function(x) {
     if (isFALSE(x[["found"]])) {

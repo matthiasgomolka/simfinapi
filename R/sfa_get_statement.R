@@ -31,16 +31,18 @@ sfa_get_statement_ <- function(
     query_list[["shares"]] <- ""
   }
 
-  content <- call_api(
+  response_light <- call_api(
     path = "api/v2/companies/statements",
     query = query_list,
     cache_dir = cache_dir
   )
+  content <- response_light[["content"]]
+
 
   # lapply necessary for SimFin+, where larger queries are possible
   DT_list <- lapply(content, function(x) {
     if (isFALSE(x[["found"]])) {
-      warning('No data returned. Please double-check your inputs.', call. = FALSE)
+      warn_not_found(response_light[["request"]])
       return(NULL)
     }
     DT <- data.table::transpose(data.table::as.data.table(x[["data"]]))
