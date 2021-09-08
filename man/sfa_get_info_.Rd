@@ -4,16 +4,19 @@
 \alias{sfa_get_info_}
 \title{Get basic company information}
 \usage{
-sfa_get_info_(ticker, api_key, cache_dir)
+sfa_get_info_(ticker, api_key, cache_dir, sfplus)
 }
 \arguments{
 \item{ticker}{\link{integer} Ticker of the companies of interest.}
 
-\item{api_key}{\verb{[character(1)]} Your 'SimFin' API key. For simplicity use
-\code{options(sfa_api_key = "yourapikey")}.}
+\item{api_key}{\link{character} Your 'SimFin' API key. It's recommended to set
+the API key globally using \link{sfa_set_api_key}.}
 
 \item{cache_dir}{\link{character} Your cache directory. It's recommended to set
 the cache directory globally using \link{sfa_set_cache_dir}.}
+
+\item{sfplus}{\link{logical} Set\code{TRUE} if you have a SimFin+ account. It's
+recommended to set \code{sfplus} globally using \link{sfa_set_sfplus}.}
 }
 \description{
 Internal function.

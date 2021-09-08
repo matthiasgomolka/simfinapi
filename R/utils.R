@@ -38,12 +38,16 @@ set_as <- function(DT, vars, as) {
   }
 }
 
-#' @importFrom data.table rbindlist setkeyv
-gather_result <- function(result_list) {
-  if (all(vapply(result_list, is.null, FUN.VALUE = logical(1L)))) {
+#' @importFrom data.table is.data.table rbindlist setkeyv
+gather_result <- function(results) {
+  if (all(vapply(results, is.null, FUN.VALUE = logical(1L)))) {
     return(invisible(NULL))
   }
-  result_DT <- data.table::rbindlist(result_list, fill = TRUE)
+  if (data.table::is.data.table(results)) {
+    result_DT <- results
+  } else {
+    result_DT <- data.table::rbindlist(results, fill = TRUE)
+  }
   set_clean_names(result_DT)
   data.table::setkeyv(result_DT, "ticker")
   result_DT[]

@@ -1,23 +1,28 @@
 #' Generic input checks
 #' @description This function covers all kinds of (recurring) input checks in
 #'   {simfinapi}. This keeps the other functions cleaner.
+#' @inheritParams sfa_get_info
 #' @inheritParams sfa_get_statement
 #' @inheritParams sfa_get_prices
 #' @inheritParams sfa_get_shares
 #' @inheritParams sfa_get_ref
-#' @importFrom checkmate assert_string assert_directory assert_character
-#'   assert_integerish assert_choice assert_date
+#' @importFrom checkmate assert_string assert_directory assert_logical
+#'   assert_character assert_integerish assert_choice assert_date
 #' @importFrom data.table year
 check_inputs <- function(
-  api_key = NULL, cache_dir = NULL, ticker = NULL, simfin_id = NULL,
-  statement = NULL, period = NULL, fyear = NULL, start = NULL, end = NULL,
-  ttm = NULL, shares = NULL, ratios = NULL, type = NULL, ref_data = NULL
+  api_key = NULL, cache_dir = NULL, sfplus = NULL, ticker = NULL,
+  simfin_id = NULL, statement = NULL, period = NULL, fyear = NULL, start = NULL,
+  end = NULL, ttm = NULL, shares = NULL, ratios = NULL, type = NULL,
+  ref_data = NULL
 ) {
   if (!is.null(api_key)) {
     checkmate::assert_string(api_key, pattern = "^[[:alnum:]]{32}$")
   }
   if (!is.null(cache_dir)) {
     checkmate::assert_directory(cache_dir, access = "rw")
+  }
+  if (!is.null(sfplus)) {
+    checkmate::assert_logical(sfplus, len = 1L)
   }
   if (!is.null(ticker)) {
     checkmate::assert_character(
