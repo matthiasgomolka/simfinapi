@@ -7,7 +7,8 @@
 sfa_set_sfplus(sfplus = TRUE)
 }
 \arguments{
-\item{sfplus}{\link{logical} Defaults to \code{TRUE} to specify that you have a SimFin+ account.}
+\item{sfplus}{\link{logical} Defaults to \code{TRUE} to specify that you have a SimFin+
+account.}
 }
 \description{
 If you have a SimFin+ account, it is highly recommended to

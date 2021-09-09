@@ -4,7 +4,8 @@
 #'   `sfa_*` functions obsolete.
 #'
 #'   You don't need this function if you don't have a SimFin+ account.
-#' @param sfplus [logical] Defaults to `TRUE` to specify that you have a SimFin+ account.
+#' @param sfplus [logical] Defaults to `TRUE` to specify that you have a SimFin+
+#'   account.
 #' @examples
 #' \dontrun{
 #' # Tell simfinapi that you have a SimFin+ account

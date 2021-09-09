@@ -5,7 +5,8 @@ sfa_get_prices_ <- function(
   start,
   end,
   api_key,
-  cache_dir
+  cache_dir,
+  sfplus
 ) {
   query_list <- list(
     "ticker" = ticker,
@@ -82,25 +83,6 @@ sfa_get_prices_ <- function(
 #'
 #' @inheritParams param_doc
 #'
-#' @param ratios [logical] With `TRUE`, you can display some price related
-#'   ratios along with the share price data (reserved for SimFin+ users). The
-#'   ratios that will be displayed are:
-#'
-#'   - Market-Cap
-#'   - Price to Earnings Ratio (quarterly)
-#'   - Price to Earnings Ratio (ttm)
-#'   - Price to Sales Ratio (quarterly)
-#'   - Price to Sales Ratio (ttm)
-#'   - Price to Book Value (ttm)
-#'   - Price to Free Cash Flow (quarterly)
-#'   - Price to Free Cash Flow (ttm)
-#'   - Enterprise Value (ttm)
-#'   - EV/EBITDA (ttm)
-#'   - EV/Sales (ttm)
-#'   - EV/FCF (ttm)
-#'   - Book to Market Value (ttm)
-#'   - Operating Income/EV (ttm).
-#'
 #' @inheritSection param_doc Parallel processing
 #'
 #' @importFrom future.apply future_lapply
@@ -115,7 +97,8 @@ sfa_get_prices <- function(
   start = NULL,
   end = NULL,
   api_key = getOption("sfa_api_key"),
-  cache_dir = getOption("sfa_cache_dir")
+  cache_dir = getOption("sfa_cache_dir"),
+  sfplus = getOption("sfa_sfplus", default = FALSE)
 ) {
 
   check_inputs(
@@ -132,14 +115,19 @@ sfa_get_prices <- function(
 
   if (length(ticker) == 0L) return(invisible(NULL))
 
-  progressr::with_progress({
-    prg <- progressr::progressor(along = ticker)
-    result_list <- future.apply::future_lapply(ticker, function(x) {
-      prg(x)
-      sfa_get_prices_(ticker = x, ratios, start, end, api_key, cache_dir)
-    },
-    future.seed = TRUE)
-  })
-
-  gather_result(result_list)
+  if (isTRUE(sfplus)) {
+    results <- sfa_get_prices_(
+      paste(ticker, collapse = ","), ratios, start, end, api_key, cache_dir, sfplus
+    )
+  } else {
+    progressr::with_progress({
+      prg <- progressr::progressor(along = ticker)
+      results <- future.apply::future_lapply(ticker, function(x) {
+        prg(x)
+        sfa_get_prices_(ticker = x, ratios, start, end, api_key, cache_dir)
+      },
+      future.seed = TRUE)
+    })
+  }
+  gather_result(results)
 }

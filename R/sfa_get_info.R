@@ -1,6 +1,3 @@
-#' Get basic company information
-#' @description Internal function.
-#' @inheritParams sfa_get_info
 #' @importFrom data.table as.data.table
 sfa_get_info_ <- function(ticker, api_key, cache_dir, sfplus) {
 
@@ -36,22 +33,15 @@ sfa_get_info_ <- function(ticker, api_key, cache_dir, sfplus) {
 }
 
 #' Get basic company information
-#' @param ticker [integer] Ticker of the companies of interest.
-#' @param simfin_id [integer] 'SimFin' IDs of the companies of interest. Any
-#'   `simfin_id` will be internally translated to the respective `ticker`. This
-#'   reduces the number of queries in case you query the same company via
-#'   `ticker` *and* `simfin_id`.
-#' @param api_key [character] Your 'SimFin' API key. It's recommended to set
-#'   the API key globally using [sfa_set_api_key].
-#' @param cache_dir [character] Your cache directory. It's recommended to set
-#'   the cache directory globally using [sfa_set_cache_dir].
-#' @param sfplus [logical] Set`TRUE` if you have a SimFin+ account. It's
-#'   recommended to set `sfplus` globally using [sfa_set_sfplus].
+#' @inheritParams param_doc
+#'
 #' @importFrom checkmate assert_character assert_integerish assert_string
 #'   assert_directory
 #' @importFrom future.apply future_lapply
 #' @importFrom progressr with_progress progressor
+#'
 #' @export
+#'
 sfa_get_info <- function(
   ticker = NULL,
   simfin_id = NULL,
