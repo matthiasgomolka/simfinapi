@@ -108,7 +108,8 @@ sfa_get_prices <- function(
     start = start,
     end = end,
     api_key = api_key,
-    cache_dir = cache_dir
+    cache_dir = cache_dir,
+    sfplus = sfplus
   )
 
   ticker <- gather_ticker(ticker, simfin_id, api_key, cache_dir)

@@ -52,8 +52,7 @@ users).
 
 \item{fyear}{\link{integer} Filter for fiscal year. As a non-SimFin+ user, you
 have to provide exactly one fiscal year. As SimFin+ user, this filter can
-be omitted to retrieve data available for the company. You can also chain
-this filter with a comma, to retrieve multiple years at once (e.g. \code{fyear = "2015,2016,2017"} to retrieve the data for 3 years at once).}
+be omitted to retrieve all data available for the company.}
 
 \item{ratios}{\link{logical} With \code{TRUE}, you can display some price related
 ratios along with the share price data (reserved for SimFin+ users). The

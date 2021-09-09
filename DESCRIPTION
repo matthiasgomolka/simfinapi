@@ -24,7 +24,8 @@ Imports:
     memoise (>= 1.1.0),
     RcppSimdJson (>= 0.1.1),
     utils,
-    progressr
+    progressr,
+    bit64
 Suggests: 
     covr (>= 3.5.0),
     testthat,

@@ -10,39 +10,39 @@ names(ref_classes) <- ref_names
 for (sfplus in c(TRUE, FALSE)) {
   sfa_set_sfplus(sfplus)
 
-  ref_1 <- sfa_get_prices("GOOG")
+  res_1 <- sfa_get_prices("GOOG")
 
   test_that("search for single Ticker works", {
     checkmate::expect_data_table(
-      ref_1,
+      res_1,
       key = "ticker",
       types = ref_classes,
       ncols = length(ref_names)
     )
-    expect_named(ref_1, ref_names)
-    expect_identical(unique(ref_1[["ticker"]]), "GOOG")
+    expect_named(res_1, ref_names)
+    expect_identical(unique(res_1[["ticker"]]), "GOOG")
     expect_identical(
-      ref_1[["date"]],
-      `attr<-`(sort(ref_1[["date"]]), "label", "Date")
+      res_1[["date"]],
+      `attr<-`(sort(res_1[["date"]]), "label", "Date")
     )
   })
 
-  ref_2 <- sfa_get_prices(c("GOOG", "AAPL"))
+  res_2 <- sfa_get_prices(c("GOOG", "AAPL"))
 
   test_that("search for two Tickers works including correct order", {
     checkmate::expect_data_table(
-      ref_2,
+      res_2,
       key = "ticker",
       types = ref_classes,
       ncols = length(ref_names)
     )
-    expect_named(ref_2, ref_names)
-    expect_gt(nrow(ref_2), nrow(ref_1))
-    expect_identical(unique(ref_2[["ticker"]]), c("AAPL", "GOOG"))
+    expect_named(res_2, ref_names)
+    expect_gt(nrow(res_2), nrow(res_1))
+    expect_identical(unique(res_2[["ticker"]]), c("AAPL", "GOOG"))
     expect_identical(
-      ref_2[["date"]],
+      res_2[["date"]],
       `attr<-`(
-        Reduce(c, tapply(ref_2[["date"]], ref_2[["ticker"]], sort)),
+        Reduce(c, tapply(res_2[["date"]], res_2[["ticker"]], sort)),
         "label",
         "Date"
       )
@@ -52,7 +52,7 @@ for (sfplus in c(TRUE, FALSE)) {
   dates <- as.Date(c("2021-01-04", "2021-01-8"))
 
   if (isTRUE(sfplus)) {
-    ref_3 <- sfa_get_prices(
+    res_3 <- sfa_get_prices(
       c("GOOG", "AAPL"),
       start = dates[1],
       end = dates[2]
@@ -60,19 +60,19 @@ for (sfplus in c(TRUE, FALSE)) {
 
     test_that("search for two Tickers and start date works", {
       checkmate::expect_data_table(
-        ref_3,
+        res_3,
         key = "ticker",
         types = ref_classes,
         nrows = 10L,
         ncols = length(ref_names)
       )
-      expect_named(ref_3, ref_names)
-      expect_identical(unique(ref_3[["ticker"]]), c("AAPL", "GOOG"))
-      expect_identical(range(ref_3[["date"]]), dates)
+      expect_named(res_3, ref_names)
+      expect_identical(unique(res_3[["ticker"]]), c("AAPL", "GOOG"))
+      expect_identical(range(res_3[["date"]]), dates)
       expect_identical(
-        ref_3[["date"]],
+        res_3[["date"]],
         `attr<-`(
-          Reduce(c, tapply(ref_3[["date"]], ref_3[["ticker"]], sort)),
+          Reduce(c, tapply(res_3[["date"]], res_3[["ticker"]], sort)),
           "label",
           "Date"
         )
