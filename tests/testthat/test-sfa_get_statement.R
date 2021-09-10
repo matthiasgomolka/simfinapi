@@ -209,7 +209,7 @@ test_that("getting pl statement works", {
     } else {
       expect_error(
         sfa_get_statement(c("GOOG", "AAPL"), statement = "pl", shares = TRUE, fyear = 2015),
-        "Displaying shares together with statements ('shares = TRUE') is reserved to SimFin+ users. As a normal user, please use 'sfa_get_shares()' with 'type = \"wa-basic\"' or 'type = \"wa-diluted\".",
+        "'shares = TRUE' is reserved to SimFin+ users. As a normal user, please use 'sfa_get_shares()' with 'type = \"wa-basic\"' or 'type = \"wa-diluted\".",
         fixed = TRUE
       )
     }

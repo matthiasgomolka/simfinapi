@@ -100,18 +100,16 @@ sfa_get_shares <- function(
   sfplus = getOption("sfa_sfplus", default = FALSE)
 ) {
 
-  check_inputs(
-    ticker = ticker,
-    simfin_id = simfin_id,
-    type = type,
-    period = period,
-    fyear = fyear,
-    start = start,
-    end = end,
-    api_key = api_key,
-    cache_dir = cache_dir,
-    sfplus = sfplus
-  )
+  check_sfplus(sfplus)
+  check_ticker(ticker)
+  check_simfin_id(simfin_id)
+  check_type(type)
+  check_period(period, sfplus)
+  check_fyear(fyear, sfplus)
+  check_start(start, sfplus)
+  check_end(end, sfplus)
+  check_api_key(api_key)
+  check_cache_dir(cache_dir)
 
   ticker <- gather_ticker(ticker, simfin_id, api_key, cache_dir)
 

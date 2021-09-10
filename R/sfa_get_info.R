@@ -49,30 +49,45 @@ sfa_get_info <- function(
   cache_dir = getOption("sfa_cache_dir"),
   sfplus = getOption("sfa_sfplus", default = FALSE)
 ) {
-  check_inputs(
+
+  # input checks
+  check_sfplus(sfplus)
+  check_ticker(ticker)
+  check_simfin_id(simfin_id)
+  check_api_key(api_key)
+  check_cache_dir(cache_dir)
+
+  # if (all(is.null(ticker), is.null(simfin_id))) {
+  #   stop("You need to specify at least one 'ticker' or 'simfin_id")
+  # }
+
+  # translate simfin_id to ticker to simplify API call
+  ticker <- gather_ticker(
     ticker = ticker,
     simfin_id = simfin_id,
     api_key = api_key,
-    cache_dir = cache_dir,
-    sfplus = sfplus
+    cache_dir = cache_dir
   )
-  if (all(is.null(ticker), is.null(simfin_id))) {
-    stop("You need to specify at least one 'ticker' or 'simfin_id")
-  }
 
-  # translate simfin_id to ticker to simplify API call
-  ticker <- gather_ticker(ticker, simfin_id, api_key, cache_dir)
-
-  if (isTRUE(sfplus)) {
+  if (isTRUE(sfplus)) { # SimFin+ users make a single API call
     results <- sfa_get_info_(
-      paste(ticker, collapse = ","), api_key, cache_dir, sfplus
+      ticker = paste(ticker, collapse = ","),
+      api_key = api_key,
+      cache_dir = cache_dir,
+      sfplus = sfplus
     )
-  } else {
+
+  } else { # normal users make several API calls
     progressr::with_progress({
       prg <- progressr::progressor(along = ticker)
       results <- future.apply::future_lapply(ticker, function(x) {
         prg(x)
-        sfa_get_info_(ticker = x, api_key, cache_dir, sfplus)
+        sfa_get_info_(
+          ticker = x,
+          api_key = api_key,
+          cache_dir = cache_dir,
+          sfplus = sfplus
+        )
       },
       future.seed = TRUE
       )

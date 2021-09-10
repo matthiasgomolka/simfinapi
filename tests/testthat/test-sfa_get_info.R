@@ -1,6 +1,4 @@
-library(data.table)
-
-ref <- data.table(
+ref <- data.table::data.table(
   simfin_id = c(18L, 59265L),
   ticker = c("GOOG", "MSFT"),
   company_name = c("Alphabet (Google)", "MICROSOFT CORP"),
@@ -66,18 +64,15 @@ for (sfplus in c(TRUE, FALSE)) {
 
 
   test_that("search for non-existent ticker / simfin_id yields warning", {
-    captured_warnings <- capture_warnings(
-      expect_null(sfa_get_info("does_not_exist"))
+    expect_error(
+      expect_warning(
+        sfa_get_info("does_not_exist"),
+        'No company found for ticker `does_not_exist`.',
+        fixed = TRUE
+      ),
+      "Please provide at least one one valid 'ticker' or 'simfin_id'.",
+      fixed = TRUE
     )
-    expected_warnings <- c(
-      'No company found for ticker `does_not_exist`.',
-      "From 'SimFin' API: 'Please specify at least one value as identifier for 'ticker''"
-    )
-    if (isTRUE(sfplus)) {
-      expect_identical(captured_warnings, expected_warnings)
-    } else {
-      expect_identical(captured_warnings, expected_warnings[1])
-    }
     expect_warning(
       expect_identical(
         sfa_get_info(simfin_id = c(1L, 18L, 59265L))[, names(ref), with = FALSE],

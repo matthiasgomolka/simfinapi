@@ -6,7 +6,8 @@ sfa_get_entities <- function(
   api_key = getOption("sfa_api_key"),
   cache_dir = getOption("sfa_cache_dir")
 ) {
-  check_inputs(api_key = api_key, cache_dir = cache_dir)
+  check_api_key(api_key)
+  check_cache_dir(cache_dir)
 
   response_light <- call_api(
     path = list("api/v2/companies/list/"),

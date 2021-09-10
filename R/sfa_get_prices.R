@@ -1,9 +1,9 @@
 #' @importFrom data.table as.data.table setnames set rbindlist setcolorder
 sfa_get_prices_ <- function(
   ticker,
-  ratios,
-  start,
-  end,
+  ratios = NULL,
+  start = NULL,
+  end = NULL,
   api_key,
   cache_dir,
   sfplus
@@ -101,20 +101,18 @@ sfa_get_prices <- function(
   sfplus = getOption("sfa_sfplus", default = FALSE)
 ) {
 
-  check_inputs(
-    ticker = ticker,
-    simfin_id = simfin_id,
-    ratios = ratios,
-    start = start,
-    end = end,
-    api_key = api_key,
-    cache_dir = cache_dir,
-    sfplus = sfplus
-  )
+  check_sfplus(sfplus)
+  check_ticker(ticker)
+  check_simfin_id(simfin_id)
+  check_ratios(ratios, sfplus)
+  check_start(start, sfplus)
+  check_end(end, sfplus)
+  check_api_key(api_key)
+  check_cache_dir(cache_dir)
 
   ticker <- gather_ticker(ticker, simfin_id, api_key, cache_dir)
 
-  if (length(ticker) == 0L) return(invisible(NULL))
+  if (length(ticker) == 0L) return(invisible(NULL)) # can I delete this since gather_ticker throws an error if there is no valid ticker / simfin_id?
 
   if (isTRUE(sfplus)) {
     results <- sfa_get_prices_(

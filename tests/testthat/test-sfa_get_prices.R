@@ -85,28 +85,30 @@ for (sfplus in c(TRUE, FALSE)) {
     })
   } else {
 
-    returned_warnings <- capture_warnings(expect_null(sfa_get_prices(
-        c("GOOG", "AAPL"),
-        start = dates[1],
-        end = dates[2]
-    )))
-
-    expect_identical(
-      returned_warnings,
-      rep(
-        "From 'SimFin' API: 'The 'start' and 'end' parameters are reserved for SimFin+ users.'",
-        2L)
+    expect_error(
+      sfa_get_prices(c("GOOG", "AAPL"), start = dates[1], end = dates[2]),
+      "Specifying 'start' is reserved for SimFin+ users.",
+      fixed = TRUE
     )
   }
 
 
   test_that("sfa_get_price returns null and warnings if ticker not found", {
-    expect_warning(
-      expect_null(sfa_get_prices("ZZZZZ")),
-      "No company found for ticker `ZZZZZ`.",
+    expect_error(
+      expect_warning(
+        sfa_get_prices("ZZZZZ"),
+        "No company found for ticker `ZZZZZ`.",
+        fixed = TRUE
+      ),
+      "Please provide at least one one valid 'ticker' or 'simfin_id'.",
       fixed = TRUE
     )
-    warnings <- capture_warnings(expect_null(sfa_get_prices(c("ZZZZZ", "ZZZZZZ"))))
+    warnings <- capture_warnings(
+      expect_error(
+        sfa_get_prices(c("ZZZZZ", "ZZZZZZ")),
+        "Please provide at least one one valid 'ticker' or 'simfin_id'.",
+        fixed = TRUE
+      ))
     expect_identical(
       warnings,
       paste0("No company found for ticker `", c("ZZZZZ", "ZZZZZZ"), "`.")
@@ -114,12 +116,23 @@ for (sfplus in c(TRUE, FALSE)) {
   })
 
   test_that("sfa_get_price returns null and warnings if simfin_id not found", {
-    expect_warning(
-      expect_null(sfa_get_prices(simfin_id = 1)),
-      'No company found for simfin_id `1`.',
+    expect_error(
+      expect_warning(
+        expect_null(sfa_get_prices(simfin_id = 1)),
+        'No company found for simfin_id `1`.',
+        fixed = TRUE
+      ),
+      "Please provide at least one one valid 'ticker' or 'simfin_id'.",
       fixed = TRUE
     )
-    warnings <- capture_warnings(expect_null(sfa_get_prices(simfin_id = 1:2)))
+
+    warnings <- capture_warnings(
+      expect_error(
+        sfa_get_prices(simfin_id = 1:2),
+        "Please provide at least one one valid 'ticker' or 'simfin_id'.",
+        fixed = TRUE
+      )
+    )
     expect_identical(
       warnings,
       paste0('No company found for simfin_id `', 1:2, '`.')

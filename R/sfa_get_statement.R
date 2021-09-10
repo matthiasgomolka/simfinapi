@@ -132,20 +132,18 @@ sfa_get_statement <- function(
   cache_dir = getOption("sfa_cache_dir"),
   sfplus = getOption("sfa_sfplus", default = FALSE)
 ) {
-  check_inputs(
-    ticker = ticker,
-    simfin_id = simfin_id,
-    statement = statement,
-    period = period,
-    fyear = fyear,
-    start = start,
-    end = end,
-    ttm = ttm,
-    shares = shares,
-    api_key = api_key,
-    cache_dir = cache_dir,
-    sfplus = sfplus
-  )
+  check_sfplus(sfplus) # check sfplus first, since it's needed for other checks
+  check_ticker(ticker)
+  check_simfin_id(simfin_id)
+  check_statement(statement)
+  check_period(period, sfplus)
+  check_fyear(fyear, sfplus)
+  check_start(start, sfplus)
+  check_end(end, sfplus)
+  check_ttm(ttm)
+  check_shares(shares, sfplus)
+  check_api_key(api_key)
+  check_cache_dir(cache_dir)
 
   ticker <- gather_ticker(ticker, simfin_id, api_key, cache_dir)
   # if (!is.null(fyear)) fyear <- paste(fyear, collapse = ",")

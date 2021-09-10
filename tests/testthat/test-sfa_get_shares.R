@@ -87,16 +87,17 @@ for (sfplus in c(TRUE, FALSE)) {
     } else {
 
       date <- as.Date("2020-01-01")
-      warning_msg <- "From 'SimFin' API: 'The 'start' and 'end' parameters are reserved for SimFin+ users.'"
-      warnings <- capture_warnings(expect_null(
-        sfa_get_shares(c("GOOG", "AMZN"), type = "common", start = date)
-      ))
-      expect_identical(warnings, rep(warning_msg, 2L))
+      expect_error(
+        sfa_get_shares(c("GOOG", "AMZN"), type = "common", start = date),
+        "Specifying 'start' is reserved for SimFin+ users.",
+        fixed = TRUE
+      )
 
-      warnings <- capture_warnings(expect_null(
-        sfa_get_shares(c("GOOG", "AMZN"), type = "common", end = date)
-      ))
-      expect_identical(warnings, rep(warning_msg, 2L))
+      expect_error(
+        sfa_get_shares(c("GOOG", "AMZN"), type = "common", end = date),
+        "Specifying 'end' is reserved for SimFin+ users.",
+        fixed = TRUE
+      )
     }
 
   })
