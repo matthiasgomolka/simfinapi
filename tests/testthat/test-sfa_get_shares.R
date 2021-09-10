@@ -1,6 +1,10 @@
 for (sfplus in c(TRUE, FALSE)) {
   sfa_set_sfplus(sfplus)
-
+  if (isTRUE(sfplus)) {
+    options(sfa_api_key = Sys.getenv("SFPLUS_API_KEY"))
+  } else {
+    options(sfa_api_key = Sys.getenv("SF_API_KEY"))
+  }
 
   test_that("sfa_get_prices() works for type = common", {
     ref_names <- c("simfin_id", "ticker", "date", "shares_outstanding_common")
@@ -81,9 +85,6 @@ for (sfplus in c(TRUE, FALSE)) {
       expect_lte(max(res_6[["date"]]), date)
 
     } else {
-
-      options(sfa_api_key = Sys.getenv("SF_API_KEY"))
-      on.exit(options(sfa_api_key = Sys.getenv("SFPLUS_API_KEY")))
 
       date <- as.Date("2020-01-01")
       warning_msg <- "From 'SimFin' API: 'The 'start' and 'end' parameters are reserved for SimFin+ users.'"

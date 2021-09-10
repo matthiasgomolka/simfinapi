@@ -15,6 +15,11 @@ check_inputs <- function(
   end = NULL, ttm = NULL, shares = NULL, ratios = NULL, type = NULL,
   ref_data = NULL
 ) {
+
+  msg_sfplus_required <- function(var, verb = "Omitting") {
+    stop(verb, " '", var, "' is reserved for SimFin+ users.", call. = FALSE)
+  }
+
   if (!is.null(api_key)) {
     checkmate::assert_string(api_key, pattern = "^[[:alnum:]]{32}$")
   }
@@ -53,6 +58,10 @@ check_inputs <- function(
       c("q1", "q2", "q3", "q4", "fy", "h1", "h2", "9m", "6m", "quarters"),
       fmatch = TRUE
     )
+  } else {
+    if (checkmate::test_false(sfplus)) {
+      msg_sfplus_required("period")
+    }
   }
   if (!is.null(fyear)) {
     checkmate::assert_integerish(
@@ -60,6 +69,10 @@ check_inputs <- function(
       lower = 1900L,
       upper = data.table::year(Sys.Date())
     )
+  } else {
+    if (checkmate::test_false(sfplus)) {
+      msg_sfplus_required("fyear")
+    }
   }
   if (!is.null(start)) {
     checkmate::assert_date(
@@ -67,6 +80,9 @@ check_inputs <- function(
       lower = as.Date("1900-01-01"),
       upper = Sys.Date()
     )
+    if (checkmate::test_false(sfplus)) {
+      msg_sfplus_required("start", "Specifying")
+    }
   }
   if (!is.null(end)) {
     checkmate::assert_date(
@@ -74,15 +90,31 @@ check_inputs <- function(
       lower = as.Date("1900-01-01"),
       upper = Sys.Date()
     )
+    if (checkmate::test_false(sfplus)) {
+      msg_sfplus_required("end", "Specifying")
+    }
   }
   if (!is.null(ttm)) {
     checkmate::assert_logical(ttm, any.missing = FALSE, len = 1L)
   }
   if (!is.null(shares)) {
     checkmate::assert_logical(shares, any.missing = FALSE, len = 1L)
+    if (isTRUE(shares) & checkmate::test_false(sfplus)) {
+      stop(
+        "Displaying shares together with statements ('shares = TRUE') is ",
+        "reserved to SimFin+ users. As a normal user, please use ",
+        "'sfa_get_shares()' with 'type = \"wa-basic\"' or 'type = ",
+        "\"wa-diluted\".",
+        call. = FALSE
+      )
+    }
   }
+
   if (!is.null(ratios)) {
     checkmate::assert_logical(ratios, any.missing = FALSE, len = 1L)
+    if (checkmate::test_false(sfplus)) {
+      msg_sfplus_required("ratios", "Specifying")
+    }
   }
   if (!is.null(type)) {
     checkmate::assert_choice(
@@ -99,18 +131,3 @@ check_inputs <- function(
     )
   }
 }
-
-
-#' @param api_key See function using this argument.
-#' @param cache_dir See function using this argument.
-#' @param ticker See function using this argument.
-#' @param simfin_id See function using this argument.
-#' @param statement See function using this argument.
-#' @param period See function using this argument.
-#' @param fyear See function using this argument.
-#' @param start See function using this argument.
-#' @param end See function using this argument.
-#' @param ttm See function using this argument.
-#' @param shares See function using this argument.
-#' @param ratios See function using this argument.
-#' @param type See function using this argument.

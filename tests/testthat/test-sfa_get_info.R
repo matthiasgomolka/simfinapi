@@ -19,6 +19,11 @@ for (i in seq_along(ref)) {
 
 for (sfplus in c(TRUE, FALSE)) {
   sfa_set_sfplus(sfplus)
+  if (isTRUE(sfplus)) {
+    options(sfa_api_key = Sys.getenv("SFPLUS_API_KEY"))
+  } else {
+    options(sfa_api_key = Sys.getenv("SF_API_KEY"))
+  }
 
   test_that("search via tickers works", {
     # Restrict columns to those which are in 'ref'. This way, I don't need to

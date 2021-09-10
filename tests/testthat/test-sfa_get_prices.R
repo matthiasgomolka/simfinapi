@@ -9,6 +9,11 @@ names(ref_classes) <- ref_names
 
 for (sfplus in c(TRUE, FALSE)) {
   sfa_set_sfplus(sfplus)
+  if (isTRUE(sfplus)) {
+    options(sfa_api_key = Sys.getenv("SFPLUS_API_KEY"))
+  } else {
+    options(sfa_api_key = Sys.getenv("SF_API_KEY"))
+  }
 
   res_1 <- sfa_get_prices("GOOG")
 
@@ -79,8 +84,6 @@ for (sfplus in c(TRUE, FALSE)) {
       )
     })
   } else {
-    options(sfa_api_key = Sys.getenv("SF_API_KEY"))
-    on.exit(options(sfa_api_key = Sys.getenv("SFPLUS_API_KEY")))
 
     returned_warnings <- capture_warnings(expect_null(sfa_get_prices(
         c("GOOG", "AAPL"),

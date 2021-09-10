@@ -11,7 +11,10 @@ gather_ticker <- function(ticker, simfin_id, api_key, cache_dir) {
 
   valid_ids <- unique(c(valid_tickers, simfin_id_as_ticker))
   if (length(valid_ids) == 0L) {
-    return(invisible(NULL))
+    stop(
+      "Please provide at least one one valid 'ticker' or 'simfin_id'.",
+      call. = FALSE
+    )
   }
   return(valid_ids)
 }

@@ -81,7 +81,7 @@ sfa_get_shares_ <- function(
 #' @inheritSection param_doc Parallel processing
 #'
 #' @importFrom checkmate assert_choice
-#' @importFrom future.apply future_lapply
+#' @importFrom future.apply future_mapply
 #' @importFrom progressr with_progress progressor
 #' @importFrom data.table year CJ
 #'

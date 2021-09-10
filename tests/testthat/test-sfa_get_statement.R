@@ -72,109 +72,148 @@ test_that("getting pl statement works", {
   )
   names(exp_classes) <- clean_names(names(exp_classes))
 
-  ref_1 <- sfa_get_statement("GOOG", statement = "pl", fyear = 2015)
-  checkmate::expect_data_table(
-    ref_1,
-    key = "ticker",
-    types = exp_classes,
-    nrows = 1L,
-    ncols = length(exp_classes),
-    col.names = "unique"
-  )
-  expect_named(ref_1, names(exp_classes))
+  for (sfplus in c(TRUE, FALSE)) {
+    exp_classes <- exp_classes[!(names(exp_classes) %in% c("shares_basic", "shares_diluted"))]
 
-  ref_1_plus <- sfa_get_statement("GOOG", statement = "pl")
-  checkmate::expect_data_table(
-    ref_1_plus,
-    key = "ticker",
-    types = exp_classes,
-    min.rows = 13L,
-    ncols = length(exp_classes),
-    col.names = "unique"
-  )
-  expect_named(ref_1_plus, names(exp_classes))
+    sfa_set_sfplus(sfplus)
+    if (isTRUE(sfplus)) {
+      options(sfa_api_key = Sys.getenv("SFPLUS_API_KEY"))
+    } else {
+      options(sfa_api_key = Sys.getenv("SF_API_KEY"))
+    }
+
+    ref_1 <- sfa_get_statement("GOOG", statement = "pl", fyear = 2015)
+    checkmate::expect_data_table(
+      ref_1,
+      key = "ticker",
+      types = exp_classes,
+      nrows = 1L,
+      ncols = length(exp_classes),
+      col.names = "unique"
+    )
+    expect_named(ref_1, names(exp_classes))
+
+    if (isTRUE(sfplus)) {
+
+      ref_1_plus <- sfa_get_statement("GOOG", statement = "pl")
+      checkmate::expect_data_table(
+        ref_1_plus,
+        key = "ticker",
+        types = exp_classes,
+        min.rows = 13L,
+        ncols = length(exp_classes),
+        col.names = "unique"
+      )
+      expect_named(ref_1_plus, names(exp_classes))
+
+    } else {
+      expect_error(
+        sfa_get_statement("GOOG", statement = "pl"),
+        "Omitting 'fyear' is reserved for SimFin+ users.",
+        fixed = TRUE
+      )
+    }
 
 
-  ref_2 <- sfa_get_statement(c("GOOG", "AAPL"), statement = "pl", fyear = 2015)
-  checkmate::expect_data_table(
-    ref_2,
-    key = "ticker",
-    types = exp_classes,
-    nrows = 2L,
-    ncols = length(exp_classes),
-    col.names = "unique"
-  )
-  expect_named(ref_2, names(exp_classes))
 
-  ref_2_plus <- sfa_get_statement(c("GOOG", "AAPL"), statement = "pl")
-  checkmate::expect_data_table(
-    ref_2_plus,
-    key = "ticker",
-    types = exp_classes,
-    min.rows = 35L,
-    ncols = length(exp_classes),
-    col.names = "unique"
-  )
-  expect_named(ref_2_plus, names(exp_classes))
+    ref_2 <- sfa_get_statement(c("GOOG", "AAPL"), statement = "pl", fyear = 2015)
+    checkmate::expect_data_table(
+      ref_2,
+      key = "ticker",
+      types = exp_classes,
+      nrows = 2L,
+      ncols = length(exp_classes),
+      col.names = "unique"
+    )
+    expect_named(ref_2, names(exp_classes))
 
-  ref_3 <- sfa_get_statement(
-    c("GOOG", "AAPL"), statement = "pl", ttm = TRUE, fyear = 2015
-  )
-  checkmate::expect_data_table(
-    ref_3,
-    key = "ticker",
-    types = exp_classes,
-    nrows = 2L,
-    ncols = length(exp_classes),
-    col.names = "unique"
-  )
-  expect_named(ref_3, names(exp_classes))
 
-  ref_3_plus <- sfa_get_statement(
-    c("GOOG", "AAPL"), statement = "pl", ttm = TRUE
-  )
-  checkmate::expect_data_table(
-    ref_3_plus,
-    key = "ticker",
-    types = exp_classes,
-    min.rows = 33L,
-    ncols = length(exp_classes),
-    col.names = "unique"
-  )
-  expect_named(ref_3_plus, names(exp_classes))
+    if (isTRUE(sfplus)) {
+      ref_2_plus <- sfa_get_statement(c("GOOG", "AAPL"), statement = "pl")
+      checkmate::expect_data_table(
+        ref_2_plus,
+        key = "ticker",
+        types = exp_classes,
+        min.rows = 35L,
+        ncols = length(exp_classes),
+        col.names = "unique"
+      )
+      expect_named(ref_2_plus, names(exp_classes))
+    } else {
+      expect_error(
+        sfa_get_statement(c("GOOG", "AAPL"), statement = "pl"),
+        "Omitting 'fyear' is reserved for SimFin+ users.",
+        fixed = TRUE
+      )
+    }
 
-  exp_classes <- append(
-    exp_classes,
-    c(`Shares (Basic)` = "numeric", `Shares (Diluted)` = "numeric"),
-    after = which(names(exp_classes) == "currency")
-  )
-  names(exp_classes) <- clean_names(names(exp_classes))
+    ref_3 <- sfa_get_statement(
+      c("GOOG", "AAPL"), statement = "pl", ttm = TRUE, fyear = 2015
+    )
+    checkmate::expect_data_table(
+      ref_3,
+      key = "ticker",
+      types = exp_classes,
+      nrows = 2L,
+      ncols = length(exp_classes),
+      col.names = "unique"
+    )
+    expect_named(ref_3, names(exp_classes))
 
-  ref_4 <- sfa_get_statement(
-    c("GOOG", "AAPL"), statement = "pl", shares = TRUE, fyear = 2015
-  )
-  checkmate::expect_data_table(
-    ref_4,
-    key = "ticker",
-    types = exp_classes,
-    nrows = 2L,
-    ncols = length(exp_classes),
-    col.names = "unique"
-  )
-  expect_named(ref_4, names(exp_classes))
 
-  ref_4_plus <- sfa_get_statement(
-    c("GOOG", "AAPL"), statement = "pl", shares = TRUE
-  )
-  checkmate::expect_data_table(
-    ref_4_plus,
-    key = "ticker",
-    types = exp_classes,
-    min.rows = 35L,
-    ncols = length(exp_classes),
-    col.names = "unique"
-  )
-  expect_named(ref_4_plus, names(exp_classes))
+    if (isTRUE(sfplus)) {
+
+      ref_3_plus <- sfa_get_statement(
+        c("GOOG", "AAPL"), statement = "pl", ttm = TRUE
+      )
+      checkmate::expect_data_table(
+        ref_3_plus,
+        key = "ticker",
+        types = exp_classes,
+        min.rows = 33L,
+        ncols = length(exp_classes),
+        col.names = "unique"
+      )
+      expect_named(ref_3_plus, names(exp_classes))
+
+    } else {
+      expect_error(
+        sfa_get_statement(c("GOOG", "AAPL"), statement = "pl", ttm = TRUE),
+        "Omitting 'fyear' is reserved for SimFin+ users.",
+        fixed = TRUE
+      )
+    }
+
+    exp_classes <- append(
+      exp_classes,
+      c(`Shares (Basic)` = "numeric", `Shares (Diluted)` = "numeric"),
+      after = which(names(exp_classes) == "currency")
+    )
+    names(exp_classes) <- clean_names(names(exp_classes))
+
+    if (isTRUE(sfplus)) {
+
+      ref_4_plus <- sfa_get_statement(
+        c("GOOG", "AAPL"), statement = "pl", shares = TRUE, fyear = 2015
+      )
+      checkmate::expect_data_table(
+        ref_4_plus,
+        key = "ticker",
+        types = exp_classes,
+        nrows = 2L,
+        ncols = length(exp_classes),
+        col.names = "unique"
+      )
+      expect_named(ref_4_plus, names(exp_classes))
+
+    } else {
+      expect_error(
+        sfa_get_statement(c("GOOG", "AAPL"), statement = "pl", shares = TRUE, fyear = 2015),
+        "Displaying shares together with statements ('shares = TRUE') is reserved to SimFin+ users. As a normal user, please use 'sfa_get_shares()' with 'type = \"wa-basic\"' or 'type = \"wa-diluted\".",
+        fixed = TRUE
+      )
+    }
+  }
 })
 
 
@@ -278,51 +317,77 @@ test_that("getting bs statement works", {
     `Total Liabilities & Equity` = "numeric"
   )
   names(exp_classes) <- clean_names(names(exp_classes))
+  exp_classes <- exp_classes[!(names(exp_classes) %in% c("shares_basic", "shares_diluted"))]
 
-  ref_1 <- sfa_get_statement("GOOG", statement = "bs", fyear = 2015)
-  checkmate::expect_data_table(
-    ref_1,
-    key = "ticker",
-    types = exp_classes,
-    nrows = 1L,
-    ncols = length(exp_classes),
-    col.names = "unique"
-  )
-  expect_named(ref_1, names(exp_classes))
+  for (sfplus in c(TRUE, FALSE)) {
 
-  ref_1_plus <- sfa_get_statement("GOOG", statement = "bs")
-  checkmate::expect_data_table(
-    ref_1_plus,
-    key = "ticker",
-    types = exp_classes,
-    min.rows = 12L,
-    ncols = length(exp_classes),
-    col.names = "unique"
-  )
-  expect_named(ref_1_plus, names(exp_classes))
+    sfa_set_sfplus(sfplus)
+    if (isTRUE(sfplus)) {
+      options(sfa_api_key = Sys.getenv("SFPLUS_API_KEY"))
+    } else {
+      options(sfa_api_key = Sys.getenv("SF_API_KEY"))
+    }
 
+    ref_1 <- sfa_get_statement("GOOG", statement = "bs", fyear = 2015)
+    checkmate::expect_data_table(
+      ref_1,
+      key = "ticker",
+      types = exp_classes,
+      nrows = 1L,
+      ncols = length(exp_classes),
+      col.names = "unique"
+    )
+    expect_named(ref_1, names(exp_classes))
 
-  ref_2 <- sfa_get_statement(c("GOOG", "AAPL"), statement = "bs", fyear = 2015)
-  checkmate::expect_data_table(
-    ref_2,
-    key = "ticker",
-    types = exp_classes,
-    nrows = 2L,
-    ncols = length(exp_classes),
-    col.names = "unique"
-  )
-  expect_named(ref_2, names(exp_classes))
+    if (isTRUE(sfplus)) {
+      ref_1_plus <- sfa_get_statement("GOOG", statement = "bs")
+      checkmate::expect_data_table(
+        ref_1_plus,
+        key = "ticker",
+        types = exp_classes,
+        min.rows = 12L,
+        ncols = length(exp_classes),
+        col.names = "unique"
+      )
+      expect_named(ref_1_plus, names(exp_classes))
+    } else {
+      expect_error(
+        sfa_get_statement("GOOG", statement = "bs"),
+        "Omitting 'fyear' is reserved for SimFin+ users.",
+        fixed = TRUE
+      )
+    }
 
-  ref_2_plus <- sfa_get_statement(c("GOOG", "AAPL"), statement = "bs")
-  checkmate::expect_data_table(
-    ref_2_plus,
-    key = "ticker",
-    types = exp_classes,
-    min.rows = 34L,
-    ncols = length(exp_classes),
-    col.names = "unique"
-  )
-  expect_named(ref_2_plus, names(exp_classes))
+    ref_2 <- sfa_get_statement(c("GOOG", "AAPL"), statement = "bs", fyear = 2015)
+    checkmate::expect_data_table(
+      ref_2,
+      key = "ticker",
+      types = exp_classes,
+      nrows = 2L,
+      ncols = length(exp_classes),
+      col.names = "unique"
+    )
+    expect_named(ref_2, names(exp_classes))
+
+    if (isTRUE(sfplus)) {
+      ref_2_plus <- sfa_get_statement(c("GOOG", "AAPL"), statement = "bs")
+      checkmate::expect_data_table(
+        ref_2_plus,
+        key = "ticker",
+        types = exp_classes,
+        min.rows = 34L,
+        ncols = length(exp_classes),
+        col.names = "unique"
+      )
+      expect_named(ref_2_plus, names(exp_classes))
+    } else {
+      expect_error(
+        sfa_get_statement(c("GOOG", "AAPL"), statement = "bs"),
+        "Omitting 'fyear' is reserved for SimFin+ users.",
+        fixed = TRUE
+      )
+    }
+  }
 })
 
 test_that("getting cf statement works", {
@@ -393,50 +458,75 @@ test_that("getting cf statement works", {
   )
   names(exp_classes) <- clean_names(names(exp_classes))
 
-  ref_1 <- sfa_get_statement("GOOG", statement = "cf", fyear = 2015)
-  checkmate::expect_data_table(
-    ref_1,
-    key = "ticker",
-    types = exp_classes,
-    nrows = 1L,
-    ncols = length(exp_classes),
-    col.names = "unique"
-  )
-  expect_named(ref_1, names(exp_classes))
+  for (sfplus in c(TRUE, FALSE)) {
 
-  ref_1_plus <- sfa_get_statement("GOOG", statement = "cf")
-  checkmate::expect_data_table(
-    ref_1_plus,
-    key = "ticker",
-    types = exp_classes,
-    min.rows = 12L,
-    ncols = length(exp_classes),
-    col.names = "unique"
-  )
-  expect_named(ref_1_plus, names(exp_classes))
+    sfa_set_sfplus(sfplus)
+    if (isTRUE(sfplus)) {
+      options(sfa_api_key = Sys.getenv("SFPLUS_API_KEY"))
+    } else {
+      options(sfa_api_key = Sys.getenv("SF_API_KEY"))
+    }
 
+    ref_1 <- sfa_get_statement("GOOG", statement = "cf", fyear = 2015)
+    checkmate::expect_data_table(
+      ref_1,
+      key = "ticker",
+      types = exp_classes,
+      nrows = 1L,
+      ncols = length(exp_classes),
+      col.names = "unique"
+    )
+    expect_named(ref_1, names(exp_classes))
 
-  ref_2 <- sfa_get_statement(c("GOOG", "AAPL"), statement = "cf", fyear = 2015)
-  checkmate::expect_data_table(
-    ref_2,
-    key = "ticker",
-    types = exp_classes,
-    nrows = 2L,
-    ncols = length(exp_classes),
-    col.names = "unique"
-  )
-  expect_named(ref_2, names(exp_classes))
+    if (isTRUE(sfplus)) {
+      ref_1_plus <- sfa_get_statement("GOOG", statement = "cf")
+      checkmate::expect_data_table(
+        ref_1_plus,
+        key = "ticker",
+        types = exp_classes,
+        min.rows = 12L,
+        ncols = length(exp_classes),
+        col.names = "unique"
+      )
+      expect_named(ref_1_plus, names(exp_classes))
+    } else {
+      expect_error(
+        sfa_get_statement("GOOG", statement = "cf"),
+        "Omitting 'fyear' is reserved for SimFin+ users.",
+        fixed = TRUE
+      )
+    }
 
-  ref_2_plus <- sfa_get_statement(c("GOOG", "AAPL"), statement = "cf")
-  checkmate::expect_data_table(
-    ref_2_plus,
-    key = "ticker",
-    types = exp_classes,
-    min.rows = 36L,
-    ncols = length(exp_classes),
-    col.names = "unique"
-  )
-  expect_named(ref_2_plus, names(exp_classes))
+    ref_2 <- sfa_get_statement(c("GOOG", "AAPL"), statement = "cf", fyear = 2015)
+    checkmate::expect_data_table(
+      ref_2,
+      key = "ticker",
+      types = exp_classes,
+      nrows = 2L,
+      ncols = length(exp_classes),
+      col.names = "unique"
+    )
+    expect_named(ref_2, names(exp_classes))
+
+    if (isTRUE(sfplus)) {
+      ref_2_plus <- sfa_get_statement(c("GOOG", "AAPL"), statement = "cf")
+      checkmate::expect_data_table(
+        ref_2_plus,
+        key = "ticker",
+        types = exp_classes,
+        min.rows = 36L,
+        ncols = length(exp_classes),
+        col.names = "unique"
+      )
+      expect_named(ref_2_plus, names(exp_classes))
+    } else {
+      expect_error(
+        sfa_get_statement(c("GOOG", "AAPL"), statement = "cf"),
+        "Omitting 'fyear' is reserved for SimFin+ users.",
+        fixed = TRUE
+      )
+    }
+  }
 })
 
 test_that("warning is triggered if the API did not return any data", {
@@ -454,10 +544,13 @@ test_that("warning is triggered if the API did not return any data", {
 })
 
 # TODO: Test all kinds of statements
-test_that("warning is trigged when no company was found", {
-  expect_warning(
-    expect_null(sfa_get_statement("doesnotexist", statement = "cf")),
-    'No company found for ticker `doesnotexist`.',
+test_that("warning is triggered when no company was found", {
+  expect_error(
+    expect_warning(
+      sfa_get_statement("doesnotexist", statement = "cf", fyear = 2015L),
+      "No company found for ticker `doesnotexist`.",
+      fixed = TRUE),
+    "Please provide at least one one valid 'ticker' or 'simfin_id'.",
     fixed = TRUE
   )
 })
