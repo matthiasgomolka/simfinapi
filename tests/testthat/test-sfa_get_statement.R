@@ -554,3 +554,24 @@ test_that("warning is triggered when no company was found", {
     fixed = TRUE
   )
 })
+
+test_that("downloading all statements works only for SimFIn+ users", {
+  for (sfplus in c(TRUE, FALSE)) {
+
+    sfa_set_sfplus(sfplus)
+
+    if (isTRUE(sfplus)) {
+      options(sfa_api_key = Sys.getenv("SFPLUS_API_KEY"))
+      checkmate::expect_data_table(
+        sfa_get_statement("GOOG", statement = "all")
+      )
+    } else {
+      options(sfa_api_key = Sys.getenv("SF_API_KEY"))
+      expect_error(
+        sfa_get_statement("GOOG", statement = "all"),
+        'statement = "all" is reserved for SimFin+ users.',
+        fixed = TRUE
+      )
+    }
+  }
+})

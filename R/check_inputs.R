@@ -38,12 +38,15 @@ check_simfin_id <- function(simfin_id) {
 }
 
 #' @importFrom checkmate assert_choice
-check_statement <- function(statement) {
+check_statement <- function(statement, sfplus) {
   checkmate::assert_choice(
     statement,
     c("pl", "bs", "cf", "derived", "all"),
     fmatch = TRUE
   )
+  if (statement == "all" & isFALSE(sfplus)) {
+    stop('statement = "all" is reserved for SimFin+ users.', call. = FALSE)
+  }
 }
 
 #' @importFrom checkmate assert_choice

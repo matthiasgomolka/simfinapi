@@ -135,7 +135,7 @@ sfa_get_statement <- function(
   check_sfplus(sfplus) # check sfplus first, since it's needed for other checks
   check_ticker(ticker)
   check_simfin_id(simfin_id)
-  check_statement(statement)
+  check_statement(statement, sfplus)
   check_period(period, sfplus)
   check_fyear(fyear, sfplus)
   check_start(start, sfplus)
