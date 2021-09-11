@@ -1,12 +1,5 @@
-#' Get basic company information
-#' @description Internal function.
-#' @param ticker [integer] Ticker of the companies of interest.
-#' @param api_key `[character(1)]` Your 'SimFin' API key. For simplicity use
-#'   `options(sfa_api_key = "yourapikey")`.
-#' @param cache_dir [character] Your cache directory. It's recommended to set
-#'   the cache directory globally using [sfa_set_cache_dir].
 #' @importFrom data.table as.data.table
-sfa_get_info_ <- function(ticker, api_key, cache_dir) {
+sfa_get_info_ <- function(ticker, api_key, cache_dir, sfplus) {
 
   response_light <- call_api(
     path = list("api/v2/companies/general"),
@@ -40,46 +33,65 @@ sfa_get_info_ <- function(ticker, api_key, cache_dir) {
 }
 
 #' Get basic company information
-#' @param ticker [integer] Ticker of the companies of interest.
-#' @param simfin_id [integer] 'SimFin' IDs of the companies of interest. Any
-#'   `simfin_id` will be internally translated to the respective `ticker`. This
-#'   reduces the number of queries in case you query the same company via
-#'   `ticker` *and* `simfin_id`.
-#' @param api_key [character] Your 'SimFin' API key. It's recommended to set
-#'   the API key globally using [sfa_set_api_key].
-#' @param cache_dir [character] Your cache directory. It's recommended to set
-#'   the cache directory globally using [sfa_set_cache_dir].
+#' @inheritParams param_doc
+#'
 #' @importFrom checkmate assert_character assert_integerish assert_string
 #'   assert_directory
 #' @importFrom future.apply future_lapply
 #' @importFrom progressr with_progress progressor
+#'
 #' @export
+#'
 sfa_get_info <- function(
   ticker = NULL,
   simfin_id = NULL,
   api_key = getOption("sfa_api_key"),
-  cache_dir = getOption("sfa_cache_dir")
+  cache_dir = getOption("sfa_cache_dir"),
+  sfplus = getOption("sfa_sfplus", default = FALSE)
 ) {
-  check_inputs(
+
+  # input checks
+  check_sfplus(sfplus)
+  check_ticker(ticker)
+  check_simfin_id(simfin_id)
+  check_api_key(api_key)
+  check_cache_dir(cache_dir)
+
+  # if (all(is.null(ticker), is.null(simfin_id))) {
+  #   stop("You need to specify at least one 'ticker' or 'simfin_id")
+  # }
+
+  # translate simfin_id to ticker to simplify API call
+  ticker <- gather_ticker(
     ticker = ticker,
     simfin_id = simfin_id,
     api_key = api_key,
     cache_dir = cache_dir
   )
-  if (all(is.null(ticker), is.null(simfin_id))) {
-    stop("You need to specify at least one 'ticker' or 'simfin_id")
+
+  if (isTRUE(sfplus)) { # SimFin+ users make a single API call
+    results <- sfa_get_info_(
+      ticker = paste(ticker, collapse = ","),
+      api_key = api_key,
+      cache_dir = cache_dir,
+      sfplus = sfplus
+    )
+
+  } else { # normal users make several API calls
+    progressr::with_progress({
+      prg <- progressr::progressor(along = ticker)
+      results <- future.apply::future_lapply(ticker, function(x) {
+        prg(x)
+        sfa_get_info_(
+          ticker = x,
+          api_key = api_key,
+          cache_dir = cache_dir,
+          sfplus = sfplus
+        )
+      },
+      future.seed = TRUE
+      )
+    })
   }
-
-  # translate simfin_id to ticker to simplify API call
-  ticker <- gather_ticker(ticker, simfin_id, api_key, cache_dir)
-
-  progressr::with_progress({
-    prg <- progressr::progressor(along = ticker)
-    result_list <- future.apply::future_lapply(ticker, function(x) {
-      prg(x)
-      sfa_get_info_(ticker = x, api_key, cache_dir)
-    },
-    future.seed = TRUE)
-  })
-  gather_result(result_list)
+  gather_result(results)
 }

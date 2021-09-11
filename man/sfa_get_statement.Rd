@@ -15,7 +15,8 @@ sfa_get_statement(
   ttm = FALSE,
   shares = FALSE,
   api_key = getOption("sfa_api_key"),
-  cache_dir = getOption("sfa_cache_dir")
+  cache_dir = getOption("sfa_cache_dir"),
+  sfplus = getOption("sfa_sfplus", default = FALSE)
 )
 }
 \arguments{
@@ -56,8 +57,7 @@ users).
 
 \item{fyear}{\link{integer} Filter for fiscal year. As a non-SimFin+ user, you
 have to provide exactly one fiscal year. As SimFin+ user, this filter can
-be omitted to retrieve data available for the company. You can also chain
-this filter with a comma, to retrieve multiple years at once (e.g. \code{fyear = "2015,2016,2017"} to retrieve the data for 3 years at once).}
+be omitted to retrieve all data available for the company.}
 
 \item{start}{\link{Date} Filter for the report dates (reserved for SimFin+ users).
 With this filter you can filter the statements by the date on which the
@@ -85,6 +85,9 @@ the API key globally using \link{sfa_set_api_key}.}
 
 \item{cache_dir}{\link{character} Your cache directory. It's recommended to set
 the cache directory globally using \link{sfa_set_cache_dir}.}
+
+\item{sfplus}{\link{logical} Set\code{TRUE} if you have a SimFin+ account. It's
+recommended to set \code{sfplus} globally using \link{sfa_set_sfplus}.}
 }
 \value{
 \link{data.table} containing the statement(s) data.

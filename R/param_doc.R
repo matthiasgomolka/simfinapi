@@ -7,6 +7,9 @@
 #' @param cache_dir [character] Your cache directory. It's recommended to set
 #'   the cache directory globally using [sfa_set_cache_dir].
 #'
+#' @param sfplus [logical] Set`TRUE` if you have a SimFin+ account. It's
+#'   recommended to set `sfplus` globally using [sfa_set_sfplus].
+#'
 #' @param ticker [integer] Ticker of the companies of interest.
 #'
 #' @param simfin_id [integer] 'SimFin' IDs of the companies of interest. Any
@@ -45,10 +48,26 @@
 #'
 #' @param fyear [integer] Filter for fiscal year. As a non-SimFin+ user, you
 #'   have to provide exactly one fiscal year. As SimFin+ user, this filter can
-#'   be omitted to retrieve data available for the company. You can also chain
-#'   this filter with a comma, to retrieve multiple years at once (e.g. `fyear =
-#'   "2015,2016,2017"` to retrieve the data for 3 years at once).
+#'   be omitted to retrieve all data available for the company.
 #'
+#' @param ratios [logical] With `TRUE`, you can display some price related
+#'   ratios along with the share price data (reserved for SimFin+ users). The
+#'   ratios that will be displayed are:
+#'
+#'   - Market-Cap
+#'   - Price to Earnings Ratio (quarterly)
+#'   - Price to Earnings Ratio (ttm)
+#'   - Price to Sales Ratio (quarterly)
+#'   - Price to Sales Ratio (ttm)
+#'   - Price to Book Value (ttm)
+#'   - Price to Free Cash Flow (quarterly)
+#'   - Price to Free Cash Flow (ttm)
+#'   - Enterprise Value (ttm)
+#'   - EV/EBITDA (ttm)
+#'   - EV/Sales (ttm)
+#'   - EV/FCF (ttm)
+#'   - Book to Market Value (ttm)
+#'   - Operating Income/EV (ttm).
 #'
 #' @section Parallel processing:
 #' This function supports parallel processing via `future.apply`. If your

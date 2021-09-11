@@ -11,7 +11,10 @@ gather_ticker <- function(ticker, simfin_id, api_key, cache_dir) {
 
   valid_ids <- unique(c(valid_tickers, simfin_id_as_ticker))
   if (length(valid_ids) == 0L) {
-    return(invisible(NULL))
+    stop(
+      "Please provide at least one one valid 'ticker' or 'simfin_id'.",
+      call. = FALSE
+    )
   }
   return(valid_ids)
 }
@@ -38,12 +41,16 @@ set_as <- function(DT, vars, as) {
   }
 }
 
-#' @importFrom data.table rbindlist setkeyv
-gather_result <- function(result_list) {
-  if (all(vapply(result_list, is.null, FUN.VALUE = logical(1L)))) {
+#' @importFrom data.table is.data.table rbindlist setkeyv
+gather_result <- function(results) {
+  if (all(vapply(results, is.null, FUN.VALUE = logical(1L)))) {
     return(invisible(NULL))
   }
-  result_DT <- data.table::rbindlist(result_list, fill = TRUE)
+  if (data.table::is.data.table(results)) {
+    result_DT <- results
+  } else {
+    result_DT <- data.table::rbindlist(results, fill = TRUE)
+  }
   set_clean_names(result_DT)
   data.table::setkeyv(result_DT, "ticker")
   result_DT[]

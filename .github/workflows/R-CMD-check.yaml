@@ -8,11 +8,9 @@ on:
   push:
     branches:
       - main
-      - master
   pull_request:
     branches:
       - main
-      - master
 
 name: R-CMD-check
 
@@ -87,7 +85,8 @@ jobs:
       - name: Check
         env:
           _R_CHECK_CRAN_INCOMING_: false
-          SIMFIN_API_KEY: ${{ secrets.SIMFIN_API_KEY }}
+          SFPLUS_API_KEY: ${{ secrets.SFPLUS_API_KEY }}
+          SF_API_KEY: ${{ secrets.SF_API_KEY }}
         run: |
           options(crayon.enabled = TRUE)
           rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")

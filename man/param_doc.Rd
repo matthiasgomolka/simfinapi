@@ -10,6 +10,9 @@ the API key globally using \link{sfa_set_api_key}.}
 \item{cache_dir}{\link{character} Your cache directory. It's recommended to set
 the cache directory globally using \link{sfa_set_cache_dir}.}
 
+\item{sfplus}{\link{logical} Set\code{TRUE} if you have a SimFin+ account. It's
+recommended to set \code{sfplus} globally using \link{sfa_set_sfplus}.}
+
 \item{ticker}{\link{integer} Ticker of the companies of interest.}
 
 \item{simfin_id}{\link{integer} 'SimFin' IDs of the companies of interest. Any
@@ -49,8 +52,27 @@ users).
 
 \item{fyear}{\link{integer} Filter for fiscal year. As a non-SimFin+ user, you
 have to provide exactly one fiscal year. As SimFin+ user, this filter can
-be omitted to retrieve data available for the company. You can also chain
-this filter with a comma, to retrieve multiple years at once (e.g. \code{fyear = "2015,2016,2017"} to retrieve the data for 3 years at once).}
+be omitted to retrieve all data available for the company.}
+
+\item{ratios}{\link{logical} With \code{TRUE}, you can display some price related
+ratios along with the share price data (reserved for SimFin+ users). The
+ratios that will be displayed are:
+\itemize{
+\item Market-Cap
+\item Price to Earnings Ratio (quarterly)
+\item Price to Earnings Ratio (ttm)
+\item Price to Sales Ratio (quarterly)
+\item Price to Sales Ratio (ttm)
+\item Price to Book Value (ttm)
+\item Price to Free Cash Flow (quarterly)
+\item Price to Free Cash Flow (ttm)
+\item Enterprise Value (ttm)
+\item EV/EBITDA (ttm)
+\item EV/Sales (ttm)
+\item EV/FCF (ttm)
+\item Book to Market Value (ttm)
+\item Operating Income/EV (ttm).
+}}
 }
 \description{
 Parameter documentation

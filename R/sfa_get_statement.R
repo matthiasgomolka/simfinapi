@@ -10,7 +10,8 @@ sfa_get_statement_ <- function(
   ttm,
   shares,
   api_key,
-  cache_dir
+  cache_dir,
+  sfplus
 ) {
   # hack ttm and statement into the query since GET cannot handle such
   # parameters (at least I don't know how)
@@ -112,8 +113,9 @@ sfa_get_statement_ <- function(
 #' @inheritSection param_doc Parallel processing
 #'
 #' @importFrom checkmate assert_choice
-#' @importFrom future.apply future_lapply
+#' @importFrom future.apply future_mapply
 #' @importFrom progressr with_progress progressor
+#' @importFrom data.table year CJ
 #'
 #' @export
 sfa_get_statement <- function(
@@ -127,34 +129,84 @@ sfa_get_statement <- function(
   ttm = FALSE,
   shares = FALSE,
   api_key = getOption("sfa_api_key"),
-  cache_dir = getOption("sfa_cache_dir")
+  cache_dir = getOption("sfa_cache_dir"),
+  sfplus = getOption("sfa_sfplus", default = FALSE)
 ) {
-  check_inputs(
-    ticker = ticker,
-    simfin_id = simfin_id,
-    statement = statement,
-    period = period,
-    fyear = fyear,
-    start = start,
-    end = end,
-    api_key = api_key,
-    cache_dir = cache_dir
-  )
+  check_sfplus(sfplus) # check sfplus first, since it's needed for other checks
+  check_ticker(ticker)
+  check_simfin_id(simfin_id)
+  check_statement(statement, sfplus)
+  check_period(period, sfplus)
+  check_fyear(fyear, sfplus)
+  check_start(start, sfplus)
+  check_end(end, sfplus)
+  check_ttm(ttm)
+  check_shares(shares, sfplus)
+  check_api_key(api_key)
+  check_cache_dir(cache_dir)
 
   ticker <- gather_ticker(ticker, simfin_id, api_key, cache_dir)
-  if (!is.null(fyear)) fyear <- paste(fyear, collapse = ",")
+  # if (!is.null(fyear)) fyear <- paste(fyear, collapse = ",")
 
-  progressr::with_progress({
-    prg <- progressr::progressor(along = ticker)
-    result_list <- future.apply::future_lapply(ticker, function(x) {
-      prg(x)
-      sfa_get_statement_(
-        ticker = x, statement, period, fyear, start, end, ttm, shares, api_key,
-        cache_dir
+  if (isTRUE(sfplus)) {
+    results <- sfa_get_statement_(
+      ticker = paste(ticker, collapse = ","),
+      statement = statement,
+      period = ifelse(is.null(period), NULL, paste(period, collapse = ",")),
+      fyear = {if (is.null(fyear)) NULL else paste(fyear, collapse = ",")},
+      start = start,
+      end = end,
+      ttm = ttm,
+      shares = shares,
+      api_key = api_key,
+      cache_dir = cache_dir,
+      sfplus = sfplus
+    )
+  } else {
+    progressr::with_progress({
+      grid <- data.table::CJ(
+        ticker = ticker,
+        period = period,
+        fyear = fyear
       )
-    },
-    future.seed = TRUE)
-  })
 
-  gather_result(result_list)
+      prg <- progressr::progressor(steps = nrow(grid))
+      results <- future.apply::future_mapply(
+        function(ticker, period, fyear) {
+          prg(ticker)
+          sfa_get_statement_(
+            ticker = ticker,
+            statement = statement,
+            period = period,
+            fyear = fyear,
+            start = start,
+            end = end,
+            ttm = ttm,
+            shares = shares,
+            api_key = api_key,
+            cache_dir = cache_dir,
+            sfplus = sfplus
+          )
+        },
+        ticker = grid[["ticker"]],
+        period = grid[["period"]],
+        fyear = grid[["fyear"]],
+        SIMPLIFY = FALSE,
+        future.seed = TRUE
+      )
+    })
+  }
+  # progressr::with_progress({
+  #   prg <- progressr::progressor(along = ticker)
+  #   result_list <- future.apply::future_lapply(ticker, function(x) {
+  #     prg(x)
+  #     sfa_get_statement_(
+  #       ticker = x, statement, period, fyear, start, end, ttm, shares, api_key,
+  #       cache_dir
+  #     )
+  #   },
+  #   future.seed = TRUE)
+  # })
+
+  gather_result(results)
 }

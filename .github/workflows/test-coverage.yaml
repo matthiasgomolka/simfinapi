@@ -40,6 +40,7 @@ jobs:
 
       - name: Test coverage
         env:
-          SIMFIN_API_KEY: ${{ secrets.SIMFIN_API_KEY }}
+          SFPLUS_API_KEY: ${{ secrets.SFPLUS_API_KEY }}
+          SF_API_KEY: ${{ secrets.SF_API_KEY }}
         run: covr::codecov()
         shell: Rscript {0}
