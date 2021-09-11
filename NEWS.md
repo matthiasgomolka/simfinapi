@@ -5,11 +5,16 @@
   conventions. The original column names are stored in the `label` attribute of
   each column.
 
-# simfinapi 0.1.1 (not on CRAN)
-
 ## Features
 * Added a `NEWS.md` file to track changes to the package.
-* `sfa_get_*()` functions now feature a progress bar powered by {progressr}.
+* Clean support for SimFin+. Most functions throw early errors if a normal user
+  requests data which is reserved for SimFin+ users. If SimFin+ offers only more
+  convenience, this is matched internally for normal users so that the user 
+  experience is very similar. Normal users only need more requests and therefore
+  have to wait a little longer. However, this requires for most functions the 
+  new argument `sfplus`.
+* `sfa_get_*()` functions now feature a progress bar powered by {progressr} for 
+  normal users since simfinapi sends possibly many requests.
 
 ## Bug Fixes
 * `set_sfa_cache_dir()` is now exported.
