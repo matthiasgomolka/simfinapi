@@ -1,3 +1,9 @@
+# simfinapi 0.2.1
+
+## Bug Fixes
+* Loading data without specifying a `cache_dir` returned a generic error instead
+  of a helpful warning with information on how to set the `cache_dir`.
+
 # simfinapi 0.2.0
 
 ## Possibly Breaking Changes

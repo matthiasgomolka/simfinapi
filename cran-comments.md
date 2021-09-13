@@ -12,3 +12,7 @@ os: ubuntu-18.04,   r: '3.5
 ## R CMD check results
 
 0 errors | 0 warnings | 0 note
+
+
+## Reason for quick resubmission
+New submission because I found a small bug.
