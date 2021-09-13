@@ -9,7 +9,9 @@ check_api_key <- function(api_key) {
 
 #' @importFrom checkmate assert_directory
 check_cache_dir <- function(cache_dir) {
-  checkmate::assert_directory(cache_dir, access = "rw")
+  if (!is.null(cache_dir)) {
+    checkmate::assert_directory(cache_dir, access = "rw")
+  }
 }
 
 #' @importFrom checkmate assert_logical

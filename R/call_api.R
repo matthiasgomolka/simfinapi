@@ -5,7 +5,6 @@
 #' @importFrom httr GET
 call_api <- function(..., cache_dir) {
   # check for cache setup
-  # if (is.null(getOption("sfa_cache_dir")))
 
   if (is.null(cache_dir)) {
     warning(
