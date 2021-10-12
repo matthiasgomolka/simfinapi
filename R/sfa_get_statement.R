@@ -26,10 +26,10 @@ sfa_get_statement_ <- function(
     "api-key" = api_key
   )
   if (isTRUE(ttm)) {
-    query_list[["ttm"]] <- ""
+    query_list[["ttm"]] <- "true"
   }
   if (isTRUE(shares)) {
-    query_list[["shares"]] <- ""
+    query_list[["shares"]] <- "true"
   }
 
   response_light <- call_api(
@@ -56,7 +56,7 @@ sfa_get_statement_ <- function(
     data.table::set(DT, j = "Currency", value = x[["currency"]])
   })
 
-  DT <- data.table::rbindlist(DT_list, use.names = TRUE)
+  DT <- data.table::rbindlist(DT_list, use.names = TRUE, fill = TRUE)
   if (nrow(DT) == 0L) {
     return(NULL)
   }

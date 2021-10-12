@@ -33,7 +33,8 @@ call_api <- function(..., cache_dir) {
   request <- response[["request"]][["url"]]
   content <- RcppSimdJson::fparse(
     response[["content"]],
-    max_simplify_lvl = "vector"
+    max_simplify_lvl = "vector",
+    int64_policy = "integer64"
   )
 
   if (utils::hasName(content, "error")) {

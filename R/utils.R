@@ -82,7 +82,7 @@ clean_names <- function(x) {
 
 warn_not_found <- function(request) {
   warning(
-    "Please double-check your inputs. The SimFin API returned no data for request '",
+    "Please double-check your inputs. The SimFin API returned no data for (parts of) request '",
     request, "'.",
     call. = FALSE
   )
