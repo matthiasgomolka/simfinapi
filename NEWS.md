@@ -3,6 +3,10 @@
 ## Bug Fixes
 * Loading data without specifying a `cache_dir` returned a generic error instead
   of a helpful warning with information on how to set the `cache_dir`.
+* `sfa_get_statements()` no longer errors when the returned data does not have 
+  the same amount of columns. See 
+  [issue #35](https://github.com/matthiasgomolka/simfinapi/issues/35) and thanks
+  to Mislav Sagovac for reporting.
 
 # simfinapi 0.2.0
 
