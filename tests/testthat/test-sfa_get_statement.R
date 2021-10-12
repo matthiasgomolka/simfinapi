@@ -555,7 +555,7 @@ test_that("warning is triggered when no company was found", {
   )
 })
 
-test_that("downloading all statements works only for SimFIn+ users", {
+test_that("downloading all statements works only for SimFin+ users", {
   for (sfplus in c(TRUE, FALSE)) {
 
     sfa_set_sfplus(sfplus)
@@ -574,4 +574,32 @@ test_that("downloading all statements works only for SimFIn+ users", {
       )
     }
   }
+})
+
+test_that("#35 is fixed", {
+  tickers <- c(
+    "A", "AA", "AAL", "AAN", "AAOI", "AAON", "AAP", "AAPL", "AAT", "AAWW",
+    "ABBV", "ABC", "ABCB", "ABEO", "ABG", "ABM", "ABMD", "ABNB", "ABR", "ABT",
+    "ABTX", "ABUS", "ACA", "ACAD", "ACC", "ACCO", "ACER", "ACET", "ACGL",
+    "ACHC", "ACI", "ACIW", "ACLS", "ACM", "ACN", "ACRX", "ACU", "ACY", "ADBE",
+    "ADC", "ADES", "ADI", "ADM", "ADMA", "ADNT", "ADOM", "ADP", "ADPT", "ADS",
+    "ADSK", "ADT", "ADTN", "ADUS", "ADVM", "ADXS", "AEE", "AEHR", "AEIS", "AEO",
+    "AEP", "AES", "AFG", "AFI", "AFL", "AGCO", "AGI", "AGIO", "AGLE", "AGNC",
+    "AGO", "AGR", "AGS", "AGX", "AGYS", "AHH", "AIG", "AIMC", "AINC", "AIR",
+    "AIRC", "AIRI", "AIT", "AIV", "AIZ", "AJG", "AJRD", "AJX", "AKAM", "AKR",
+    "AL", "ALB", "ALCO", "ALE", "ALEX", "ALG", "ALGN", "ALGT", "ALK", "ALKS",
+    "ALL"
+  )
+  expect_silent({
+    ratios <- sfa_get_statement(
+      ticker = tickers,
+      statement = "all",
+      period = "quarters",
+      start = Sys.Date() - 5000,
+      end = Sys.Date(),
+      ttm = TRUE,
+      shares = TRUE,
+      sfplus = TRUE
+    )
+  })
 })
