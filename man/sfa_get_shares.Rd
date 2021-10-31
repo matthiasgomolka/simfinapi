@@ -8,8 +8,8 @@ sfa_get_shares(
   ticker = NULL,
   simfin_id = NULL,
   type,
-  period = "fy",
-  fyear = data.table::year(Sys.Date()) - 1L,
+  period = NULL,
+  fyear = NULL,
   start = NULL,
   end = NULL,
   api_key = getOption("sfa_api_key"),
@@ -32,9 +32,8 @@ reduces the number of queries in case you query the same company via
 \item \code{"wa-diluted"}: Weighted average diluted shares outstanding for a period.
 }}
 
-\item{period}{\link{character} Filter for periods. As a non-SimFin+ user, you have
-to provide exactly one period. As SimFin+ user, this filter can be omitted
-to retrieve all statements available for the company.
+\item{period}{\link{character} Filter for periods. Only works with \code{type = wa-basic} and \code{type = wa-diluted}. This filter can be omitted to retrieve
+all shares outstanding available for the company.
 \itemize{
 \item \code{"q1"}: First fiscal quarter.
 \item \code{"q2"}: Second fiscal quarter.
@@ -44,11 +43,12 @@ to retrieve all statements available for the company.
 \item \code{"h1"}: First 6 months of fiscal year.
 \item \code{"h2"}: Last 6 months of fiscal year.
 \item \code{"9m"}: First nine months of fiscal year.
-\item \code{"6m"}: Any fiscal 6 month period (first + second half years; reserved
-for SimFin+ users).
-\item \code{"quarters"}: All quarters (q1 + q2 + q3 + q4; reserved for SimFin+
-users).
-}}
+\item \code{"6m"}: Any fiscal 6 month period (first + second half years).
+\item \code{"quarters"}: All quarters (q1 + q2 + q3 + q4).
+}
+
+You can select several periods by passing several of the above items at
+once, e.g. \code{period = c("q1", "q2")}.}
 
 \item{fyear}{\link{integer} Filter for fiscal year. As a non-SimFin+ user, you
 have to provide exactly one fiscal year. As SimFin+ user, this filter can
@@ -83,8 +83,7 @@ interested in more details, take a look at this page:
 https://simfin.com/data/help/main?topic=apiv2-shares
 }
 \section{Fiscal year}{
-
-Only works with \code{type = "wa-basic"} and \code{type = "wa-diluted"}.
+ Only works with \code{type = "wa-basic"} and \code{type = "wa-diluted"}.
 }
 
 \section{Parallel processing}{

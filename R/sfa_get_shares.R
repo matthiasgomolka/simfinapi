@@ -75,8 +75,26 @@ sfa_get_shares_ <- function(
 #'   - `"wa-basic"`: Weighted average basic shares outstanding for a period.
 #'   - `"wa-diluted"`: Weighted average diluted shares outstanding for a period.
 #'
-#' @section Fiscal year:
-#' Only works with `type = "wa-basic"` and `type = "wa-diluted"`.
+#' @param period [character] Filter for periods. Only works with `type =
+#'   wa-basic` and `type = wa-diluted`. This filter can be omitted to retrieve
+#'   all shares outstanding available for the company.
+#'
+#'   - `"q1"`: First fiscal quarter.
+#'   - `"q2"`: Second fiscal quarter.
+#'   - `"q3"`: Third fiscal quarter.
+#'   - `"q4"`: Fourth fiscal quarter.
+#'   - `"fy"`: Full fiscal year.
+#'   - `"h1"`: First 6 months of fiscal year.
+#'   - `"h2"`: Last 6 months of fiscal year.
+#'   - `"9m"`: First nine months of fiscal year.
+#'   - `"6m"`: Any fiscal 6 month period (first + second half years).
+#'   - `"quarters"`: All quarters (q1 + q2 + q3 + q4).
+#'
+#'   You can select several periods by passing several of the above items at
+#'   once, e.g. `period = c("q1", "q2")`.
+#'
+#' @section Fiscal year: Only works with `type = "wa-basic"` and `type =
+#'   "wa-diluted"`.
 #'
 #' @inheritSection param_doc Parallel processing
 #'
@@ -91,8 +109,8 @@ sfa_get_shares <- function(
   ticker = NULL,
   simfin_id = NULL,
   type,
-  period = "fy",
-  fyear = data.table::year(Sys.Date()) - 1L,
+  period = NULL,
+  fyear = NULL,
   start = NULL,
   end = NULL,
   api_key = getOption("sfa_api_key"),
@@ -104,8 +122,8 @@ sfa_get_shares <- function(
   check_ticker(ticker)
   check_simfin_id(simfin_id)
   check_type(type)
-  check_period(period, sfplus)
-  check_fyear(fyear, sfplus)
+  check_period_get_shares(period, sfplus, called_from_get_shares = TRUE)
+  check_fyear_get_shares(fyear, sfplus, type = type)
   check_start(start, sfplus)
   check_end(end, sfplus)
   check_api_key(api_key)
@@ -115,10 +133,15 @@ sfa_get_shares <- function(
 
   if (isTRUE(sfplus)) {
     results <- sfa_get_shares_(
-      paste(ticker, collapse = ","),
-      type, period,
-      paste(fyear, collapse = ","),
-      start, end, api_key, cache_dir, sfplus
+      ticker = paste(ticker, collapse = ","),
+      type = type,
+      period = period,
+      fyear = {if (is.null(fyear)) NULL else paste(fyear, collapse = ",")},
+      start = start,
+      end = end,
+      api_key = api_key,
+      cache_dir = cache_dir,
+      sfplus = sfplus
     )
   } else {
     progressr::with_progress({
