@@ -9,7 +9,7 @@ sfa_get_prices_ <- function(
   sfplus
 ) {
   query_list <- list(
-    "ticker" = ticker,
+    "ticker" = paste(ticker, collapse = ","),
     "start" = start,
     "end" = end,
     "api-key" = api_key
@@ -26,11 +26,11 @@ sfa_get_prices_ <- function(
   )
   content <- response_light[["content"]]
 
+  warn_not_found(content, ticker)
 
   # lapply necessary for SimFin+, where larger queries are possible
   DT_list <- lapply(content, function(x) {
     if (isFALSE(x[["found"]])) {
-      warn_not_found(response_light[["request"]])
       return(NULL)
     }
     DT <- data.table::as.data.table(
@@ -115,9 +115,26 @@ sfa_get_prices <- function(
   if (length(ticker) == 0L) return(invisible(NULL)) # can I delete this since gather_ticker throws an error if there is no valid ticker / simfin_id?
 
   if (isTRUE(sfplus)) {
-    results <- sfa_get_prices_(
-      paste(ticker, collapse = ","), ratios, start, end, api_key, cache_dir, sfplus
-    )
+    # split list of tickers into chunks of 200. This is a workaround for very
+    # large requests. See https://github.com/matthiasgomolka/simfinapi/issues/34
+    # for details.
+    ticker_list <- split(ticker, ceiling(seq_along(ticker) / 10L))
+
+    progressr::with_progress({
+      prg <- progressr::progressor(steps = length(ticker_list))
+
+      results <- future.apply::future_lapply(
+        ticker_list,
+        function(ticker) {
+          # browser()
+          res <- sfa_get_prices_(
+            ticker, ratios, start, end, api_key, cache_dir, sfplus
+          )
+          prg(ticker)
+          return(res)
+        }
+      )
+    })
   } else {
     progressr::with_progress({
       prg <- progressr::progressor(along = ticker)

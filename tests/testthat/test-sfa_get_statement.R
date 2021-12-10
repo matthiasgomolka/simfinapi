@@ -535,10 +535,7 @@ test_that("warning is triggered if the API did not return any data", {
     expect_null(
       sfa_get_statement("GOOG", statement = "bs", fyear = fyear)
     ),
-    paste0(
-      "Please double-check your inputs. The SimFin API returned no data for (parts of) request 'https://simfin.com/api/v2/companies/statements?ticker=GOOG&statement=bs&period=fy&fyear=2021&api-key=",
-      getOption("sfa_api_key"), "'."
-    ),
+    "No data retrieved for ticker 'GOOG'.",
     fixed = TRUE
   )
 })

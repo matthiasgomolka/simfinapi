@@ -15,7 +15,7 @@ sfa_get_shares_ <- function(
   response_light <- call_api(
     path = "api/v2/companies/shares",
     query = list(
-      "ticker" = ticker,
+      "ticker" = paste(ticker, collapse = ","),
       "type" = type,
       "period" = period,
       "fyear" = fyear,
@@ -26,12 +26,14 @@ sfa_get_shares_ <- function(
     cache_dir = cache_dir
   )
   content <- response_light[["content"]]
+
+  warn_not_found(content, ticker)
+
   type_name <- paste0("Shares Outstanding (", type, ")")
 
   # lapply necessary for SimFin+, where larger queries are possible
   DT_list <- lapply(content, function(x) {
     if (isFALSE(x[["found"]])) {
-      warn_not_found(response_light[["request"]])
       return(NULL)
     }
     DT <- as.data.table(
@@ -132,17 +134,34 @@ sfa_get_shares <- function(
   ticker <- gather_ticker(ticker, simfin_id, api_key, cache_dir)
 
   if (isTRUE(sfplus)) {
-    results <- sfa_get_shares_(
-      ticker = paste(ticker, collapse = ","),
-      type = type,
-      period = period,
-      fyear = {if (is.null(fyear)) NULL else paste(fyear, collapse = ",")},
-      start = start,
-      end = end,
-      api_key = api_key,
-      cache_dir = cache_dir,
-      sfplus = sfplus
-    )
+    # split list of tickers into chunks of 200. This is a workaround for very
+    # large requests. See https://github.com/matthiasgomolka/simfinapi/issues/34
+    # for details.
+    ticker_list <- split(ticker, ceiling(seq_along(ticker) / 200L))
+
+    progressr::with_progress({
+      prg <- progressr::progressor(steps = length(ticker_list))
+
+      results <- future.apply::future_lapply(
+        ticker_list,
+        function(ticker) {
+          res <- sfa_get_shares_(
+            ticker = ticker,
+            type = type,
+            period = period,
+            fyear = {if (is.null(fyear)) NULL else paste(fyear, collapse = ",")},
+            start = start,
+            end = end,
+            api_key = api_key,
+            cache_dir = cache_dir,
+            sfplus = sfplus
+          )
+          prg(ticker)
+          return(res)
+        },
+        future.seed = TRUE
+      )
+    })
   } else {
     progressr::with_progress({
       if (type == "common") {
