@@ -1,4 +1,4 @@
-#' Get a table of all available 'SimFin' ID's with ticker and name.
+#' Get a table of all available 'SimFin' ID's with ticker.
 #' @inheritParams param_doc
 #' @importFrom data.table as.data.table rbindlist setnames set setkeyv
 #' @export
