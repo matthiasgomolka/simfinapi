@@ -27,7 +27,7 @@ call_api <- function(..., cache_dir) {
 
   # call API and transform result to list
   response <- mem_GET(
-    url = "https://simfin.com",
+    url = "https://legacy.simfin.com",
     ...
   )
   request <- response[["request"]][["url"]]
