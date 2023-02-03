@@ -1,41 +1,32 @@
+# Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
+# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 on:
   push:
-    branches:
-      - main
+    branches: [main, master, v2-branch]
   pull_request:
-    branches:
-      - main
+    branches: [main, master, v2-branch]
 
 name: lint
 
 jobs:
   lint:
-    runs-on: macOS-latest
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: r-lib/actions/setup-r@master
-
-      - name: Query dependencies
-        run: |
-          install.packages('remotes')
-          saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
-        shell: Rscript {0}
-
-      - name: Cache R packages
-        uses: actions/cache@v1
+      - uses: ./setup-r
         with:
-          path: ${{ env.R_LIBS_USER }}
-          key: macOS-r-3.6-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: macOS-r-3.6-
+          use-public-rspm: true
 
-      - name: Install dependencies
-        run: |
-          install.packages(c("remotes"))
-          remotes::install_deps(dependencies = TRUE)
-          remotes::install_cran("lintr")
-        shell: Rscript {0}
+      - uses: ./setup-r-dependencies
+        with:
+          extra-packages: any::lintr, local::.
+          needs: lint
 
       - name: Lint
         run: lintr::lint_package()
         shell: Rscript {0}
+        env:
+          LINTR_ERROR_ON_LINT: true
