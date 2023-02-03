@@ -574,6 +574,7 @@ test_that("downloading all statements works only for SimFin+ users", {
 })
 
 test_that("#35 is fixed", {
+  testthat::skip("Wait for new API")
   options(sfa_api_key = Sys.getenv("SFPLUS_API_KEY"))
   tickers <- c(
     "A", "AA", "AAL", "AAN", "AAOI", "AAON", "AAP", "AAPL", "AAT", "AAWW",
