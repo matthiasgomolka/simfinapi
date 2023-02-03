@@ -80,10 +80,14 @@ clean_names <- function(x) {
   gsub("sim_fin", "simfin", fixed = TRUE, x)
 }
 
-warn_not_found <- function(request) {
-  warning(
-    "Please double-check your inputs. The SimFin API returned no data for (parts of) request '",
-    request, "'.",
-    call. = FALSE
-  )
+warn_not_found <- function(content, ticker) {
+  not_found_idx <- which(!vapply(content, `[[`, "found", FUN.VALUE = logical(1L)))
+  if (length(not_found_idx) > 0L) {
+    for (tckr in ticker[not_found_idx]) {
+      warning(
+        "No data retrieved for ticker '", tckr, "'.",
+        call. = FALSE
+      )
+    }
+  }
 }

@@ -17,7 +17,7 @@ sfa_get_statement_ <- function(
   # parameters (at least I don't know how)
 
   query_list <- list(
-    "ticker" = ticker,
+    "ticker" = paste(ticker, collapse = ","),
     "statement" = statement,
     "period" = period,
     "fyear" = fyear,
@@ -39,11 +39,11 @@ sfa_get_statement_ <- function(
   )
   content <- response_light[["content"]]
 
+  warn_not_found(content, ticker)
 
   # lapply necessary for SimFin+, where larger queries are possible
   DT_list <- lapply(content, function(x) {
     if (isFALSE(x[["found"]])) {
-      warn_not_found(response_light[["request"]])
       return(NULL)
     }
     DT <- data.table::transpose(data.table::as.data.table(x[["data"]]))
@@ -149,19 +149,36 @@ sfa_get_statement <- function(
   # if (!is.null(fyear)) fyear <- paste(fyear, collapse = ",")
 
   if (isTRUE(sfplus)) {
-    results <- sfa_get_statement_(
-      ticker = paste(ticker, collapse = ","),
-      statement = statement,
-      period = ifelse(is.null(period), NULL, paste(period, collapse = ",")),
-      fyear = {if (is.null(fyear)) NULL else paste(fyear, collapse = ",")},
-      start = start,
-      end = end,
-      ttm = ttm,
-      shares = shares,
-      api_key = api_key,
-      cache_dir = cache_dir,
-      sfplus = sfplus
-    )
+    # split list of tickers into chunks of 200. This is a workaround for very
+    # large requests. See https://github.com/matthiasgomolka/simfinapi/issues/34
+    # for details.
+    ticker_list <- split(ticker, ceiling(seq_along(ticker) / 200L))
+
+    progressr::with_progress({
+      prg <- progressr::progressor(steps = length(ticker_list))
+
+      results <- future.apply::future_lapply(
+        ticker_list,
+        function(ticker) {
+          res <- sfa_get_statement_(
+            ticker = ticker,
+            statement = statement,
+            period = ifelse(is.null(period), NULL, paste(period, collapse = ",")),
+            fyear = {if (is.null(fyear)) NULL else paste(fyear, collapse = ",")},
+            start = start,
+            end = end,
+            ttm = ttm,
+            shares = shares,
+            api_key = api_key,
+            cache_dir = cache_dir,
+            sfplus = sfplus
+          )
+          prg(ticker)
+          return(res)
+        },
+        future.seed = TRUE
+      )
+    })
   } else {
     progressr::with_progress({
       grid <- data.table::CJ(
@@ -173,8 +190,7 @@ sfa_get_statement <- function(
       prg <- progressr::progressor(steps = nrow(grid))
       results <- future.apply::future_mapply(
         function(ticker, period, fyear) {
-          prg(ticker)
-          sfa_get_statement_(
+          res <- sfa_get_statement_(
             ticker = ticker,
             statement = statement,
             period = period,
@@ -187,6 +203,8 @@ sfa_get_statement <- function(
             cache_dir = cache_dir,
             sfplus = sfplus
           )
+          prg(ticker)
+          return(res)
         },
         ticker = grid[["ticker"]],
         period = grid[["period"]],
@@ -196,17 +214,6 @@ sfa_get_statement <- function(
       )
     })
   }
-  # progressr::with_progress({
-  #   prg <- progressr::progressor(along = ticker)
-  #   result_list <- future.apply::future_lapply(ticker, function(x) {
-  #     prg(x)
-  #     sfa_get_statement_(
-  #       ticker = x, statement, period, fyear, start, end, ttm, shares, api_key,
-  #       cache_dir
-  #     )
-  #   },
-  #   future.seed = TRUE)
-  # })
 
   gather_result(results)
 }

@@ -28,7 +28,6 @@ for (sfplus in c(TRUE, FALSE)) {
       `attr<-`(res_1[["date"]], "label", "Date")
     )
 
-
     res_2 <- sfa_get_shares(c("GOOG", "AMZN"), type = "common")
 
     checkmate::expect_data_table(
@@ -44,9 +43,11 @@ for (sfplus in c(TRUE, FALSE)) {
       `attr<-`(res_2[["date"]], "label", "Date")
     )
 
+
     res_3 <- sfa_get_shares(c("GOOG", "AMZN"), type = "common", period = "q1")
     expect_identical(res_3, res_2)
     # since fyear is only relevant for types "wa-basic" and "wa-diluted"
+
 
     res_4 <- sfa_get_shares(c("GOOG", "AMZN"), type = "common", fyear = 2019:2020)
     expect_identical(res_4, res_2)
@@ -102,32 +103,46 @@ for (sfplus in c(TRUE, FALSE)) {
 
   })
 
-  for (type in c("wa-basic", "wa-diluted")) {
+  test_that("sfa_get_prices() works for type != common", {
+    for (type in c("wa-basic", "wa-diluted")) {
 
-    # TODO: This needs more tests, but it makes more sense after implementing
-    # https://github.com/matthiasgomolka/simfinapi/issues/33
+      # TODO: This needs more tests, but it makes more sense after implementing
+      # https://github.com/matthiasgomolka/simfinapi/issues/33
 
-    ref_names <- c(
-      "simfin_id", "ticker", "fiscal_period", "fiscal_year", "report_date",
-      "ttm", paste0("shares_outstanding_", sub("-", "_", fixed = TRUE, type))
-    )
-    ref_classes <- c(
-      "integer", "character", "character", "integer", "Date", "logical",
-      "integer64"
-    )
-    names(ref_classes) <- ref_names
+      ref_names <- c(
+        "simfin_id", "ticker", "fiscal_period", "fiscal_year", "report_date",
+        "ttm", paste0("shares_outstanding_", sub("-", "_", fixed = TRUE, type))
+      )
+      ref_classes <- c(
+        "integer", "character", "character", "integer", "Date", "logical",
+        "integer64"
+      )
+      names(ref_classes) <- ref_names
 
-    res_7 <- sfa_get_shares("GOOG", type = type)
+      if (isTRUE(sfplus)) {
+        res_7 <- sfa_get_shares("GOOG", type = type)
+      } else {
+        expect_error(
+          sfa_get_shares("GOOG", type = type),
+          "Omitting 'fyear' is reserved for SimFin+ users.",
+          fixed = TRUE
+        )
+        res_7 <- sfa_get_shares("GOOG", type = type, fyear = 2015L)
+      }
 
-    checkmate::expect_data_table(
-      res_7,
-      key = "ticker",
-      types = ref_classes,
-      nrows = 1L,
-      ncols = length(ref_names)
-    )
-    expect_named(res_7, ref_names)
-    expect_identical(unique(res_7[["ticker"]]), "GOOG")
-  }
-
+      checkmate::expect_data_table(
+        res_7,
+        key = "ticker",
+        types = ref_classes,
+        min.rows = 8L,
+        ncols = length(ref_names)
+      )
+      expect_identical(
+        sort(unique(res_7[["fiscal_period"]])),
+        c("9M", "FY", "H1", "H2", "Q1", "Q2", "Q3", "Q4")
+      )
+      expect_named(res_7, ref_names)
+      expect_identical(unique(res_7[["ticker"]]), "GOOG")
+    }
+  })
 }

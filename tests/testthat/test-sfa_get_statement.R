@@ -535,10 +535,7 @@ test_that("warning is triggered if the API did not return any data", {
     expect_null(
       sfa_get_statement("GOOG", statement = "bs", fyear = fyear)
     ),
-    paste0(
-      "Please double-check your inputs. The SimFin API returned no data for (parts of) request 'https://simfin.com/api/v2/companies/statements?ticker=GOOG&statement=bs&period=fy&fyear=2021&api-key=",
-      getOption("sfa_api_key"), "'."
-    ),
+    "No data retrieved for ticker 'GOOG'.",
     fixed = TRUE
   )
 })
@@ -582,8 +579,8 @@ test_that("#35 is fixed", {
     "A", "AA", "AAL", "AAN", "AAOI", "AAON", "AAP", "AAPL", "AAT", "AAWW",
     "ABBV", "ABC", "ABCB", "ABEO", "ABG", "ABM", "ABMD", "ABNB", "ABR", "ABT",
     "ABTX", "ABUS", "ACA", "ACAD", "ACC", "ACCO", "ACER", "ACET", "ACGL",
-    "ACHC", "ACI", "ACIW", "ACLS", "ACM", "ACN", "ACRX", "ACU", "ACY", "ADBE",
-    "ADC", "ADES", "ADI", "ADM", "ADMA", "ADNT", "ADOM", "ADP", "ADPT", "ADS",
+    "ACHC", "ACI", "ACIW", "ACLS", "ACM", "ACN", "ACRX", "ACU", "ADBE", "ADES",
+    "ADI", "ADM", "ADMA", "ADNT", "ADOM", "ADP", "ADPT",
     "ADSK", "ADT", "ADTN", "ADUS", "ADVM", "ADXS", "AEE", "AEHR", "AEIS", "AEO",
     "AEP", "AES", "AFG", "AFI", "AFL", "AGCO", "AGI", "AGIO", "AGLE", "AGNC",
     "AGO", "AGR", "AGS", "AGX", "AGYS", "AHH", "AIG", "AIMC", "AINC", "AIR",
