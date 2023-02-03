@@ -22,7 +22,7 @@ sfa_get_ref <- function(ref_data, api_key = getOption("sfa_api_key")) {
   temp_zip <- tempfile(fileext = ".zip")
   utils::download.file(
     paste0(
-      "https://simfin.com/api/bulk/bulk.php?dataset=", ref_data,
+      "https://legacy.simfin.com/api/bulk/bulk.php?dataset=", ref_data,
       "&variant=null", "&api-key=", api_key
     ),
     temp_zip,
