@@ -23,7 +23,7 @@ check_sfplus <- function(sfplus) {
 check_ticker <- function(ticker) {
   checkmate::assert_character(
     ticker,
-    pattern = "^[A-Za-z0-9_\\.\\-]+$",
+    pattern = "^[A-Za-z0-9_\\.\\:\\-]+$",
     any.missing = FALSE,
     null.ok = TRUE
   )
