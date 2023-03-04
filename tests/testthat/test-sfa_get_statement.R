@@ -574,7 +574,6 @@ test_that("downloading all statements works only for SimFin+ users", {
 })
 
 test_that("#35 is fixed", {
-  testthat::skip("Wait for new API")
   options(sfa_api_key = Sys.getenv("SFPLUS_API_KEY"))
   tickers <- c(
     "A", "AA", "AAL", "AAN", "AAOI", "AAON", "AAP", "AAPL", "AAT", "AAWW",
@@ -584,10 +583,7 @@ test_that("#35 is fixed", {
     "ADI", "ADM", "ADMA", "ADNT", "ADOM", "ADP", "ADPT",
     "ADSK", "ADT", "ADTN", "ADUS", "ADVM", "ADXS", "AEE", "AEHR", "AEIS", "AEO",
     "AEP", "AES", "AFG", "AFI", "AFL", "AGCO", "AGI", "AGIO", "AGLE", "AGNC",
-    "AGO", "AGR", "AGS", "AGX", "AGYS", "AHH", "AIG", "AIMC", "AINC", "AIR",
-    "AIRC", "AIRI", "AIT", "AIV", "AIZ", "AJG", "AJRD", "AJX", "AKAM", "AKR",
-    "AL", "ALB", "ALCO", "ALE", "ALEX", "ALG", "ALGN", "ALGT", "ALK", "ALKS",
-    "ALL"
+    "AGO", "AGR", "AGS", "AGX", "AGYS", "AHH", "AIG", "AIMC", "AINC", "AIR"
   )
   expect_silent(
     sfa_get_statement(
