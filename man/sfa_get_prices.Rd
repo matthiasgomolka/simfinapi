@@ -68,7 +68,7 @@ recommended to set \code{sfplus} globally using \link{sfa_set_sfplus}.}
 Share price data and ratios can be retrieved here. All share
 prices are adjusted for stock splits. If you are interested in more
 details, take a look at this page:
-https://simfin.com/data/help/main?topic=apiv2-prices
+https://www.simfin.com/data/help/main?topic=apiv2-prices
 }
 \section{Parallel processing}{
 

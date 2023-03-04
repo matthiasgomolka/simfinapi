@@ -30,14 +30,14 @@ theme_set(theme_minimal())
 [![CRAN release](https://www.r-pkg.org/badges/version/simfinapi)](https://CRAN.R-project.org/package=simfinapi)
 [![Status](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![R-CMD-check](https://github.com/matthiasgomolka/simfinapi/workflows/R-CMD-check/badge.svg)](https://github.com/matthiasgomolka/simfinapi/actions)
-[![](https://codecov.io/gh/matthiasgomolka/simfinapi/branch/main/graph/badge.svg)](https://codecov.io/gh/matthiasgomolka/simfinapi)
+[![](https://codecov.io/gh/matthiasgomolka/simfinapi/branch/main/graph/badge.svg)](https://app.codecov.io/gh/matthiasgomolka/simfinapi)
 `r badge_dependencies()`
 
 ## What does simfinapi do?
-simfinapi wraps the https://simfin.com/ Web-API to make 'SimFin' data easily
+simfinapi wraps the https://www.simfin.com/ Web-API to make 'SimFin' data easily
 available in R. 
 
-*To use the package, you need to register at https://simfin.com/login and obtain
+*To use the package, you need to register at https://app.simfin.com/login and obtain
 a 'SimFin' API key.*
 
 
@@ -47,7 +47,8 @@ plot.
 
 ```{r download_data}
 # load package
-library(simfinapi)
+# library(simfinapi)
+devtools::load_all()
 
 # download stock price data
 tickers <- c("AMZN", "GOOG") # Amazon, Google

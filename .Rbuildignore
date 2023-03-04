@@ -6,3 +6,5 @@
 ^simfinapi\.code-workspace$
 ^cran-comments\.md$
 ^CRAN-RELEASE$
+^doc$
+^Meta$

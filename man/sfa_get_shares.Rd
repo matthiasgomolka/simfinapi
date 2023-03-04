@@ -80,7 +80,7 @@ Common shares outstanding (point-in-time) and weighted average
 basic/diluted shares outstanding for all periods can be retrieved here.
 These shares are the aggregate figures for the entire company. If you are
 interested in more details, take a look at this page:
-https://simfin.com/data/help/main?topic=apiv2-shares
+https://www.simfin.com/data/help/main?topic=apiv2-shares
 }
 \section{Fiscal year}{
  Only works with \code{type = "wa-basic"} and \code{type = "wa-diluted"}.

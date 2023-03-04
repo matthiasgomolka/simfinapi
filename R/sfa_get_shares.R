@@ -67,7 +67,7 @@ sfa_get_shares_ <- function(
 #'   basic/diluted shares outstanding for all periods can be retrieved here.
 #'   These shares are the aggregate figures for the entire company. If you are
 #'   interested in more details, take a look at this page:
-#'   https://simfin.com/data/help/main?topic=apiv2-shares
+#'   https://www.simfin.com/data/help/main?topic=apiv2-shares
 #'
 #' @inheritParams param_doc
 #'
