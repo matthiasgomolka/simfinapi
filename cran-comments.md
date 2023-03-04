@@ -1,18 +1,5 @@
-## Test environments
-os: macOS-latest,   r: 'release'
-os: windows-latest, r: 'release'
-os: ubuntu-18.04,   r: 'devel', 
-os: ubuntu-18.04,   r: 'release', 
-os: ubuntu-18.04,   r: 'oldrel',  
-os: ubuntu-18.04,   r: '3.6
-os: ubuntu-18.04,   r: '3.5
-
-(via GitHub Actions)
-
 ## R CMD check results
 
 0 errors | 0 warnings | 0 note
 
-
-## Reason for quick resubmission
-New submission because I found a small bug.
+* This is a new release which accommodates for changes in the SimFin API.

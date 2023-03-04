@@ -1,3 +1,7 @@
+# simfinapi 0.2.3
+* This is a mainly a maintenance release due to the SimFin API update. The API 
+  V2 is now in legacy mode.
+
 # simfinapi 0.2.1
 
 ## Bug Fixes
