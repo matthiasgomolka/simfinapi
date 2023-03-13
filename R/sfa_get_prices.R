@@ -107,7 +107,7 @@ sfa_get_prices <- function(
   check_ratios(ratios, sfplus)
   check_start(start, sfplus)
   check_end(end, sfplus)
-  check_api_key(api_key)
+  #check_api_key(api_key)
   check_cache_dir(cache_dir)
 
   ticker <- gather_ticker(ticker, simfin_id, api_key, cache_dir)

@@ -17,7 +17,7 @@
 sfa_get_ref <- function(ref_data, api_key = getOption("sfa_api_key")) {
 
   check_ref_data(ref_data)
-  check_api_key(api_key)
+  #check_api_key(api_key)
 
   temp_zip <- tempfile(fileext = ".zip")
   utils::download.file(

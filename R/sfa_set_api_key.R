@@ -49,9 +49,5 @@ sfa_set_api_key <- function(api_key, env_var) {
   }
 
   sfa_api_key <- getOption("sfa_api_key")
-  checkmate::assert_string(
-    sfa_api_key,
-    pattern = "^[[:alnum:]]{32}$"
-  )
   return(invisible(sfa_api_key))
 }

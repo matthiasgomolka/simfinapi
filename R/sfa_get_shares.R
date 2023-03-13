@@ -128,7 +128,7 @@ sfa_get_shares <- function(
   check_fyear_get_shares(fyear, sfplus, type = type)
   check_start(start, sfplus)
   check_end(end, sfplus)
-  check_api_key(api_key)
+  #check_api_key(api_key)
   check_cache_dir(cache_dir)
 
   ticker <- gather_ticker(ticker, simfin_id, api_key, cache_dir)
