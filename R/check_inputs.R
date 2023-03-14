@@ -4,7 +4,7 @@ msg_sfplus_required <- function(var, verb = "Omitting") {
 
 #' @importFrom checkmate assert_string
 check_api_key <- function(api_key) {
-  checkmate::assert_string(api_key, pattern = "^[[:alnum:]]{32}$")
+  checkmate::assert_string(api_key, pattern = "[[:alnum:]]$")
 }
 
 #' @importFrom checkmate assert_directory

@@ -54,7 +54,7 @@ sfa_get_info <- function(
   check_sfplus(sfplus)
   check_ticker(ticker)
   check_simfin_id(simfin_id)
-  #check_api_key(api_key)
+  check_api_key(api_key)
   check_cache_dir(cache_dir)
 
   # if (all(is.null(ticker), is.null(simfin_id))) {
