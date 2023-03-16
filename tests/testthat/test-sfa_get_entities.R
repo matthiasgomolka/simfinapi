@@ -18,7 +18,7 @@ test_that("sfa_get_entities returns correctly structured data.table", {
 test_that("sfa_get_entities returns error if api key is incorrect", {
   expect_error(
     sfa_get_entities("invalid_api_key"),
-    "Assertion on 'api_key' failed: Must comply to pattern '^[[:alnum:]]{32}$'.",
+    "Assertion on 'api_key' failed: Must comply to pattern '^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$'.",
     fixed = TRUE
   )
   expect_warning(
