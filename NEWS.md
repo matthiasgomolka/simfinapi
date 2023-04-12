@@ -1,3 +1,7 @@
+# simfinapi 0.2.4
+## Bug Fixes
+* Some new API keys were not accepted by `check_api_key()`. This is fixed now.
+
 # simfinapi 0.2.3
 * This is a mainly a maintenance release due to the SimFin API update. The API 
   V2 is now in legacy mode.

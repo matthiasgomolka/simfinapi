@@ -1,13 +1,13 @@
 Type: Package
 Package: simfinapi
 Title: Accessing 'SimFin' Data
-Version: 0.2.3
+Version: 0.2.4
 Authors@R: 
     person("Matthias", "Gomolka", , "matthias.gomolka@posteo.de", role = c("aut", "cre"))
 Description: Through simfinapi, you can intuitively access the 'SimFin'
-    Web-API (<https://www.simfin.com/>) to make 'SimFin' data easily available
-    in R. To obtain an 'SimFin' API key (and thus to use this package),
-    you need to register at <https://app.simfin.com/login>.
+    Web-API (<https://www.simfin.com/>) to make 'SimFin' data easily
+    available in R. To obtain an 'SimFin' API key (and thus to use this
+    package), you need to register at <https://app.simfin.com/login>.
 License: GPL-3
 URL: https://github.com/matthiasgomolka/simfinapi
 BugReports: https://github.com/matthiasgomolka/simfinapi/issues
@@ -34,7 +34,7 @@ Config/testthat/edition: 3
 Config/testthat/parallel: true
 Config/testthat/start-first: check_inputs
 Encoding: UTF-8
+Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
-Language: en-US
