@@ -18,7 +18,7 @@ Imports:
     checkmate (>= 2.0.0),
     data.table (>= 1.12.8),
     future.apply (>= 1.4.0),
-    httr,
+    httr2,
     memoise (>= 1.1.0),
     progressr,
     RcppSimdJson (>= 0.1.1),

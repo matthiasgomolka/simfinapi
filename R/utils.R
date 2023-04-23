@@ -1,25 +1,42 @@
 gather_ticker <- function(ticker, simfin_id, api_key, cache_dir) {
-  # get entities in order to verify the existence of ticker / simfin_id
-  entities <- sfa_get_entities(api_key = api_key, cache_dir = cache_dir)
+    # get entities in order to verify the existence of ticker / simfin_id
+    companies <- sfa_load_companies(add_info = FALSE, api_key = api_key, cache_dir = cache_dir)
 
-  # find valid tickers
-  valid_tickers <- find_and_warn(entities, ticker, "ticker")
+    # find valid tickers
+    valid_tickers <- find_and_warn(companies, ticker, "ticker")
 
-  # find valid simfin_ids and translate them to tickers
-  valid_simfin_ids <- find_and_warn(entities, simfin_id, "simfin_id")
-  simfin_id_as_ticker <- entities[simfin_id %in% valid_simfin_ids, ticker]
+    # find valid simfin_ids and translate them to tickers
+    valid_simfin_ids <- find_and_warn(companies, simfin_id, "id")
+    simfin_id_as_ticker <- companies |>
+      dplyr::filter(id %in% valid_simfin_ids) |>
+      dplyr::pull(ticker)
 
-  valid_ids <- unique(c(valid_tickers, simfin_id_as_ticker))
-  if (length(valid_ids) == 0L) {
-    stop(
-      "Please provide at least one one valid 'ticker' or 'simfin_id'.",
-      call. = FALSE
-    )
-  }
-  return(valid_ids)
+    valid_ids <- unique(c(valid_tickers, simfin_id_as_ticker))
+    if (length(valid_ids) == 0L) {
+      stop(
+        "Please provide at least one one valid 'ticker' or 'simfin_id'.",
+        call. = FALSE
+      )
+    }
+    return(valid_ids)
 }
 
-find_and_warn <- function(entities, ids, id_name) {
+find_and_warn <- function(companies, ids, id_name) {
+  findings <- dplyr::filter(companies, dplyr::if_all(id_name, ~ .x %in% ids))
+
+  if (nrow(findings) < length(ids)) {
+    not_found <- setdiff(ids, dplyr::pull(findings, id_name))
+    for (id in not_found) {
+      warning('No company found for ', id_name, ' `', id, '`.', call. = FALSE)
+    }
+    return(setdiff(ids, not_found))
+  }
+
+  return(ids)
+
+}
+
+find_and_warn_ <- function(entities, ids, id_name) {
   ids_ <- ids # necessary for filtering
   found_DT <- subset(entities, get(id_name) %in% ids_)
 

@@ -1,9 +1,9 @@
-#' @importFrom httr content
 #' @importFrom RcppSimdJson fparse
-#' @importFrom utils hasName
 #' @importFrom memoise memoise cache_filesystem
-#' @importFrom httr GET
-call_api <- function(..., cache_dir) {
+#' @importFrom httr2 request req_url_path_append req_headers req_user_agent req_url_query
+#'    req_perform last_response resp_is_error resp_body_string
+#' @importFrom tibble as_tibble
+call_api <- function(url, api_key, cache_dir, ...) {
   # check for cache setup
 
   if (is.null(cache_dir)) {
@@ -18,30 +18,58 @@ call_api <- function(..., cache_dir) {
     cache_dir <- getOption("sfa_cache_dir")
   }
 
-  checkmate::assert_directory(cache_dir, access = "rw")
+    checkmate::assert_directory(cache_dir, access = "rw")
 
-  mem_GET <- memoise::memoise(
-    httr::GET,
-    cache = memoise::cache_filesystem(cache_dir)
-  )
+    req <- httr2::request("https://backend.simfin.com/api/v3") |>
+        httr2::req_url_path_append(url) |>
+        httr2::req_headers(
+            Authorization = api_key,
+            accept = "application/json"
+        ) |>
+        httr2::req_user_agent("simfinapi (https://github.com/matthiasgomolka/simfinapi)") |>
+        httr2::req_url_query(...)
 
-  # call API and transform result to list
-  response <- mem_GET(
-    url = "https://legacy.simfin.com",
-    ...
-  )
-  request <- response[["request"]][["url"]]
-  content <- RcppSimdJson::fparse(
-    response[["content"]],
-    max_simplify_lvl = "vector",
-    int64_policy = "integer64"
-  )
+    mem_req_perform <- memoise::memoise(
+        httr2::req_perform,
+        cache = memoise::cache_filesystem(cache_dir)
+    )
 
-  if (utils::hasName(content, "error")) {
-    warning("From 'SimFin' API: '", content[["error"]], "'", call. = FALSE)
-    return(NULL)
-  }
+    resp <- tryCatch(mem_req_perform(req), error = \(error) httr2::last_response())
 
+    if (httr2::resp_is_error(resp)) {
+        body <- httr2::resp_body_string(resp) |> RcppSimdJson::fparse()
+        warning(paste0("SimFin API Error ", body$status, ": ", body$error))
+        return(list(request = req, reponse = NULL))
+    }
 
-  return(list(request = request, content = content))
+    return(resp)
 }
+#     simplify_lvl <- ifelse(url == "/companies/list", "data_frame", "list")
+#     resp_body <- httr2::resp_body_string(resp) |>
+#         RcppSimdJson::fparse(
+#             max_simplify_lvl = simplify_lvl,
+#             int64_policy = "integer64"
+#         )
+#   browser()
+#     if (is.data.frame(resp_body)) {
+#         resp_tbl <- tibble::as_tibble(resp_body)
+#     } else {
+#         resp_tbl <- purrr::map_dfr(
+#           resp_body,
+#           ~ {
+#             browser()
+#
+#             cols <- as.character(.x[["columns"]])
+#
+#             id_tbl <- tibble::as_tibble(.x[c("name", "id", "ticker")])
+#             tibble::as_tibble(.x[["data"]])
+#             resp_tbl <- tibble::as_tibble(.x[["data"]], .name_repair = "minimal")
+#             colnames(resp_tbl) <- .x[["columns"]]
+#             return(resp_tbl)
+#           }
+#         )
+#
+#     }
+#
+#     return(list(request = req, body = resp_tbl))
+# }
