@@ -55,13 +55,8 @@ sfa_load_shareprices <- function(
             data.table::set(dt, j = var, value = item[[var]])
         }
         return(dt)
-    }) |> data.table::rbindlist()
-
-    data.table::set(
-        results_dt,
-        j = "Date",
-        value = lapply(results_dt[["Date"]], \(x) paste(x, collapse = "-") |> as.Date(format = "%Y-%m-%d"))
-    )
+    }) |> data.table::rbindlist() |>
+        _[, Date := vapply(Date, paste, collapse = "-", FUN.VALUE = character(1L)) |> as.Date(format = "%Y-%m-%d")]
 
     return(results_dt)
 }
