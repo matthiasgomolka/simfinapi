@@ -27,6 +27,7 @@ sfa_load_shareprices <- function(
 
     response <- call_api(
         url = "/companies/prices/compact",
+        # url = "/companies/prices/verbose",
         api_key = api_key,
         cache_dir = cache_dir,
         ticker = ticker_cat,
@@ -42,32 +43,27 @@ sfa_load_shareprices <- function(
             max_simplify_lvl = "list"
         )
 
-    tbl <- lapply(
-        response_body,
-        \(body) {
-            cols <- body[["columns"]] |> as.character()
+    results_dt <- lapply(response_body, \(item) {
+        cols <- item[["columns"]] |> as.character()
+        dt <- item[["data"]] |>
+            unlist(recursive = FALSE) |>
+            matrix(ncol = length(cols), byrow = TRUE) |>
+            data.table::data.table() |>
+            data.table::setnames(cols)
 
-            value_tbl <- lapply(
-                body[["data"]],
-                \(row) {
-                    names(row) <- cols
-                    row[["Date"]] <- row[["Date"]] |> as.character() |> paste(collapse = "-")
-                    return(row)
-                }
-            ) |>
-                dplyr::bind_rows()
-
-            id_cols <- c("name", "id", "ticker", "currency")
-            body[id_cols] |>
-                as_tibble() |>
-                dplyr::mutate(value_cols = list(value_tbl)) |>
-                tidyr::unnest(value_cols)
+        for (var in c("name", "id", "ticker", "currency")) {
+            data.table::set(dt, j = var, value = item[[var]])
         }
-    ) |>
-        dplyr::bind_rows() |>
-        dplyr::mutate(Date = as.Date(Date, format = "%Y-%m-%d"))
+        return(dt)
+    }) |> data.table::rbindlist()
 
-    return(tbl)
+    data.table::set(
+        results_dt,
+        j = "Date",
+        value = lapply(results_dt[["Date"]], \(x) paste(x, collapse = "-") |> as.Date(format = "%Y-%m-%d"))
+    )
+
+    return(results_dt)
 }
 
 #' @importFrom data.table as.data.table setnames set rbindlist setcolorder
