@@ -56,9 +56,11 @@ sfa_load_shareprices <- function(
         }
         return(dt)
     }) |> data.table::rbindlist() |>
-        _[, Date := vapply(Date, paste, collapse = "-", FUN.VALUE = character(1L)) |> as.Date(format = "%Y-%m-%d")]
+        _[, Date := vapply(Date, paste, collapse = "-", FUN.VALUE = character(1L)) |>
+              as.Date(format = "%Y-%m-%d")
+          ]
 
-    return(results_dt)
+    return(results_dt[])
 }
 
 #' @importFrom data.table as.data.table setnames set rbindlist setcolorder

@@ -108,3 +108,26 @@ warn_not_found <- function(content, ticker) {
     }
   }
 }
+
+handle_api_error <- function(resp) {
+    content_type <- resp$headers$`content-type`
+    error_msg <- switch(
+        content_type,
+        "text/html;charset=utf-8" = get_html_error(resp),
+        "application/json" = get_json_error(resp)
+    )
+
+    warning(paste0("SimFin API Error ", resp$status_code, ": ", error_msg))
+}
+
+get_html_error <- function(resp) {
+    body <- httr2::resp_body_html(resp)
+    error_msg <- sub(".+<title>", "", body) |> sub("</title>.+", "", x = _) |> sub(".+ – ", "", x = _)
+    return(error_msg)
+}
+
+get_json_error <- function(resp) {
+    body <- httr2::resp_body_string(resp) |> RcppSimdJson::fparse()
+    error_msg <- sub(".+<title>", "", body) |> sub("</title>.+", "", x = _) |> sub(".+ – ", "", x = _)
+    return(error_msg)
+}

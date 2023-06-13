@@ -1,30 +1,26 @@
 #' #' Get a table of all available 'SimFin' ID's with ticker.
-#' #' @inheritParams param_doc
-#' #' @importFrom data.table as.data.table rbindlist setnames set setkeyv
-#' #' @export
-#' sfa_get_entities <- function(
-#'     ...,
-#'     api_key = getOption("sfa_api_key"),
-#'     cache_dir = getOption("sfa_cache_dir")
-#' ) {
-#'   check_api_key(api_key)
-#'   check_cache_dir(cache_dir)
-#'   # checkmate::assert_subset(order, choices = c("id", "name", "ticker", "sector"))
+#' @description
+#' `r lifecycle::badge("deprecated")`
 #'
-#'   response <- call_api(
-#'     url = "/companies/list",
-#'     api_key = api_key,
-#'     cache_dir = cache_dir
-#'   )
-#'   companies <- response[["body"]]
+#' This function was deprecated because of the new 'SimFin' Web API V3.
+#' @keywords internal
+#' @inheritParams param_doc
+#' @importFrom lifecycle deprecate_soft
+#' @importFrom data.table setkeyv
+#' @examples
+#' sfa_get_entities()
+#' # ->
+#' sfa_list_companies()
 #'
-#'   # return early of no content
-#'   if (is.null(companies)) {
-#'     return(invisible(NULL))
-#'   } else {
-#'       companies <- dplyr::arrange(companies, ...)
-#'   }
-#'
-#'   return(companies)
-#' }
-#'
+#' @export
+sfa_get_entities <- function(
+    api_key = getOption("sfa_api_key"),
+    cache_dir = getOption("sfa_cache_dir")
+) {
+    lifecycle::deprecate_soft("1.0.0", "sfa_get_entities()", "sfa_list_companies()")
+
+    companies <- sfa_load_companies()[, .(simfin_id = id, ticker)]
+    data.table::setkeyv(companies, "ticker")
+
+    return(companies)
+}

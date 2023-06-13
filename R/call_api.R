@@ -37,9 +37,8 @@ call_api <- function(url, api_key, cache_dir, ...) {
     resp <- tryCatch(mem_req_perform(req), error = \(error) httr2::last_response())
 
     if (httr2::resp_is_error(resp)) {
-        body <- httr2::resp_body_string(resp) |> RcppSimdJson::fparse()
-        warning(paste0("SimFin API Error ", body$status, ": ", body$error))
-        return(list(request = req, reponse = NULL))
+        handle_api_error(resp)
+        # return(list(request = req, response = NULL))
     }
 
     return(resp)
