@@ -1,6 +1,6 @@
 gather_ticker <- function(ticker, simfin_id, api_key, cache_dir) {
     # get entities in order to verify the existence of ticker / simfin_id
-    companies <- sfa_load_companies(add_info = FALSE, api_key = api_key, cache_dir = cache_dir)
+    companies <- sfa_list_companies(api_key = api_key, cache_dir = cache_dir)
 
     # find valid tickers
     valid_tickers <- find_and_warn(companies, ticker, "ticker")
