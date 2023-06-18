@@ -121,7 +121,7 @@ sfa_get_statement_ <- function(
 sfa_load_statement <- function(
     ticker = NULL,
     simfin_id = NULL,
-    statement,
+    statements,
     period = "fy",
     fyear = NULL,
     start = NULL,
