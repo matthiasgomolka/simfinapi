@@ -1,17 +1,17 @@
 #' @importFrom data.table transpose as.data.table setnames set setcolorder
 #'   rbindlist
 sfa_get_statement_ <- function(
-        ticker,
-        statement,
-        period,
-        fyear,
-        start,
-        end,
-        ttm,
-        shares,
-        api_key,
-        cache_dir,
-        sfplus
+    ticker,
+    statement,
+    period,
+    fyear,
+    start,
+    end,
+    ttm,
+    shares,
+    api_key,
+    cache_dir,
+    sfplus
 ) {
     # hack ttm and statement into the query since GET cannot handle such
     # parameters (at least I don't know how)
@@ -127,7 +127,8 @@ sfa_load_statement <- function(
     start = NULL,
     end = NULL,
     ttm = FALSE,
-    shares = FALSE,
+    asreported = FALSE,
+    details = FALSE,
     api_key = getOption("sfa_api_key"),
     cache_dir = getOption("sfa_cache_dir")
 ) {
@@ -140,8 +141,8 @@ sfa_load_statement <- function(
     # check_end(end, sfplus)
     # check_ttm(ttm)
     # check_shares(shares, sfplus)
-    # check_api_key(api_key)
-    # check_cache_dir(cache_dir)
+    check_api_key(api_key)
+    check_cache_dir(cache_dir)
 
     ticker <- gather_ticker(ticker, simfin_id, api_key, cache_dir)
 

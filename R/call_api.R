@@ -20,7 +20,7 @@ call_api <- function(url, api_key, cache_dir, ...) {
 
     checkmate::assert_directory(cache_dir, access = "rw")
 
-    req <- httr2::request("https://backend.simfin.com/api/v3") |>
+    req <- httr2::request("https://prod.simfin.com/api/v3") |>
         httr2::req_url_path_append(url) |>
         httr2::req_headers(
             Authorization = api_key,

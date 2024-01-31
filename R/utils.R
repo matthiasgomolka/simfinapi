@@ -1,15 +1,13 @@
 gather_ticker <- function(ticker, simfin_id, api_key, cache_dir) {
     # get entities in order to verify the existence of ticker / simfin_id
-    companies <- sfa_list_companies(api_key = api_key, cache_dir = cache_dir)
+    companies <- sfa_load_companies(api_key = api_key, cache_dir = cache_dir)
 
     # find valid tickers
     valid_tickers <- find_and_warn(companies, ticker, "ticker")
 
     # find valid simfin_ids and translate them to tickers
     valid_simfin_ids <- find_and_warn(companies, simfin_id, "id")
-    simfin_id_as_ticker <- companies |>
-      dplyr::filter(id %in% valid_simfin_ids) |>
-      dplyr::pull(ticker)
+    simfin_id_as_ticker <- companies[id %in% valid_simfin_ids][["ticker"]]
 
     valid_ids <- unique(c(valid_tickers, simfin_id_as_ticker))
     if (length(valid_ids) == 0L) {
@@ -110,14 +108,24 @@ warn_not_found <- function(content, ticker) {
 }
 
 handle_api_error <- function(resp) {
-    content_type <- resp$headers$`content-type`
-    error_msg <- switch(
-        content_type,
-        "text/html;charset=utf-8" = get_html_error(resp),
-        "application/json" = get_json_error(resp)
-    )
+    # content_type <- resp$headers$`content-type`
+    # error_msg <- switch(
+    #     content_type,
+    #     "text/html;charset=utf-8" = get_html_error(resp),
+    #     "application/json" = get_json_error(resp)
+    # )
+    msg <- paste0("SimFin API Error ", resp$status_code, ": ", httr2::resp_body_string(resp))
+    if (resp$status_code > 400L) {
+        stop(msg, call. = FALSE)
+    } else {
+        warning(msg)
+    }
+    # error_msg <- switch(
+    #     as.character(resp$status_code),
+    #     "401" = "Unauthorized. Check your API key."
+    # )
 
-    warning(paste0("SimFin API Error ", resp$status_code, ": ", error_msg))
+    # warning(paste0("SimFin API Error ", resp$status_code, ": ", httr2::resp_body_string(resp)))
 }
 
 get_html_error <- function(resp) {
