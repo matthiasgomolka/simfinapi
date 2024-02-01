@@ -1,13 +1,16 @@
-test_that("getting pl statement works", {
+test_that("loading pl statement works", {
   exp_classes <- c(
-    SimFinId = "integer",
+    id = "integer",
     Ticker = "character",
+    Name = "character",
+    isin = "character",
     `Fiscal Period` = "character",
     `Fiscal Year` = "integer",
     `Report Date` = "Date",
     `Publish Date` = "Date",
-    `Restated Date` = "Date",
+    Restated = "Date",
     Source = "character",
+    Template = "character",
     TTM = "logical",
     `Value Check` = "logical",
     Currency = "character",
@@ -28,7 +31,7 @@ test_that("getting pl statement works", {
     `Research & Development` = "numeric",
     `Depreciation & Amortization` = "numeric",
     `Provision for Doubtful Accounts` = "numeric",
-    `Other Operating Expenses` = "numeric",
+    `Other Operating Expense` = "numeric",
     `Operating Income (Loss)` = "numeric",
     `Non-Operating Income (Loss)` = "numeric",
     `Interest Expense, Net` = "numeric",
@@ -38,7 +41,7 @@ test_that("getting pl statement works", {
     `Foreign Exchange Gain (Loss)` = "numeric",
     `Income (Loss) from Affiliates` = "numeric",
     `Other Non-Operating Income (Loss)` = "numeric",
-    `Pretax Income (Loss), Adj.` = "numeric",
+    pretax_income_loss_adjusted_ = "numeric",
     `Abnormal Gains (Losses)` = "numeric",
     `Acquired In-Process R&D` = "numeric",
     `Merger & Acquisition Expense` = "numeric",
@@ -50,7 +53,7 @@ test_that("getting pl statement works", {
     `Sale of Business` = "numeric",
     `Legal Settlement` = "numeric",
     `Restructuring Charges` = "numeric",
-    `Sale of Investments & Unrealized Investments` = "numeric",
+    sale_of_and_unrealized_investments_ = "numeric",
     `Insurance Settlement` = "numeric",
     `Other Abnormal Items` = "numeric",
     `Pretax Income (Loss)` = "numeric",
@@ -62,13 +65,13 @@ test_that("getting pl statement works", {
     `Income (Loss) from Continuing Operations` = "numeric",
     `Net Extraordinary Gains (Losses)` = "numeric",
     `Discontinued Operations` = "numeric",
-    `Accounting Charges & Other` = "numeric",
-    `Income (Loss) Incl. Minority Interest` = "numeric",
+    `XO & Accounting Charges & Other` = "numeric",
+    `Income (Loss) Including Minority Interest` = "numeric",
     `Minority Interest` = "numeric",
     `Net Income` = "numeric",
     `Preferred Dividends` = "numeric",
     `Other Adjustments` = "numeric",
-    `Net Income (Common)` = "numeric"
+    `Net Income Available to Common Shareholders` = "numeric"
   )
   names(exp_classes) <- clean_names(names(exp_classes))
 
@@ -82,7 +85,7 @@ test_that("getting pl statement works", {
       options(sfa_api_key = Sys.getenv("SF_API_KEY"))
     }
 
-    ref_1 <- sfa_get_statement("GOOG", statement = "pl", fyear = 2015)
+    ref_1 <- sfa_load_statement("GOOG", statement = "pl", fyear = 2020)
     checkmate::expect_data_table(
       ref_1,
       key = "ticker",
@@ -95,7 +98,7 @@ test_that("getting pl statement works", {
 
     if (isTRUE(sfplus)) {
 
-      ref_1_plus <- sfa_get_statement("GOOG", statement = "pl")
+      ref_1_plus <- sfa_load_statement("GOOG", statement = "pl")
       checkmate::expect_data_table(
         ref_1_plus,
         key = "ticker",
@@ -108,7 +111,7 @@ test_that("getting pl statement works", {
 
     } else {
       expect_error(
-        sfa_get_statement("GOOG", statement = "pl"),
+        sfa_load_statement("GOOG", statement = "pl"),
         "Omitting 'fyear' is reserved for SimFin+ users.",
         fixed = TRUE
       )
@@ -116,7 +119,7 @@ test_that("getting pl statement works", {
 
 
 
-    ref_2 <- sfa_get_statement(c("GOOG", "AAPL"), statement = "pl", fyear = 2015)
+    ref_2 <- sfa_load_statement(c("GOOG", "AAPL"), statement = "pl", fyear = 2015)
     checkmate::expect_data_table(
       ref_2,
       key = "ticker",
@@ -129,7 +132,7 @@ test_that("getting pl statement works", {
 
 
     if (isTRUE(sfplus)) {
-      ref_2_plus <- sfa_get_statement(c("GOOG", "AAPL"), statement = "pl")
+      ref_2_plus <- sfa_load_statement(c("GOOG", "AAPL"), statement = "pl")
       checkmate::expect_data_table(
         ref_2_plus,
         key = "ticker",
@@ -141,13 +144,13 @@ test_that("getting pl statement works", {
       expect_named(ref_2_plus, names(exp_classes))
     } else {
       expect_error(
-        sfa_get_statement(c("GOOG", "AAPL"), statement = "pl"),
+        sfa_load_statement(c("GOOG", "AAPL"), statement = "pl"),
         "Omitting 'fyear' is reserved for SimFin+ users.",
         fixed = TRUE
       )
     }
 
-    ref_3 <- sfa_get_statement(
+    ref_3 <- sfa_load_statement(
       c("GOOG", "AAPL"), statement = "pl", ttm = TRUE, fyear = 2015
     )
     checkmate::expect_data_table(
@@ -163,7 +166,7 @@ test_that("getting pl statement works", {
 
     if (isTRUE(sfplus)) {
 
-      ref_3_plus <- sfa_get_statement(
+      ref_3_plus <- sfa_load_statement(
         c("GOOG", "AAPL"), statement = "pl", ttm = TRUE
       )
       checkmate::expect_data_table(
@@ -178,7 +181,7 @@ test_that("getting pl statement works", {
 
     } else {
       expect_error(
-        sfa_get_statement(c("GOOG", "AAPL"), statement = "pl", ttm = TRUE),
+        sfa_load_statement(c("GOOG", "AAPL"), statement = "pl", ttm = TRUE),
         "Omitting 'fyear' is reserved for SimFin+ users.",
         fixed = TRUE
       )
@@ -193,7 +196,7 @@ test_that("getting pl statement works", {
 
     if (isTRUE(sfplus)) {
 
-      ref_4_plus <- sfa_get_statement(
+      ref_4_plus <- sfa_load_statement(
         c("GOOG", "AAPL"), statement = "pl", shares = TRUE, fyear = 2015
       )
       checkmate::expect_data_table(
@@ -208,7 +211,7 @@ test_that("getting pl statement works", {
 
     } else {
       expect_error(
-        sfa_get_statement(c("GOOG", "AAPL"), statement = "pl", shares = TRUE, fyear = 2015),
+        sfa_load_statement(c("GOOG", "AAPL"), statement = "pl", shares = TRUE, fyear = 2015),
         "'shares = TRUE' is reserved to SimFin+ users. As a normal user, please use 'sfa_get_shares()' with 'type = \"wa-basic\"' or 'type = \"wa-diluted\".",
         fixed = TRUE
       )
@@ -225,7 +228,7 @@ test_that("getting bs statement works", {
     `Fiscal Year` = "integer",
     `Report Date` = "Date",
     `Publish Date` = "Date",
-    `Restated Date` = "Date",
+    restated = "Date",
     Source = "character",
     TTM = "logical",
     `Value Check` = "logical",
@@ -328,7 +331,7 @@ test_that("getting bs statement works", {
       options(sfa_api_key = Sys.getenv("SF_API_KEY"))
     }
 
-    ref_1 <- sfa_get_statement("GOOG", statement = "bs", fyear = 2015)
+    ref_1 <- sfa_load_statement("GOOG", statement = "bs", fyear = 2015)
     checkmate::expect_data_table(
       ref_1,
       key = "ticker",
@@ -340,7 +343,7 @@ test_that("getting bs statement works", {
     expect_named(ref_1, names(exp_classes))
 
     if (isTRUE(sfplus)) {
-      ref_1_plus <- sfa_get_statement("GOOG", statement = "bs")
+      ref_1_plus <- sfa_load_statement("GOOG", statement = "bs")
       checkmate::expect_data_table(
         ref_1_plus,
         key = "ticker",
@@ -352,13 +355,13 @@ test_that("getting bs statement works", {
       expect_named(ref_1_plus, names(exp_classes))
     } else {
       expect_error(
-        sfa_get_statement("GOOG", statement = "bs"),
+        sfa_load_statement("GOOG", statement = "bs"),
         "Omitting 'fyear' is reserved for SimFin+ users.",
         fixed = TRUE
       )
     }
 
-    ref_2 <- sfa_get_statement(c("GOOG", "AAPL"), statement = "bs", fyear = 2015)
+    ref_2 <- sfa_load_statement(c("GOOG", "AAPL"), statement = "bs", fyear = 2015)
     checkmate::expect_data_table(
       ref_2,
       key = "ticker",
@@ -370,7 +373,7 @@ test_that("getting bs statement works", {
     expect_named(ref_2, names(exp_classes))
 
     if (isTRUE(sfplus)) {
-      ref_2_plus <- sfa_get_statement(c("GOOG", "AAPL"), statement = "bs")
+      ref_2_plus <- sfa_load_statement(c("GOOG", "AAPL"), statement = "bs")
       checkmate::expect_data_table(
         ref_2_plus,
         key = "ticker",
@@ -382,7 +385,7 @@ test_that("getting bs statement works", {
       expect_named(ref_2_plus, names(exp_classes))
     } else {
       expect_error(
-        sfa_get_statement(c("GOOG", "AAPL"), statement = "bs"),
+        sfa_load_statement(c("GOOG", "AAPL"), statement = "bs"),
         "Omitting 'fyear' is reserved for SimFin+ users.",
         fixed = TRUE
       )
@@ -467,7 +470,7 @@ test_that("getting cf statement works", {
       options(sfa_api_key = Sys.getenv("SF_API_KEY"))
     }
 
-    ref_1 <- sfa_get_statement("GOOG", statement = "cf", fyear = 2015)
+    ref_1 <- sfa_load_statement("GOOG", statement = "cf", fyear = 2015)
     checkmate::expect_data_table(
       ref_1,
       key = "ticker",
@@ -479,7 +482,7 @@ test_that("getting cf statement works", {
     expect_named(ref_1, names(exp_classes))
 
     if (isTRUE(sfplus)) {
-      ref_1_plus <- sfa_get_statement("GOOG", statement = "cf")
+      ref_1_plus <- sfa_load_statement("GOOG", statement = "cf")
       checkmate::expect_data_table(
         ref_1_plus,
         key = "ticker",
@@ -491,13 +494,13 @@ test_that("getting cf statement works", {
       expect_named(ref_1_plus, names(exp_classes))
     } else {
       expect_error(
-        sfa_get_statement("GOOG", statement = "cf"),
+        sfa_load_statement("GOOG", statement = "cf"),
         "Omitting 'fyear' is reserved for SimFin+ users.",
         fixed = TRUE
       )
     }
 
-    ref_2 <- sfa_get_statement(c("GOOG", "AAPL"), statement = "cf", fyear = 2015)
+    ref_2 <- sfa_load_statement(c("GOOG", "AAPL"), statement = "cf", fyear = 2015)
     checkmate::expect_data_table(
       ref_2,
       key = "ticker",
@@ -509,7 +512,7 @@ test_that("getting cf statement works", {
     expect_named(ref_2, names(exp_classes))
 
     if (isTRUE(sfplus)) {
-      ref_2_plus <- sfa_get_statement(c("GOOG", "AAPL"), statement = "cf")
+      ref_2_plus <- sfa_load_statement(c("GOOG", "AAPL"), statement = "cf")
       checkmate::expect_data_table(
         ref_2_plus,
         key = "ticker",
@@ -521,7 +524,7 @@ test_that("getting cf statement works", {
       expect_named(ref_2_plus, names(exp_classes))
     } else {
       expect_error(
-        sfa_get_statement(c("GOOG", "AAPL"), statement = "cf"),
+        sfa_load_statement(c("GOOG", "AAPL"), statement = "cf"),
         "Omitting 'fyear' is reserved for SimFin+ users.",
         fixed = TRUE
       )
@@ -533,7 +536,7 @@ test_that("warning is triggered if the API did not return any data", {
   fyear <- year(Sys.Date())
   expect_warning(
     expect_null(
-      sfa_get_statement("GOOG", statement = "bs", fyear = fyear)
+      sfa_load_statement("GOOG", statement = "bs", fyear = fyear)
     ),
     "No data retrieved for ticker 'GOOG'.",
     fixed = TRUE
@@ -544,7 +547,7 @@ test_that("warning is triggered if the API did not return any data", {
 test_that("warning is triggered when no company was found", {
   expect_error(
     expect_warning(
-      sfa_get_statement("doesnotexist", statement = "cf", fyear = 2015L),
+      sfa_load_statement("doesnotexist", statement = "cf", fyear = 2015L),
       "No company found for ticker `doesnotexist`.",
       fixed = TRUE),
     "Please provide at least one one valid 'ticker' or 'simfin_id'.",
@@ -560,12 +563,12 @@ test_that("downloading all statements works only for SimFin+ users", {
     if (isTRUE(sfplus)) {
       options(sfa_api_key = Sys.getenv("SFPLUS_API_KEY"))
       checkmate::expect_data_table(
-        sfa_get_statement("GOOG", statement = "all")
+        sfa_load_statement("GOOG", statement = "all")
       )
     } else {
       options(sfa_api_key = Sys.getenv("SF_API_KEY"))
       expect_error(
-        sfa_get_statement("GOOG", statement = "all"),
+        sfa_load_statement("GOOG", statement = "all"),
         'statement = "all" is reserved for SimFin+ users.',
         fixed = TRUE
       )
@@ -586,7 +589,7 @@ test_that("#35 is fixed", {
     "AGO", "AGR", "AGS", "AGX", "AGYS", "AHH", "AIG", "AIMC", "AINC", "AIR"
   )
   expect_silent(
-    sfa_get_statement(
+    sfa_load_statement(
       ticker = tickers,
       statement = "all",
       period = "quarters",

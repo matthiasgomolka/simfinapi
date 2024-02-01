@@ -78,10 +78,10 @@ gather_result <- function(results) {
 #' @return A [data.table] with cleaned names and labels.
 #' @importFrom data.table setattr setnames
 set_clean_names <- function(DT) {
-  for (var in names(DT)) {
-    data.table::setattr(DT[[var]], "label", var)
-  }
-  data.table::setnames(DT, clean_names)
+    for (var in names(DT)) {
+        data.table::setattr(DT[[var]], "label", var)
+    }
+    data.table::setnames(DT, clean_names)
 }
 
 clean_names <- function(x) {
