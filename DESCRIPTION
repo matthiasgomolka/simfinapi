@@ -1,7 +1,7 @@
 Type: Package
 Package: simfinapi
 Title: Accessing 'SimFin' Data
-Version: 0.2.4
+Version: 1.0.0
 Authors@R: 
     person("Matthias", "Gomolka", , "matthias.gomolka@posteo.de", role = c("aut", "cre"))
 Description: Through simfinapi, you can intuitively access the 'SimFin'

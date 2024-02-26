@@ -69,7 +69,7 @@ the API key globally using \link{sfa_set_api_key}.}
 \item{cache_dir}{\link{character} Your cache directory. It's recommended to set
 the cache directory globally using \link{sfa_set_cache_dir}.}
 
-\item{statement}{\link{character} vactor of statements, available values: pl (Profit & Loss), bs
+\item{statement}{\link{character} vector of statements, available values: pl (Profit & Loss), bs
 (Balance Sheet), cf (Cash Flow), derived (Derived Ratios and Indicators).}
 }
 \value{

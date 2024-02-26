@@ -19,22 +19,7 @@ gather_ticker <- function(ticker, simfin_id, api_key, cache_dir) {
     return(valid_ids)
 }
 
-find_and_warn <- function(companies, ids, id_name) {
-  findings <- dplyr::filter(companies, dplyr::if_all(id_name, ~ .x %in% ids))
-
-  if (nrow(findings) < length(ids)) {
-    not_found <- setdiff(ids, dplyr::pull(findings, id_name))
-    for (id in not_found) {
-      warning('No company found for ', id_name, ' `', id, '`.', call. = FALSE)
-    }
-    return(setdiff(ids, not_found))
-  }
-
-  return(ids)
-
-}
-
-find_and_warn_ <- function(entities, ids, id_name) {
+find_and_warn <- function(entities, ids, id_name) {
   ids_ <- ids # necessary for filtering
   found_DT <- subset(entities, get(id_name) %in% ids_)
 

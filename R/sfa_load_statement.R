@@ -4,7 +4,7 @@
 #'
 #' @inheritParams param_doc
 #'
-#' @param statement [character] vactor of statements, available values: pl (Profit & Loss), bs
+#' @param statement [character] vector of statements, available values: pl (Profit & Loss), bs
 #'   (Balance Sheet), cf (Cash Flow), derived (Derived Ratios and Indicators).
 #'
 #' @param ttm [logical] If `TRUE`, retrieves trailing twelve month periods.

@@ -2,7 +2,6 @@
 #' @importFrom memoise memoise cache_filesystem
 #' @importFrom httr2 request req_url_path_append req_headers req_user_agent req_url_query
 #'    req_perform last_response resp_is_error resp_body_string
-#' @importFrom tibble as_tibble
 call_api <- function(url, api_key, cache_dir, ...) {
   # check for cache setup
 
@@ -43,32 +42,3 @@ call_api <- function(url, api_key, cache_dir, ...) {
 
     return(resp)
 }
-#     simplify_lvl <- ifelse(url == "/companies/list", "data_frame", "list")
-#     resp_body <- httr2::resp_body_string(resp) |>
-#         RcppSimdJson::fparse(
-#             max_simplify_lvl = simplify_lvl,
-#             int64_policy = "integer64"
-#         )
-#   browser()
-#     if (is.data.frame(resp_body)) {
-#         resp_tbl <- tibble::as_tibble(resp_body)
-#     } else {
-#         resp_tbl <- purrr::map_dfr(
-#           resp_body,
-#           ~ {
-#             browser()
-#
-#             cols <- as.character(.x[["columns"]])
-#
-#             id_tbl <- tibble::as_tibble(.x[c("name", "id", "ticker")])
-#             tibble::as_tibble(.x[["data"]])
-#             resp_tbl <- tibble::as_tibble(.x[["data"]], .name_repair = "minimal")
-#             colnames(resp_tbl) <- .x[["columns"]]
-#             return(resp_tbl)
-#           }
-#         )
-#
-#     }
-#
-#     return(list(request = req, body = resp_tbl))
-# }
