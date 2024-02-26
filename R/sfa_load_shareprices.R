@@ -1,6 +1,6 @@
 sfa_load_shareprices <- function(
-        simfin_id = NULL,
         ticker = NULL,
+        simfin_id = NULL,
         start = NULL,
         end = NULL,
         ratios = FALSE,
@@ -30,6 +30,7 @@ sfa_load_shareprices <- function(
         cache_dir = cache_dir,
         ticker = ticker_cat,
         ratios = tolower(ratios),
+        asreported = tolower(as_reported),
         start = start,
         end = end
     )
@@ -58,10 +59,20 @@ sfa_load_shareprices <- function(
         return(dt)
     }) |> data.table::rbindlist()
 
-    date_vars <- grep("Date", colnames(results_dt), fixed = TRUE, value = TRUE)
-    for (var in date_vars) {
-        data.table::set(results_dt, j = var, value = as.Date(results_dt[[var]], format = "%Y-%m-%d"))
-    }
+    base_vars <- c("name", "id", "ticker", "currency")
+    col_order <- c(base_vars, setdiff(names(results_dt), base_vars))
+    data.table::setcolorder(results_dt, col_order)
+
+    char_vars <- c("ticker", "name", "currency")
+    date_vars <- c("Date")
+    lgl_vars <- c("Restated")
+    int_vars <- c("id")
+    num_vars <- setdiff(names(results_dt), c(char_vars, date_vars, lgl_vars, int_vars))
+
+    set_as(results_dt, date_vars, as.Date)
+    set_as(results_dt, lgl_vars, as.logical)
+    set_as(results_dt, int_vars, as.integer)
+    set_as(results_dt, num_vars, as.numeric)
 
     return(results_dt[])
 }

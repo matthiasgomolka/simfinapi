@@ -52,7 +52,9 @@ find_and_warn_ <- function(entities, ids, id_name) {
 #' @importFrom data.table set
 set_as <- function(DT, vars, as) {
   for (var in vars) {
-    data.table::set(DT, j = var, value = as(DT[[var]]))
+    if (var %in% names(DT)) {
+      data.table::set(DT, j = var, value = as(DT[[var]]))
+    }
   }
 }
 
