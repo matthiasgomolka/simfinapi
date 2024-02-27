@@ -4,9 +4,9 @@ library(simfinapi)
 library(data.table)
 
 on_cran <- function() {
-  !identical(Sys.getenv("NOT_CRAN"), "true")
+    !identical(Sys.getenv("NOT_CRAN"), "true")
 }
 
 if (!on_cran()) {
-  test_check("simfinapi")
+    test_check("simfinapi")
 }

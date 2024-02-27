@@ -10,15 +10,16 @@ the API key globally using \link{sfa_set_api_key}.}
 \item{cache_dir}{\link{character} Your cache directory. It's recommended to set
 the cache directory globally using \link{sfa_set_cache_dir}.}
 
-\item{sfplus}{\link{logical} Set\code{TRUE} if you have a SimFin+ account. It's
-recommended to set \code{sfplus} globally using \link{sfa_set_sfplus}.}
-
 \item{ticker}{\link{integer} Ticker of the companies of interest.}
 
-\item{simfin_id}{\link{integer} 'SimFin' IDs of the companies of interest. Any
-\code{simfin_id} will be internally translated to the respective \code{ticker}. This
+\item{id}{\link{integer} 'SimFin' IDs of the companies of interest. Any
+\code{id} will be internally translated to the respective \code{ticker}. This
 reduces the number of queries in case you query the same company via
-\code{ticker} \emph{and} \code{simfin_id}.}
+\code{ticker} \emph{and} \code{id}.}
+
+\item{asreported}{\link{logical} If \code{TRUE}, retrieves the as-reported (not restated) data.}
+
+\item{ttm}{\link{logical} If \code{TRUE}, retrieves trailing twelve month periods.}
 
 \item{start}{\link{Date} Filter for the report dates (reserved for SimFin+ users).
 With this filter you can filter the statements by the date on which the
@@ -36,17 +37,17 @@ date.}
 to provide exactly one period. As SimFin+ user, this filter can be omitted
 to retrieve all statements available for the company.
 \itemize{
-\item \code{"q1"}: First fiscal quarter.
-\item \code{"q2"}: Second fiscal quarter.
-\item \code{"q3"}: Third fiscal quarter.
-\item \code{"q4"}: Fourth fiscal quarter.
-\item \code{"fy"}: Full fiscal year.
-\item \code{"h1"}: First 6 months of fiscal year.
-\item \code{"h2"}: Last 6 months of fiscal year.
-\item \code{"9m"}: First nine months of fiscal year.
-\item \code{"6m"}: Any fiscal 6 month period (first + second half years; reserved
+\item \code{'q1'}: First fiscal quarter.
+\item \code{'q2'}: Second fiscal quarter.
+\item \code{'q3'}: Third fiscal quarter.
+\item \code{'q4'}: Fourth fiscal quarter.
+\item \code{'fy'}: Full fiscal year.
+\item \code{'h1'}: First 6 months of fiscal year.
+\item \code{'h2'}: Last 6 months of fiscal year.
+\item \code{'9m'}: First nine months of fiscal year.
+\item \code{'6m'}: Any fiscal 6 month period (first + second half years; reserved
 for SimFin+ users).
-\item \code{"quarters"}: All quarters (q1 + q2 + q3 + q4; reserved for SimFin+
+\item \code{'quarters'}: All quarters (q1 + q2 + q3 + q4; reserved for SimFin+
 users).
 }}
 
