@@ -2,11 +2,11 @@
 
 export(sfa_load_common_shares_outstanding)
 export(sfa_load_companies)
+export(sfa_load_shareprices)
 export(sfa_load_statements)
 export(sfa_load_weighted_shares_outstanding)
 export(sfa_set_api_key)
 export(sfa_set_cache_dir)
-export(sfa_set_sfplus)
 importFrom(RcppSimdJson,fparse)
 importFrom(checkmate,assert_character)
 importFrom(checkmate,assert_choice)

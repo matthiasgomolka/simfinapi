@@ -10,9 +10,6 @@ the API key globally using \link{sfa_set_api_key}.}
 \item{cache_dir}{\link{character} Your cache directory. It's recommended to set
 the cache directory globally using \link{sfa_set_cache_dir}.}
 
-\item{sfplus}{\link{logical} Set\code{TRUE} if you have a SimFin+ account. It's
-recommended to set \code{sfplus} globally using \link{sfa_set_sfplus}.}
-
 \item{ticker}{\link{integer} Ticker of the companies of interest.}
 
 \item{id}{\link{integer} 'SimFin' IDs of the companies of interest. Any

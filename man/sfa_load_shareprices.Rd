@@ -45,6 +45,9 @@ the API key globally using \link{sfa_set_api_key}.}
 \item{cache_dir}{\link{character} Your cache directory. It's recommended to set
 the cache directory globally using \link{sfa_set_cache_dir}.}
 }
+\value{
+\link{data.table} with share price data.
+}
 \description{
 Retrieve share price data and ratios.
 }

@@ -14,6 +14,9 @@ well.}
 key, e.g. \code{SIMFIN_API_KEY}. Leave empty (\code{NULL}, default) if you want to
 set your API key directly.}
 }
+\value{
+\link{character} The API key (invisibly).
+}
 \description{
 It is highly recommended to set the API key globally as it makes
 specifying the \code{api_key} argument of other \verb{sfa_*} functions obsolete.

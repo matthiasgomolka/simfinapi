@@ -12,6 +12,7 @@
 #'   from the 'SimFin' API calls.
 #' @param create [logical] Set `TRUE` if you want to create `path` automatically
 #'   if it does not yet exist.
+#' @return [character] The cache directory (invisibly).
 #' @export
 sfa_set_cache_dir <- function(path, create = FALSE) {
     checkmate::assert_string(path)

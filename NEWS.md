@@ -1,3 +1,7 @@
+# simfinapi 1.0.0
+## Features
+* The package is now compatible with the new SimFin API V3.
+
 # simfinapi 0.2.4
 ## Bug Fixes
 * Some new API keys were not accepted by `check_api_key()`. This is fixed now.

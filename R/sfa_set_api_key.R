@@ -28,6 +28,7 @@
 #' sfa_set_api_key(env_var = 'SIMFIN_API_KEY')
 #' }
 #' @importFrom checkmate assert_string
+#' @return [character] The API key (invisibly).
 #' @export
 sfa_set_api_key <- function(api_key, env_var) {
     api_key_specified <- !missing(api_key)

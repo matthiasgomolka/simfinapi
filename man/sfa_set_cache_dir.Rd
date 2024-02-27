@@ -13,6 +13,9 @@ from the 'SimFin' API calls.}
 \item{create}{\link{logical} Set \code{TRUE} if you want to create \code{path} automatically
 if it does not yet exist.}
 }
+\value{
+\link{character} The cache directory (invisibly).
+}
 \description{
 It is highly recommended to set the cache directory globally.
 This has two advantages:

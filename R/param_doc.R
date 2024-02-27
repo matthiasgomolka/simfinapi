@@ -7,9 +7,6 @@
 #' @param cache_dir [character] Your cache directory. It's recommended to set
 #'   the cache directory globally using [sfa_set_cache_dir].
 #'
-#' @param sfplus [logical] Set`TRUE` if you have a SimFin+ account. It's
-#'   recommended to set `sfplus` globally using [sfa_set_sfplus].
-#'
 #' @param ticker [integer] Ticker of the companies of interest.
 #'
 #' @param id [integer] 'SimFin' IDs of the companies of interest. Any

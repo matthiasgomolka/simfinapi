@@ -2,6 +2,7 @@
 #' @importFrom memoise memoise cache_filesystem
 #' @importFrom httr2 request req_url_path_append req_headers req_user_agent req_url_query
 #'    req_perform last_response resp_is_error resp_body_string
+#' @noRd
 call_api <- function(url, api_key, cache_dir, ...) {
     # check for cache setup
 
