@@ -12,10 +12,14 @@
 #'
 #' @param ticker [integer] Ticker of the companies of interest.
 #'
-#' @param simfin_id [integer] 'SimFin' IDs of the companies of interest. Any
-#'   `simfin_id` will be internally translated to the respective `ticker`. This
+#' @param id [integer] 'SimFin' IDs of the companies of interest. Any
+#'   `id` will be internally translated to the respective `ticker`. This
 #'   reduces the number of queries in case you query the same company via
-#'   `ticker` *and* `simfin_id`.
+#'   `ticker` *and* `id`.
+#'
+#' @param asreported [logical] If `TRUE`, retrieves the as-reported (not restated) data.
+#'
+#' @param ttm [logical] If `TRUE`, retrieves trailing twelve month periods.
 #'
 #' @param start [Date] Filter for the report dates (reserved for SimFin+ users).
 #'   With this filter you can filter the statements by the date on which the
@@ -33,17 +37,17 @@
 #'   to provide exactly one period. As SimFin+ user, this filter can be omitted
 #'   to retrieve all statements available for the company.
 #'
-#'   - `"q1"`: First fiscal quarter.
-#'   - `"q2"`: Second fiscal quarter.
-#'   - `"q3"`: Third fiscal quarter.
-#'   - `"q4"`: Fourth fiscal quarter.
-#'   - `"fy"`: Full fiscal year.
-#'   - `"h1"`: First 6 months of fiscal year.
-#'   - `"h2"`: Last 6 months of fiscal year.
-#'   - `"9m"`: First nine months of fiscal year.
-#'   - `"6m"`: Any fiscal 6 month period (first + second half years; reserved
+#'   - `'q1'`: First fiscal quarter.
+#'   - `'q2'`: Second fiscal quarter.
+#'   - `'q3'`: Third fiscal quarter.
+#'   - `'q4'`: Fourth fiscal quarter.
+#'   - `'fy'`: Full fiscal year.
+#'   - `'h1'`: First 6 months of fiscal year.
+#'   - `'h2'`: Last 6 months of fiscal year.
+#'   - `'9m'`: First nine months of fiscal year.
+#'   - `'6m'`: Any fiscal 6 month period (first + second half years; reserved
 #'   for SimFin+ users).
-#'   - `"quarters"`: All quarters (q1 + q2 + q3 + q4; reserved for SimFin+
+#'   - `'quarters'`: All quarters (q1 + q2 + q3 + q4; reserved for SimFin+
 #'   users).
 #'
 #' @param fyear [integer] Filter for fiscal year. As a non-SimFin+ user, you

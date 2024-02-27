@@ -14,14 +14,11 @@ BugReports: https://github.com/matthiasgomolka/simfinapi/issues
 Depends: 
     R (>= 3.5)
 Imports: 
-    bit64,
     checkmate (>= 2.0.0),
     data.table (>= 1.12.8),
-    future.apply (>= 1.4.0),
     httr2,
     lifecycle,
     memoise (>= 1.1.0),
-    progressr,
     RcppSimdJson (>= 0.1.1),
     utils
 Suggests: 

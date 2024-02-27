@@ -16,6 +16,6 @@
 #' @importFrom checkmate assert_logical
 #' @export
 sfa_set_sfplus <- function(sfplus = TRUE) {
-  checkmate::assert_logical(sfplus, len = 1L)
-  options(sfa_sfplus = sfplus)
+    checkmate::assert_logical(sfplus, len = 1L)
+    options(sfa_sfplus = sfplus)
 }

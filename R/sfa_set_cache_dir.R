@@ -14,20 +14,17 @@
 #'   if it does not yet exist.
 #' @export
 sfa_set_cache_dir <- function(path, create = FALSE) {
-  checkmate::assert_string(path)
-  checkmate::assert_logical(create, any.missing = FALSE, len = 1L)
+    checkmate::assert_string(path)
+    checkmate::assert_logical(create, any.missing = FALSE, len = 1L)
 
-  if (!dir.exists(path)) {
-    if (isFALSE(create)) {
-      stop(
-        "'", path,
-        "' does not exist. Use 'create = TRUE' to create it on the fly."
-      )
-    } else {
-      dir.create(path, recursive = TRUE)
+    if (!dir.exists(path)) {
+        if (isFALSE(create)) {
+            stop("'", path, "' does not exist. Use 'create = TRUE' to create it on the fly.")
+        } else {
+            dir.create(path, recursive = TRUE)
+        }
     }
-  }
 
-  options(sfa_cache_dir = path)
-  return(invisible(getOption("sfa_cache_dir")))
+    options(sfa_cache_dir = path)
+    return(invisible(getOption("sfa_cache_dir")))
 }

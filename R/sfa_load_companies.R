@@ -10,20 +10,12 @@
 #' @return `data.table::data.table()` containing basic company information.
 #' @export
 #'
-sfa_load_companies <- function(
-    api_key = getOption("sfa_api_key"),
-    cache_dir = getOption("sfa_cache_dir"),
-    details = FALSE
-) {
+sfa_load_companies <- function(api_key = getOption("sfa_api_key"), cache_dir = getOption("sfa_cache_dir"), details = FALSE) {
     check_api_key(api_key)
     check_cache_dir(cache_dir)
 
     if (isTRUE(details)) {
-        response <- call_api(
-            url = "/companies/general/compact",
-            api_key = api_key,
-            cache_dir = cache_dir
-        )
+        response <- call_api(url = "/companies/general/compact", api_key = api_key, cache_dir = cache_dir)
         response_body <- httr2::resp_body_string(response) |>
             RcppSimdJson::fparse()
 
@@ -33,28 +25,13 @@ sfa_load_companies <- function(
             utils::type.convert(as.is = TRUE)
 
     } else {
-        response <- call_api(
-            url = "/companies/list",
-            api_key = api_key,
-            cache_dir = cache_dir
-        )
+        response <- call_api(url = "/companies/list", api_key = api_key, cache_dir = cache_dir)
         response_body <- httr2::resp_body_string(response) |>
-            RcppSimdJson::fparse(int64_policy = "integer64")
+            RcppSimdJson::fparse()
         companies <- data.table::data.table(response_body)
     }
-    col_order <- c(
-        "id",
-        "name",
-        "ticker",
-        "isin",
-        "sectorCode",
-        "sectorName",
-        "industryName",
-        "market",
-        "endFy",
-        "numEmployees",
-        "companyDescription"
-    )
+    col_order <- c("id", "name", "ticker", "isin", "sectorCode", "sectorName", "industryName", "market", "endFy", "numEmployees",
+        "companyDescription")
     col_order <- intersect(col_order, names(companies))
     data.table::setcolorder(companies, col_order)
     data.table::setkeyv(companies, "id")

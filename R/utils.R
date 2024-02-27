@@ -1,61 +1,59 @@
-gather_ticker <- function(ticker, simfin_id, api_key, cache_dir) {
-    # get entities in order to verify the existence of ticker / simfin_id
+gather_ticker <- function(ticker, id, api_key, cache_dir) {
+    id <- NULL
+    # get entities in order to verify the existence of ticker / id
     companies <- sfa_load_companies(api_key = api_key, cache_dir = cache_dir)
 
     # find valid tickers
     valid_tickers <- find_and_warn(companies, ticker, "ticker")
 
-    # find valid simfin_ids and translate them to tickers
-    valid_simfin_ids <- find_and_warn(companies, simfin_id, "id")
-    simfin_id_as_ticker <- companies[id %in% valid_simfin_ids][["ticker"]]
+    # find valid ids and translate them to tickers
+    valid_ids <- find_and_warn(companies, id, "id")
+    id_as_ticker <- subset(companies, id %in% valid_ids)[["ticker"]]
 
-    valid_ids <- unique(c(valid_tickers, simfin_id_as_ticker))
+    valid_ids <- unique(c(valid_tickers, id_as_ticker))
     if (length(valid_ids) == 0L) {
-      stop(
-        "Please provide at least one one valid 'ticker' or 'simfin_id'.",
-        call. = FALSE
-      )
+        stop("Please provide at least one one valid 'ticker' or 'id'.", call. = FALSE)
     }
     return(valid_ids)
 }
 
 find_and_warn <- function(entities, ids, id_name) {
-  ids_ <- ids # necessary for filtering
-  found_DT <- subset(entities, get(id_name) %in% ids_)
+    ids_ <- ids  # necessary for filtering
+    found_DT <- subset(entities, get(id_name) %in% ids_)
 
-  if (nrow(found_DT) < length(ids)) {
-    not_found <- setdiff(ids, found_DT[[id_name]])
-    for (id in not_found) {
-      warning('No company found for ', id_name, ' `', id, '`.', call. = FALSE)
+    if (nrow(found_DT) < length(ids)) {
+        not_found <- setdiff(ids, found_DT[[id_name]])
+        for (id in not_found) {
+            warning("No company found for ", id_name, " `", id, "`.", call. = FALSE)
+        }
+        return(setdiff(ids, not_found))
     }
-    return(setdiff(ids, not_found))
-  }
-  return(ids)
+    return(ids)
 
 }
 
 #' @importFrom data.table set
 set_as <- function(DT, vars, as) {
-  for (var in vars) {
-    if (var %in% names(DT)) {
-      data.table::set(DT, j = var, value = as(DT[[var]]))
+    for (var in vars) {
+        if (var %in% names(DT)) {
+            data.table::set(DT, j = var, value = as(DT[[var]]))
+        }
     }
-  }
 }
 
 #' @importFrom data.table is.data.table rbindlist setkeyv
 gather_result <- function(results) {
-  if (all(vapply(results, is.null, FUN.VALUE = logical(1L)))) {
-    return(invisible(NULL))
-  }
-  if (data.table::is.data.table(results)) {
-    result_DT <- results
-  } else {
-    result_DT <- data.table::rbindlist(results, fill = TRUE)
-  }
-  set_clean_names(result_DT)
-  data.table::setkeyv(result_DT, "ticker")
-  result_DT[]
+    if (all(vapply(results, is.null, FUN.VALUE = logical(1L)))) {
+        return(invisible(NULL))
+    }
+    if (data.table::is.data.table(results)) {
+        result_DT <- results
+    } else {
+        result_DT <- data.table::rbindlist(results, fill = TRUE)
+    }
+    set_clean_names(result_DT)
+    data.table::setkeyv(result_DT, "ticker")
+    result_DT[]
 }
 
 #' Clean names
@@ -72,57 +70,31 @@ set_clean_names <- function(DT) {
 }
 
 clean_names <- function(x) {
-  # clean camelCase -> snake_case
-  x <- gsub("(?<=[a-z])([A-Z])", "_\\1", perl = TRUE, x)
-  # clean spaces and special chars to _
-  x <- gsub("\\.+", "_", tolower(make.names(x)))
-  # remove trailing _
-  x <- gsub("_$", "", x)
-  # sim_fin_id -> simfim_id
-  gsub("sim_fin", "simfin", fixed = TRUE, x)
+    # clean camelCase -> snake_case
+    x <- gsub("(?<=[a-z])([A-Z])", "_\\1", perl = TRUE, x)
+    # clean spaces and special chars to _
+    x <- gsub("\\.+", "_", tolower(make.names(x)))
+    # remove trailing _
+    x <- gsub("_$", "", x)
+    # sim_fin_id -> simfim_id
+    gsub("sim_fin", "simfin", fixed = TRUE, x)
 }
 
 warn_not_found <- function(content, ticker) {
-  not_found_idx <- which(!vapply(content, `[[`, "found", FUN.VALUE = logical(1L)))
-  if (length(not_found_idx) > 0L) {
-    for (tckr in ticker[not_found_idx]) {
-      warning(
-        "No data retrieved for ticker '", tckr, "'.",
-        call. = FALSE
-      )
+    not_found_idx <- which(!vapply(content, `[[`, "found", FUN.VALUE = logical(1L)))
+    if (length(not_found_idx) > 0L) {
+        for (tckr in ticker[not_found_idx]) {
+            warning("No data retrieved for ticker '", tckr, "'.", call. = FALSE)
+        }
     }
-  }
 }
 
 handle_api_error <- function(resp) {
-    # content_type <- resp$headers$`content-type`
-    # error_msg <- switch(
-    #     content_type,
-    #     "text/html;charset=utf-8" = get_html_error(resp),
-    #     "application/json" = get_json_error(resp)
-    # )
     msg <- paste0("SimFin API Error ", resp$status_code, ": ", httr2::resp_body_string(resp))
-    if (resp$status_code > 400L) {
+    if (resp$status_code >= 400L) {
         stop(msg, call. = FALSE)
     } else {
         warning(msg)
     }
-    # error_msg <- switch(
-    #     as.character(resp$status_code),
-    #     "401" = "Unauthorized. Check your API key."
-    # )
-
-    # warning(paste0("SimFin API Error ", resp$status_code, ": ", httr2::resp_body_string(resp)))
 }
 
-get_html_error <- function(resp) {
-    body <- httr2::resp_body_html(resp)
-    error_msg <- sub(".+<title>", "", body) |> sub("</title>.+", "", x = _) |> sub(".+ – ", "", x = _)
-    return(error_msg)
-}
-
-get_json_error <- function(resp) {
-    body <- httr2::resp_body_string(resp) |> RcppSimdJson::fparse()
-    error_msg <- sub(".+<title>", "", body) |> sub("</title>.+", "", x = _) |> sub(".+ – ", "", x = _)
-    return(error_msg)
-}

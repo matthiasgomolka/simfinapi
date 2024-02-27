@@ -38,7 +38,7 @@ Please note that all functions in simfinapi start with the prefix
 
 The downloaded data looks like this:
 
-| simfin_id | ticker | date       | currency | open | high |  low | close | adj_close |    volume | dividend | common_shares_outstanding |
+| id | ticker | date       | currency | open | high |  low | close | adj_close |    volume | dividend | common_shares_outstanding |
 |----------:|:-------|:-----------|:---------|-----:|-----:|-----:|------:|----------:|----------:|---------:|--------------------------:|
 |     62747 | AMZN   | 2000-01-03 | USD      | 4.08 | 4.48 | 4.00 |  4.47 |      4.47 | 322352000 |       NA |                        NA |
 |     62747 | AMZN   | 2000-01-04 | USD      | 4.27 | 4.58 | 4.09 |  4.10 |      4.10 | 349748000 |       NA |                        NA |
@@ -71,7 +71,7 @@ company_info <- sfa_get_info(tickers)
 
 `company_info` contains these information:
 
-| simfin_id | ticker | company_name      | industry_id | month_fy_end | number_employees | business_summary                                                                                                                                                                                                                                                |
+| id | ticker | company_name      | industry_id | month_fy_end | number_employees | business_summary                                                                                                                                                                                                                                                |
 |----------:|:-------|:------------------|------------:|-------------:|-----------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 |     62747 | AMZN   | AMAZON COM INC    |      103002 |           12 |          1298000 | Amazon.com Inc is an online retailer. The Company sells its products through the website which provides services, such as advertising services and co-branded credit card agreements. It also offers electronic devices like Kindle e-readers and Fire tablets. |
 |        18 | GOOG   | Alphabet (Google) |      101002 |           12 |           135301 | Alphabet (formerly known as Google) offers a variety of IT services to individuals and corporations alike. Their main revenues come from online advertising.                                                                                                    |

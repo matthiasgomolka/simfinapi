@@ -30,9 +30,9 @@ check_ticker <- function(ticker) {
 }
 
 #' @importFrom checkmate assert_integerish
-check_simfin_id <- function(simfin_id) {
+check_id <- function(id) {
   checkmate::assert_integerish(
-    simfin_id,
+    id,
     lower = 1L,
     any.missing = FALSE,
     null.ok = TRUE
@@ -79,7 +79,7 @@ check_period_get_shares <- function(...) {
 
 #' @importFrom checkmate assert_integerish
 check_fyear <- function(fyear, sfplus) {
-  if (is.null(fyear) & isFALSE(sfplus)) {
+  if (is.null(fyear) && isFALSE(sfplus)) {
     msg_sfplus_required("fyear")
   }
   checkmate::assert_integerish(
@@ -97,7 +97,7 @@ check_fyear_get_shares <- function(..., type) {
 
 #' @importFrom checkmate assert_date
 check_start <- function(start, sfplus) {
-  if (!is.null(start) & isFALSE(sfplus)) {
+  if (!is.null(start) && isFALSE(sfplus)) {
     msg_sfplus_required("start", "Specifying")
   }
   checkmate::assert_date(
@@ -110,7 +110,7 @@ check_start <- function(start, sfplus) {
 
 #' @importFrom checkmate assert_date
 check_end <- function(end, sfplus) {
-  if (!is.null(end) & isFALSE(sfplus)) {
+  if (!is.null(end) && isFALSE(sfplus)) {
     msg_sfplus_required("end", "Specifying")
   }
   checkmate::assert_date(
@@ -130,7 +130,7 @@ check_ttm <- function(ttm) {
 check_shares <- function(shares, sfplus) {
   checkmate::assert_logical(shares, any.missing = FALSE, len = 1L)
 
-  if (isTRUE(shares) & isFALSE(sfplus)) {
+  if (isTRUE(shares) && isFALSE(sfplus)) {
     stop(
       "'shares = TRUE' is reserved to SimFin+ users. As a normal user, please ",
       "use 'sfa_get_shares()' with 'type = \"wa-basic\"' or 'type = ",
@@ -142,7 +142,7 @@ check_shares <- function(shares, sfplus) {
 
 #' @importFrom checkmate assert_logical
 check_ratios <- function(ratios, sfplus) {
-  if (!is.null(ratios) & isFALSE(sfplus)) {
+  if (!is.null(ratios) && isFALSE(sfplus)) {
     msg_sfplus_required("ratios", "Specifying")
   }
   checkmate::assert_logical(

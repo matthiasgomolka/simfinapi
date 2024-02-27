@@ -4,24 +4,20 @@
 #'
 #' @inheritParams param_doc
 #'
-#' @param statement [character] vector of statements, available values: pl (Profit & Loss), bs
+#' @param statements [character] vector of statements, available values: pl (Profit & Loss), bs
 #'   (Balance Sheet), cf (Cash Flow), derived (Derived Ratios and Indicators).
-#'
-#' @param ttm [logical] If `TRUE`, retrieves trailing twelve month periods.
 #'
 #' @return [data.table] containing the statement(s) data.
 #'
 #' @inheritSection param_doc Parallel processing
 #'
 #' @importFrom checkmate assert_choice
-#' @importFrom future.apply future_mapply
-#' @importFrom progressr with_progress progressor
 #' @importFrom data.table year CJ
 #'
 #' @export
-sfa_load_statement <- function(
+sfa_load_statements <- function(
     ticker = NULL,
-    simfin_id = NULL,
+    id = NULL,
     statements,
     period = "fy",
     fyear = NULL,
@@ -29,22 +25,21 @@ sfa_load_statement <- function(
     end = NULL,
     ttm = FALSE,
     asreported = FALSE,
-    details = FALSE,
+    # details = FALSE,
     api_key = getOption("sfa_api_key"),
     cache_dir = getOption("sfa_cache_dir")
 ) {
     check_ticker(ticker)
-    check_simfin_id(simfin_id)
-    check_statement(statements, sfplus)
-    check_period(period, sfplus)
-    check_fyear(fyear, sfplus)
-    check_start(start, sfplus)
-    check_end(end, sfplus)
+    check_id(id)
+    # check_period(period, sfplus)
+    # check_fyear(fyear, sfplus)
+    # check_start(start, sfplus)
+    # check_end(end, sfplus)
     check_ttm(ttm)
     check_api_key(api_key)
     check_cache_dir(cache_dir)
 
-    ticker <- gather_ticker(ticker, simfin_id, api_key, cache_dir)
+    ticker <- gather_ticker(ticker, id, api_key, cache_dir)
 
     response <- call_api(
         url = "/companies/statements/compact",
@@ -58,7 +53,7 @@ sfa_load_statement <- function(
         end = end,
         ttm = ttm,
         asreported = asreported,
-        details = details
+        # details = details
     )
 
     response_body <- httr2::resp_body_string(response) |>
