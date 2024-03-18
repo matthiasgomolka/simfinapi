@@ -20,7 +20,7 @@ gather_ticker <- function(ticker, id, api_key, cache_dir) {
 
 #' @noRd
 find_and_warn <- function(entities, ids, id_name) {
-    ids_ <- ids  # necessary for filtering
+    ids_ <- ids # necessary for filtering
     found_DT <- subset(entities, get(id_name) %in% ids_)
 
     if (nrow(found_DT) < length(ids)) {
@@ -31,7 +31,6 @@ find_and_warn <- function(entities, ids, id_name) {
         return(setdiff(ids, not_found))
     }
     return(ids)
-
 }
 
 
@@ -106,4 +105,3 @@ handle_api_error <- function(resp) {
         warning(msg)
     }
 }
-

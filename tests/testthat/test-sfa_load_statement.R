@@ -1,4 +1,40 @@
-# test_that('loading pl statement works', { exp_classes <- c( id = 'integer', Ticker = 'character', Name = 'character',
+test_cases <- data.table::CJ(
+    ticker = list("GOOG", c("GOOG", "AAPL")),
+    # id = list(18, c(18, 111052)),
+    statements = list("pl", "bs", "cf", "derived", c("pl", "bs", "cf", "derived")),
+    # period =
+    sorted = FALSE
+)
+
+test_cases[, indx := .I]
+data.table::setcolorder(test_cases, "indx")
+data.table::setindexv(test_cases, "indx")
+test_cases[, key_ := do.call(paste, c(.SD, sep = "-")), .SDcols = names(test_cases)]
+for (row in seq(nrow(test_cases))) {
+    test_that(paste("sfa_load_statement - Case:",  test_cases[row, key_]), {
+        res <- sfa_load_statements(
+            ticker = test_cases[[row, "ticker"]],
+            statements = test_cases[[row, "statements"]]
+        )
+        checkmate::expect_data_table(res)
+        if ("pl" %in% test_cases[[row, "statements"]]) {
+            checkmate::expect_names(colnames(res), must.include = "revenue")
+        }
+        if ("bs" %in% test_cases[[row, "statements"]]) {
+            checkmate::expect_names(colnames(res), must.include = "total_assets")
+        }
+        if ("cf" %in% test_cases[[row, "statements"]]) {
+            checkmate::expect_names(colnames(res), must.include = "cash_from_operating_activities")
+        }
+        if ("cf" %in% test_cases[[row, "derived"]]) {
+            checkmate::expect_names(colnames(res), must.include = "ebitda")
+        }
+    })
+}
+
+# test_that('loading pl statement works', {
+#     exp_classes <- c(
+#         id = 'integer', Ticker = 'character', Name = 'character',
 # isin = 'character', `Fiscal Period` = 'character', `Fiscal Year` = 'integer', `Report Date` = 'Date', `Publish Date` =
 # 'Date', Restated = 'Date', Source = 'character', Template = 'character', TTM = 'logical', `Value Check` = 'logical',
 # Currency = 'character', Revenue = 'numeric', `Sales & Services Revenue` = 'numeric', `Financing Revenue` = 'numeric',
@@ -21,15 +57,29 @@
 # = 'numeric', `Discontinued Operations` = 'numeric', `XO & Accounting Charges & Other` = 'numeric', `Income (Loss)
 # Including Minority Interest` = 'numeric', `Minority Interest` = 'numeric', `Net Income` = 'numeric', `Preferred
 # Dividends` = 'numeric', `Other Adjustments` = 'numeric', `Net Income Available to Common Shareholders` = 'numeric' )
-# names(exp_classes) <- clean_names(names(exp_classes)) for (sfplus in c(TRUE, FALSE)) { exp_classes <-
-# exp_classes[!(names(exp_classes) %in% c('shares_basic', 'shares_diluted'))] sfa_set_sfplus(sfplus) if (isTRUE(sfplus))
-# { options(sfa_api_key = Sys.getenv('SFPLUS_API_KEY')) } else { options(sfa_api_key = Sys.getenv('SF_API_KEY')) } ref_1
-# <- sfa_load_statements('GOOG', statement = 'pl', fyear = 2020) checkmate::expect_data_table( ref_1, key = 'ticker',
-# types = exp_classes, nrows = 1L, ncols = length(exp_classes), col.names = 'unique' ) expect_named(ref_1,
-# names(exp_classes)) if (isTRUE(sfplus)) { ref_1_plus <- sfa_load_statements('GOOG', statement = 'pl')
-# checkmate::expect_data_table( ref_1_plus, key = 'ticker', types = exp_classes, min.rows = 13L, ncols =
-# length(exp_classes), col.names = 'unique' ) expect_named(ref_1_plus, names(exp_classes)) } else { expect_error(
-# sfa_load_statements('GOOG', statement = 'pl'), 'Omitting 'fyear' is reserved for SimFin+ users.', fixed = TRUE ) }
+#
+#
+# names(exp_classes) <- clean_names(names(exp_classes))
+# for (sfplus in c(TRUE, FALSE)) {
+#     exp_classes <- exp_classes[!(names(exp_classes) %in% c('shares_basic', 'shares_diluted'))]
+#     sfa_set_sfplus(sfplus)
+#     if (isTRUE(sfplus)) {
+#         options(sfa_api_key = Sys.getenv('SFPLUS_API_KEY'))
+#     } else {
+#         options(sfa_api_key = Sys.getenv('SF_API_KEY'))
+#     }
+#     ref_1 <- sfa_load_statements('GOOG', statement = 'pl', fyear = 2020)
+#     checkmate::expect_data_table( ref_1, key = 'ticker', types = exp_classes, nrows = 1L, ncols = length(exp_classes), col.names = 'unique' )
+#     expect_named(ref_1, names(exp_classes))
+#     if (isTRUE(sfplus)) {
+#         ref_1_plus <- sfa_load_statements('GOOG', statement = 'pl')
+#         checkmate::expect_data_table( ref_1_plus, key = 'ticker', types = exp_classes, min.rows = 13L, ncols =
+# length(exp_classes), col.names = 'unique' )
+#         expect_named(ref_1_plus, names(exp_classes))
+#         } else {
+#             expect_error(
+#                 sfa_load_statements('GOOG', statement = 'pl'), 'Omitting 'fyear' is reserved for SimFin+ users.', fixed = TRUE )
+#             }
 # ref_2 <- sfa_load_statements(c('GOOG', 'AAPL'), statement = 'pl', fyear = 2015) checkmate::expect_data_table( ref_2,
 # key = 'ticker', types = exp_classes, nrows = 2L, ncols = length(exp_classes), col.names = 'unique' )
 # expect_named(ref_2, names(exp_classes)) if (isTRUE(sfplus)) { ref_2_plus <- sfa_load_statements(c('GOOG', 'AAPL'),
@@ -152,4 +202,5 @@
 # 'ADM', 'ADMA', 'ADNT', 'ADOM', 'ADP', 'ADPT', 'ADSK', 'ADT', 'ADTN', 'ADUS', 'ADVM', 'ADXS', 'AEE', 'AEHR', 'AEIS',
 # 'AEO', 'AEP', 'AES', 'AFG', 'AFI', 'AFL', 'AGCO', 'AGI', 'AGIO', 'AGLE', 'AGNC', 'AGO', 'AGR', 'AGS', 'AGX', 'AGYS',
 # 'AHH', 'AIG', 'AIMC', 'AINC', 'AIR' ) expect_silent( sfa_load_statements( ticker = tickers, statement = 'all', period
-# = 'quarters', start = Sys.Date() - 5000, end = Sys.Date(), ttm = TRUE, shares = TRUE, sfplus = TRUE ) ) })
+# = 'quarters', start = Sys.Date() - 5000, end = Sys.Date(), ttm = TRUE, shares = TRUE, sfplus = TRUE ) )
+# })
