@@ -22,3 +22,6 @@ PackageCheckArgs: --as-cran
 PackageRoxygenize: rd,collate,namespace,vignette
 
 QuitChildProcessesOnExit: Yes
+
+MarkdownWrap: Column
+MarkdownWrapAtColumn: 99

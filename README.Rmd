@@ -24,26 +24,25 @@ options("future.rng.onMisuse" = "ignore")
 theme_set(theme_minimal())
 ```
 
-# simfinapi <img src='man/figures/logo.png' align="right" height="139" />
+# simfinapi <img src="man/figures/logo.png" align="right" height="139"/>
 
-`r badge_lifecycle("experimental")`
-[![CRAN release](https://www.r-pkg.org/badges/version/simfinapi)](https://CRAN.R-project.org/package=simfinapi)
+`r badge_lifecycle("experimental")` [![CRAN
+release](https://www.r-pkg.org/badges/version/simfinapi)](https://CRAN.R-project.org/package=simfinapi)
 [![Status](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![R-CMD-check](https://github.com/matthiasgomolka/simfinapi/workflows/R-CMD-check/badge.svg)](https://github.com/matthiasgomolka/simfinapi/actions)
 [![](https://codecov.io/gh/matthiasgomolka/simfinapi/branch/main/graph/badge.svg)](https://app.codecov.io/gh/matthiasgomolka/simfinapi)
 `r badge_dependencies()`
 
 ## What does simfinapi do?
-simfinapi wraps the https://www.simfin.com/ Web-API to make 'SimFin' data easily
-available in R. 
 
-*To use the package, you need to register at https://app.simfin.com/login and obtain
-a 'SimFin' API key.*
+simfinapi wraps the <https://www.simfin.com/> Web-API to make 'SimFin' data easily available in R.
 
+*To use the package, you need to register at <https://app.simfin.com/login> and obtain a 'SimFin'
+API key.*
 
 ## Example
-In this example, we download some stock price data and turn these into a simple
-plot.
+
+In this example, we download some stock price data and turn these into a simple plot.
 
 ```{r download_data}
 # load package
@@ -52,11 +51,11 @@ devtools::load_all()
 
 # download stock price data
 tickers <- c("AMZN", "GOOG") # Amazon, Google
-prices <- sfa_get_prices(tickers)
+prices <- sfa_load_shareprices(tickers)
 ```
 
-Please note that all functions in simfinapi start with the prefix `sfa_`. This
-makes it easy to find all available functionality.
+Please note that all functions in simfinapi start with the prefix `sfa_`. This makes it easy to
+find all available functionality.
 
 The downloaded data looks like this:
 
@@ -72,67 +71,36 @@ library(ggplot2)
 
 # create plot
 ggplot(prices) +
-  aes(x = date, y = close, color = ticker) +
-  geom_line()
-```
-
-Suppose we would like to display the actual company name instead of the ticker.
-To do so, we download additional company information and merge it to the
-`prices` data:
-
-```{r download_info}
-company_info <- sfa_get_info(tickers)
-```
-
-`company_info` contains these information:
-
-```{r show_info, echo=FALSE}
-kable(company_info)
-```
-
-Now we merge both datasets and recreate the plot with the actual company names.
-
-```{r recreate_plot}
-# merge data
-merged <- merge(prices, company_info, by = "ticker")
-
-# recreate plot
-ggplot(merged) +
-  aes(x = date, y = close, color = company_name) +
+  aes(x = Date, y = `Last Closing Price`, color = name) +
   geom_line()
 ```
 
 ## Installation
+
 From [CRAN](https://CRAN.R-project.org/package=simfinapi):
+
 ```{r install_cran, eval = FALSE}
 install.packages("simfinapi")
 ```
-If you want to try out the newest features you may want to give the development
-version a try and install it from
-[GitHub](https://github.com/matthiasgomolka/simfinapi):
+
+If you want to try out the newest features you may want to give the development version a try and
+install it from [GitHub](https://github.com/matthiasgomolka/simfinapi):
 
 ```{r install_github, eval=FALSE}
 remotes::install_github("https://github.com/matthiasgomolka/simfinapi")
 ```
 
 ## Setup
-Using simfinapi is much more convenient if you set your API key and cache
-directory^[simfinapi always caches the results from your API calls to obtain
-results quicker and to reduce the number of API calls. If you set the cache
-directory to a permanent directory (the default is `tempdir()`), simfinapi will
-be able to reuse this cache in subsequent R sessions.] globally before you start
-downloading data. See `?sfa_set_api_key` and `?sfa_set_cache_dir` for details.
+
+Using simfinapi is much more convenient if you set your API key and cache directory[^1] globally
+before you start downloading data. See `?sfa_set_api_key` and `?sfa_set_cache_dir` for details.
+
+[^1]: simfinapi always caches the results from your API calls to obtain results quicker and to
+    reduce the number of API calls. If you set the cache directory to a permanent directory (the
+    default is `tempdir()`), simfinapi will be able to reuse this cache in subsequent R sessions.
 
 ## Code of Conduct
+
 Please note that the 'simfinapi' project is released with a [Contributor Code of
-Conduct](https://github.com/matthiasgomolka/simfinapi/blob/master/.github/CODE_OF_CONDUCT.md).
-By contributing to this project, you agree to abide by its terms.
-
-## Relation to `simfinR`
-
-In case you also found `simfinR` ([CRAN](https://CRAN.R-project.org/package=simfinR), 
-[GitHub](https://github.com/msperlin/simfinR/)) you might want to know about the
-differences between the `simfinapi` and `simfinR`. I tried to compile a list in 
-[this issue](https://github.com/matthiasgomolka/simfinapi/issues/22#issuecomment-847270864).
-
----
+Conduct](https://github.com/matthiasgomolka/simfinapi/blob/master/.github/CODE_OF_CONDUCT.md). By
+contributing to this project, you agree to abide by its terms.
