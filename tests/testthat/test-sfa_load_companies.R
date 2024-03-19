@@ -17,8 +17,8 @@ test_that("sfa_load_companies works with details = FALSE/TRUE", {
 
 test_that("sfa_load_companies returns error if api key is incorrect", {
     expect_error(
-      sfa_load_companies("invalid_api_key"),
-      "SimFin API Error 401: Invalid API Key - check the key again and also if you confirmed your e-mail on registration",
-      fixed = TRUE
+        sfa_load_companies("invalid_api_key"),
+        "SimFin API Error 401: Invalid API Key - check the key again and also if you confirmed your e-mail on registration",
+        fixed = TRUE
     )
 })
