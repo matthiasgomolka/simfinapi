@@ -1,6 +1,5 @@
 #' @noRd
 gather_ticker <- function(ticker, id, api_key, cache_dir) {
-    id <- NULL
     # get entities in order to verify the existence of ticker / id
     companies <- sfa_load_companies(api_key = api_key, cache_dir = cache_dir)
 

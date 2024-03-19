@@ -46,7 +46,7 @@ sfa_load_statements <- function(
         cache_dir = cache_dir,
         ticker = paste(ticker, collapse = ","),
         statements = paste(statements, collapse = ","),
-        period = period,
+        period = paste(period, collapse = ","),
         fyear = paste(fyear, collapse = ","),
         start = start,
         end = end,
