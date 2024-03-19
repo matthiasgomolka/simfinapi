@@ -18,8 +18,10 @@ test_that("setting the API via environment variable works", {
 
 test_that("api_key is ignored if env_var is specified", {
     options(sfa_api_key = NULL)
-    warning <- capture_warnings(expect_identical(sfa_set_api_key(api_key = "InvalidApiKeyOfCorrectLength5678", env_var = "SIMFIN_TEST_KEY"),
-        test_key))
+    warning <- capture_warnings(expect_identical(
+        sfa_set_api_key(api_key = "InvalidApiKeyOfCorrectLength5678", env_var = "SIMFIN_TEST_KEY"),
+        test_key
+    ))
 
     expect_identical(warning, "Both 'api_key' and 'env_var' provided. Ignoring 'api_key'.")
     expect_identical(getOption("sfa_api_key"), test_key)

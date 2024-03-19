@@ -9,7 +9,8 @@ call_api <- function(url, api_key, cache_dir, ...) {
     if (is.null(cache_dir)) {
         warning("'cache_dir' not set. Defaulting to 'tempdir()'. Thus, API results will ", "only be cached during this session. To learn why and how to cache ",
             "results over the end of this session, see `?sfa_set_cache_dir`.\n\n", "[This warning appears only once per session.]",
-            call. = FALSE)
+            call. = FALSE
+        )
         sfa_set_cache_dir(tempdir(), create = TRUE)
         cache_dir <- getOption("sfa_cache_dir")
     }

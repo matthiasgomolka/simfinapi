@@ -8,13 +8,13 @@ library(knitr)
 library(ggplot2)
 
 opts_chunk$set(
-  fig.width = 8,
-  fig.height = 4.5,
-  fig.path = "man/figures/README-",
-  dpi = 150,
-  collapse = TRUE,
-  comment = "#>",
-  out.width = "100%"
+    fig.width = 8,
+    fig.height = 4.5,
+    fig.path = "man/figures/README-",
+    dpi = 150,
+    collapse = TRUE,
+    comment = "#>",
+    out.width = "100%"
 )
 
 options(sfa_api_key = Sys.getenv("SIMFIN_API_KEY"))
@@ -71,8 +71,8 @@ library(ggplot2)
 
 # create plot
 ggplot(prices) +
-  aes(x = Date, y = `Last Closing Price`, color = name) +
-  geom_line()
+    aes(x = Date, y = `Last Closing Price`, color = name) +
+    geom_line()
 ```
 
 ## Installation
