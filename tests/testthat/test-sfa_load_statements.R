@@ -3,6 +3,8 @@ test_cases <- data.table::CJ(
     id = list(NULL, 59265, c(59265, 62747)), # MSFT, AMZN
     statements = list("pl", "bs", "cf", "derived", c("pl", "bs", "cf", "derived")),
     period = list(NULL, "q1", c("q1", "q2", "q3", "q4", "fy", "h1", "h2", "nine_month")),
+    fyear = list(NULL, 2022, c(2021, 2022)),
+    ttm = list(TRUE, FALSE),
     sorted = FALSE
 )[lengths(ticker) + lengths(id) != 0] # drop rows without ticker or id
 
@@ -18,7 +20,9 @@ for (row in seq(nrow(test_cases))) {
             ticker = test_cases[[row, "ticker"]],
             id = test_cases[[row, "id"]],
             statements = test_cases[[row, "statements"]],
-            period = test_cases[[row, "period"]]
+            period = test_cases[[row, "period"]],
+            fyear = test_cases[[row, "fyear"]],
+            ttm = test_cases[[row, "ttm"]]
         )
         checkmate::expect_data_table(res)
 
@@ -61,21 +65,26 @@ for (row in seq(nrow(test_cases))) {
         if (all(test_cases[[row, "statements"]] == "derived")) {
             expected <- intersect(expected, c("FY", "Q1", "Q2", "Q3", "Q4")) |> sort()
         }
-        expect_identical(unique(res[["fiscal_period"]]) |> sort(), expected)
-        # testing period parameter
-        # if (is.null(test_cases[[row, "period"]])) {
-        #     expected <- c("9M", "FY", "H1", "H2", "Q1", "Q2", "Q3", "Q4")
-        #     if (test_cases[[row, "statements"]] == "bs") {
-        #         # balance sheet statements are only quarterly
-        #         expected <- c("Q1", "Q2", "Q3", "Q4")
-        #     }
-        #     expect_identical(unique(res[["fiscal_period"]]), expected)
-        # } else {
-        #     expect_identical(
-        #         test_cases[[row, "period"]] |> sort(),
-        #         res[["fiscal_period"]] |> unique() |> tolower() |> sub(pattern = "9m", replacement = "nine_month") |> sort()
-        #     )
+
+        if (isFALSE(test_cases[[row, "ttm"]])) {
+            # run this test only if ttm = FALSE, because ttm overrides period
+            expect_identical(unique(res[["fiscal_period"]]) |> sort(), expected)
+        }
+
+        # testing fyear parameter
+        if (is.null(test_cases[[row, "fyear"]])) {
+            expect_lt(res[["fiscal_year"]] |> min(), 2021)
+        } else if (all(test_cases[[row, "fyear"]] == 2022)) {
+            expect_equal(res[["fiscal_year"]] |> unique(), 2022)
+        } else if (all(test_cases[[row, "fyear"]] == c(2021, 2022))) {
+            expect_equal(res[["fiscal_year"]] |> unique() |> sort(), c(2021, 2022))
+        }
+
+        # testing ttm parameter
+        # if (isTRUE(test_cases[[row, "ttm"]]) & !is.null(test_cases[[row, "fyear"]])) {
+        #     expect_equal(res[["fiscal_period"]] |> unique() |> sort(), paste0("Q", 1:4))
         # }
+
     })
 }
 
