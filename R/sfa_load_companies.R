@@ -23,15 +23,16 @@ sfa_load_companies <- function(api_key = getOption("sfa_api_key"), cache_dir = g
             data.table::data.table() |>
             data.table::setnames(response_body[["columns"]]) |>
             utils::type.convert(as.is = TRUE)
-
     } else {
         response <- call_api(url = "/companies/list", api_key = api_key, cache_dir = cache_dir)
         response_body <- httr2::resp_body_string(response) |>
             RcppSimdJson::fparse()
         companies <- data.table::data.table(response_body)
     }
-    col_order <- c("id", "name", "ticker", "isin", "sectorCode", "sectorName", "industryName", "market", "endFy", "numEmployees",
-        "companyDescription")
+    col_order <- c(
+        "id", "name", "ticker", "isin", "sectorCode", "sectorName", "industryName", "market", "endFy", "numEmployees",
+        "companyDescription"
+    )
     col_order <- intersect(col_order, names(companies))
     data.table::setcolorder(companies, col_order)
     data.table::setkeyv(companies, "id")

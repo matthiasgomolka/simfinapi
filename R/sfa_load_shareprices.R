@@ -17,8 +17,7 @@ sfa_load_shareprices <- function(
     ratios = FALSE,
     asreported = FALSE,
     api_key = getOption("sfa_api_key"),
-    cache_dir = getOption("sfa_cache_dir")
-) {
+    cache_dir = getOption("sfa_cache_dir")) {
     # check_sfplus(sfplus)
     check_id(id)
     check_ticker(ticker)

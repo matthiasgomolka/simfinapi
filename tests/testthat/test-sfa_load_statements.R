@@ -1,4 +1,96 @@
-# test_that('loading pl statement works', { exp_classes <- c( id = 'integer', Ticker = 'character', Name = 'character',
+test_cases <- data.table::CJ(
+    ticker = list("GOOG", NULL, c("GOOG", "AAPL")),
+    id = list(NULL, 59265, c(59265, 62747)), # MSFT, AMZN
+    statements = list("pl", "bs", "cf", "derived", c("pl", "bs", "cf", "derived")),
+    period = list(NULL, "q1", c("q1", "q2", "q3", "q4", "fy", "h1", "h2", "nine_month")),
+    fyear = list(NULL, 2022, c(2021, 2022)),
+    ttm = list(TRUE, FALSE),
+    sorted = FALSE
+)[lengths(ticker) + lengths(id) != 0] # drop rows without ticker or id
+
+
+test_cases[, indx := .I]
+data.table::setcolorder(test_cases, "indx")
+data.table::setindexv(test_cases, "indx")
+test_cases[, key_ := do.call(paste, c(.SD, sep = "-")), .SDcols = names(test_cases)]
+
+for (row in seq(nrow(test_cases))) {
+    test_that(paste("sfa_load_statement - Case:", test_cases[row, key_]), {
+        res <- sfa_load_statements(
+            ticker = test_cases[[row, "ticker"]],
+            id = test_cases[[row, "id"]],
+            statements = test_cases[[row, "statements"]],
+            period = test_cases[[row, "period"]],
+            fyear = test_cases[[row, "fyear"]],
+            ttm = test_cases[[row, "ttm"]]
+        )
+        checkmate::expect_data_table(res)
+
+        # testing ticker parameter
+        for (ticker in test_cases[[row, "ticker"]]) {
+            expect_true(ticker %in% res[["ticker"]])
+        }
+
+        # testing id parameter
+        for (id in test_cases[[row, "id"]]) {
+            expect_true(id %in% res[["id"]])
+        }
+
+        # testing statements parameter
+        if ("pl" %in% test_cases[[row, "statements"]]) {
+            checkmate::expect_names(colnames(res), must.include = "revenue")
+        }
+        if ("bs" %in% test_cases[[row, "statements"]]) {
+            checkmate::expect_names(colnames(res), must.include = "total_assets")
+        }
+        if ("cf" %in% test_cases[[row, "statements"]]) {
+            checkmate::expect_names(colnames(res), must.include = "cash_from_operating_activities")
+        }
+        if ("cf" %in% test_cases[[row, "derived"]]) {
+            checkmate::expect_names(colnames(res), must.include = "ebitda")
+        }
+
+        # testing period parameter
+        expected <- test_cases[[row, "period"]] |>
+            toupper() |>
+            sub(pattern = "NINE_MONTH", replacement = "9M") |>
+            sort()
+        if (is.null(test_cases[[row, "period"]])) {
+            expected <- c("9M", "FY", "H1", "H2", "Q1", "Q2", "Q3", "Q4")
+        }
+        if (all(test_cases[[row, "statements"]] == "bs")) {
+            # balance sheet statements are only quarterly
+            expected <- intersect(expected, c("Q1", "Q2", "Q3", "Q4")) |> sort()
+        }
+        if (all(test_cases[[row, "statements"]] == "derived")) {
+            expected <- intersect(expected, c("FY", "Q1", "Q2", "Q3", "Q4")) |> sort()
+        }
+
+        if (isFALSE(test_cases[[row, "ttm"]])) {
+            # run this test only if ttm = FALSE, because ttm overrides period
+            expect_identical(unique(res[["fiscal_period"]]) |> sort(), expected)
+        }
+
+        # testing fyear parameter
+        if (is.null(test_cases[[row, "fyear"]])) {
+            expect_lt(res[["fiscal_year"]] |> min(), 2021)
+        } else if (all(test_cases[[row, "fyear"]] == 2022)) {
+            expect_equal(res[["fiscal_year"]] |> unique(), 2022)
+        } else if (all(test_cases[[row, "fyear"]] == c(2021, 2022))) {
+            expect_equal(res[["fiscal_year"]] |> unique() |> sort(), c(2021, 2022))
+        }
+
+        # testing ttm parameter
+        # if (isTRUE(test_cases[[row, "ttm"]]) & !is.null(test_cases[[row, "fyear"]])) {
+        #     expect_equal(res[["fiscal_period"]] |> unique() |> sort(), paste0("Q", 1:4))
+        # }
+
+    })
+}
+
+# test_that('loading pl statement works', {
+#     exp_classes <- c(
+#         id = 'integer', Ticker = 'character', Name = 'character',
 # isin = 'character', `Fiscal Period` = 'character', `Fiscal Year` = 'integer', `Report Date` = 'Date', `Publish Date` =
 # 'Date', Restated = 'Date', Source = 'character', Template = 'character', TTM = 'logical', `Value Check` = 'logical',
 # Currency = 'character', Revenue = 'numeric', `Sales & Services Revenue` = 'numeric', `Financing Revenue` = 'numeric',
@@ -21,15 +113,29 @@
 # = 'numeric', `Discontinued Operations` = 'numeric', `XO & Accounting Charges & Other` = 'numeric', `Income (Loss)
 # Including Minority Interest` = 'numeric', `Minority Interest` = 'numeric', `Net Income` = 'numeric', `Preferred
 # Dividends` = 'numeric', `Other Adjustments` = 'numeric', `Net Income Available to Common Shareholders` = 'numeric' )
-# names(exp_classes) <- clean_names(names(exp_classes)) for (sfplus in c(TRUE, FALSE)) { exp_classes <-
-# exp_classes[!(names(exp_classes) %in% c('shares_basic', 'shares_diluted'))] sfa_set_sfplus(sfplus) if (isTRUE(sfplus))
-# { options(sfa_api_key = Sys.getenv('SFPLUS_API_KEY')) } else { options(sfa_api_key = Sys.getenv('SF_API_KEY')) } ref_1
-# <- sfa_load_statements('GOOG', statement = 'pl', fyear = 2020) checkmate::expect_data_table( ref_1, key = 'ticker',
-# types = exp_classes, nrows = 1L, ncols = length(exp_classes), col.names = 'unique' ) expect_named(ref_1,
-# names(exp_classes)) if (isTRUE(sfplus)) { ref_1_plus <- sfa_load_statements('GOOG', statement = 'pl')
-# checkmate::expect_data_table( ref_1_plus, key = 'ticker', types = exp_classes, min.rows = 13L, ncols =
-# length(exp_classes), col.names = 'unique' ) expect_named(ref_1_plus, names(exp_classes)) } else { expect_error(
-# sfa_load_statements('GOOG', statement = 'pl'), 'Omitting 'fyear' is reserved for SimFin+ users.', fixed = TRUE ) }
+#
+#
+# names(exp_classes) <- clean_names(names(exp_classes))
+# for (sfplus in c(TRUE, FALSE)) {
+#     exp_classes <- exp_classes[!(names(exp_classes) %in% c('shares_basic', 'shares_diluted'))]
+#     sfa_set_sfplus(sfplus)
+#     if (isTRUE(sfplus)) {
+#         options(sfa_api_key = Sys.getenv('SFPLUS_API_KEY'))
+#     } else {
+#         options(sfa_api_key = Sys.getenv('SF_API_KEY'))
+#     }
+#     ref_1 <- sfa_load_statements('GOOG', statement = 'pl', fyear = 2020)
+#     checkmate::expect_data_table( ref_1, key = 'ticker', types = exp_classes, nrows = 1L, ncols = length(exp_classes), col.names = 'unique' )
+#     expect_named(ref_1, names(exp_classes))
+#     if (isTRUE(sfplus)) {
+#         ref_1_plus <- sfa_load_statements('GOOG', statement = 'pl')
+#         checkmate::expect_data_table( ref_1_plus, key = 'ticker', types = exp_classes, min.rows = 13L, ncols =
+# length(exp_classes), col.names = 'unique' )
+#         expect_named(ref_1_plus, names(exp_classes))
+#         } else {
+#             expect_error(
+#                 sfa_load_statements('GOOG', statement = 'pl'), 'Omitting 'fyear' is reserved for SimFin+ users.', fixed = TRUE )
+#             }
 # ref_2 <- sfa_load_statements(c('GOOG', 'AAPL'), statement = 'pl', fyear = 2015) checkmate::expect_data_table( ref_2,
 # key = 'ticker', types = exp_classes, nrows = 2L, ncols = length(exp_classes), col.names = 'unique' )
 # expect_named(ref_2, names(exp_classes)) if (isTRUE(sfplus)) { ref_2_plus <- sfa_load_statements(c('GOOG', 'AAPL'),
@@ -152,4 +258,5 @@
 # 'ADM', 'ADMA', 'ADNT', 'ADOM', 'ADP', 'ADPT', 'ADSK', 'ADT', 'ADTN', 'ADUS', 'ADVM', 'ADXS', 'AEE', 'AEHR', 'AEIS',
 # 'AEO', 'AEP', 'AES', 'AFG', 'AFI', 'AFL', 'AGCO', 'AGI', 'AGIO', 'AGLE', 'AGNC', 'AGO', 'AGR', 'AGS', 'AGX', 'AGYS',
 # 'AHH', 'AIG', 'AIMC', 'AINC', 'AIR' ) expect_silent( sfa_load_statements( ticker = tickers, statement = 'all', period
-# = 'quarters', start = Sys.Date() - 5000, end = Sys.Date(), ttm = TRUE, shares = TRUE, sfplus = TRUE ) ) })
+# = 'quarters', start = Sys.Date() - 5000, end = Sys.Date(), ttm = TRUE, shares = TRUE, sfplus = TRUE ) )
+# })
