@@ -39,6 +39,10 @@ sfa_load_statements <- function(
     check_cache_dir(cache_dir)
 
     ticker <- gather_ticker(ticker, id, api_key, cache_dir)
+    if (isTRUE(ttm)) {
+        period <- NULL
+    }
+
 
     response <- call_api(
         url = "/companies/statements/compact",
@@ -51,7 +55,7 @@ sfa_load_statements <- function(
         start = start,
         end = end,
         ttm = ttm,
-        asreported = asreported,
+        asreported = asreported
         # details = details
     )
 
