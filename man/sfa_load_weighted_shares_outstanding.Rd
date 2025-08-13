@@ -67,7 +67,7 @@ the API key globally using \link{sfa_set_api_key}.}
 the cache directory globally using \link{sfa_set_cache_dir}.}
 }
 \value{
-\link{data.table} containing the common shares outstanding.
+\link[data.table:data.table]{data.table::data.table} containing the common shares outstanding.
 }
 \description{
 Get the number of weighted shares outstanding for a company.

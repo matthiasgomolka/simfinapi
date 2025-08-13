@@ -74,7 +74,7 @@ the API key globally using \link{sfa_set_api_key}.}
 the cache directory globally using \link{sfa_set_cache_dir}.}
 }
 \value{
-\link{data.table} containing the statement(s) data.
+\link[data.table:data.table]{data.table::data.table} containing the statement(s) data.
 }
 \description{
 Fundamentals and derived figures can be retrieved here.

@@ -8,7 +8,7 @@
 #' @importFrom httr2 resp_body_string
 #' @importFrom RcppSimdJson fparse
 #'
-#' @return [data.table] containing the common shares outstanding.
+#' @return [data.table::data.table] containing the common shares outstanding.
 #'
 #' @export
 sfa_load_common_shares_outstanding <- function(
@@ -54,7 +54,7 @@ sfa_load_common_shares_outstanding <- function(
 #' @importFrom httr2 resp_body_string
 #' @importFrom RcppSimdJson fparse
 #'
-#' @return [data.table] containing the common shares outstanding.
+#' @return [data.table::data.table] containing the common shares outstanding.
 #'
 #' @export
 sfa_load_weighted_shares_outstanding <- function(

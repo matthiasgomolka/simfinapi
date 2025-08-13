@@ -7,7 +7,7 @@
 #' @param statements [character] vector of statements, available values: pl (Profit & Loss), bs
 #'   (Balance Sheet), cf (Cash Flow), derived (Derived Ratios and Indicators).
 #'
-#' @return [data.table] containing the statement(s) data.
+#' @return [data.table::data.table] containing the statement(s) data.
 #'
 #' @inheritSection param_doc Parallel processing
 #'

@@ -6,7 +6,7 @@
 #'
 #' @param ratios [logical] If `TRUE`, additional ratios and derived metrics are included.
 #'
-#' @return [data.table] with share price data.
+#' @return [data.table::data.table] with share price data.
 #'
 #' @export
 sfa_load_shareprices <- function(

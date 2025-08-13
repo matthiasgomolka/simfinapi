@@ -10,3 +10,4 @@
 ^Meta$
 ^revdep$
 ^CRAN-SUBMISSION$
+^.lintr$

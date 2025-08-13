@@ -36,11 +36,11 @@ GitHub.
 \examples{
 \dontrun{
 # set API key directly
-sfa_set_api_key(api_key = 'YourApiKey')
+sfa_set_api_key(api_key = "YourApiKey")
 
 # set API key via environment variable
 # (this assumes you already created an environment variable called
 # 'SIMFIN_API_KEY' which contains you API key)
-sfa_set_api_key(env_var = 'SIMFIN_API_KEY')
+sfa_set_api_key(env_var = "SIMFIN_API_KEY")
 }
 }
