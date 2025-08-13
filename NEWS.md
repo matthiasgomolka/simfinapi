@@ -1,3 +1,7 @@
+# simfinapi 1.0.1
+## Fixes
+* package links in *.Rd files updated
+
 # simfinapi 1.0.0
 ## Features
 * The package is now compatible with the new SimFin API V3.
